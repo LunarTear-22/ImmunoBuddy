@@ -1,0 +1,27 @@
+# Android Studio
+.idea/
+*.iml
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Jetpack Compose
+*.cach*
+.compose-cache/
+
+# Local properties
+local.properties
+
+# Keystore (se esistente)
+*.jks
+
+# NDK / CMake
+.cxx/
