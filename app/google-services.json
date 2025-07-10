@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "283165197410",
+    "project_id": "immunobuddy",
+    "storage_bucket": "immunobuddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:283165197410:android:deb700177f0c438a29bd3b",
+        "android_client_info": {
+          "package_name": "com.example.immunobuddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAW0h7smsBHgopdc-MrrxphAzytZPybNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
