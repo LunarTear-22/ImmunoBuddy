@@ -25,3 +25,6 @@ local.properties
 
 # NDK / CMake
 .cxx/
+
+# Firebase / Google Services
+app/google-services.json
