@@ -1,19 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/background_light">
 
-    <TextView
+    <!-- Titolo + SOS -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ImmunoBuddy"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnSOS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SOS"
+            android:textColor="@color/text_dark"
+            android:backgroundTint="@color/danger"/>
+    </LinearLayout>
+
+    <!-- Consiglio -->
+    <LinearLayout
+        android:id="@+id/boxTip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_margin="16dp"
+        android:background="@drawable/rounded_box"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Consiglio del giorno"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lo sapevi? Il polline aumenta nelle ore centrali della giornata."
+            android:textColor="@color/text_dark"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <!-- Ultime Reazioni -->
+    <LinearLayout
+        android:id="@+id/boxReazioni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/boxTip"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_white_box">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ultime Reazioni"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12/05/2025 - Orticaria da farmaco 🌶"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20/03/2025 - Allergia pollini 🌿"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="05/02/2025 - Reazione a crostacei 🍤"
+            android:textColor="@color/text_dark"/>
+
+        <Button
+            android:id="@+id/btnMostraReazioni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostra tutto"
+            android:layout_gravity="end"
+            android:backgroundTint="@color/primary_medium"/>
+    </LinearLayout>
+
+    <!-- Nel tuo Kit -->
+    <LinearLayout
+        android:id="@+id/boxKit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/boxReazioni"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_white_box">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nel tuo Kit:"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• Jext® 300 mcg - Adrenalina autoiniettabile"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• Xyzal® 5 mg - Antistaminico orale"
+            android:textColor="@color/text_dark"/>
+
+        <Button
+            android:id="@+id/btnMostraKit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostra tutto"
+            android:layout_gravity="end"
+            android:backgroundTint="@color/primary_medium"/>
+    </LinearLayout>
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/primary_dark"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Menu nascosto -->
+    <include
+        android:id="@+id/fabMenuLayout"
+        layout="@layout/fab_menu"/>
+</RelativeLayout>
