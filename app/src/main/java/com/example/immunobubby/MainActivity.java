@@ -1,12 +1,14 @@
 package com.example.immunobubby;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FabMenu fabMenu;
+    private boolean isFabMenuOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,23 +16,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
+        LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);
+
         FloatingActionButton fab1 = findViewById(R.id.btnReazioni);
         FloatingActionButton fab2 = findViewById(R.id.btnPromemoria);
         FloatingActionButton fab3 = findViewById(R.id.btnSintomi);
 
-        fabMenu = new FabMenu(fabMain, fab1, fab2, fab3);
+        // Toggle menu al click sul FAB principale
+        fabMain.setOnClickListener(v -> {
+            if (isFabMenuOpen) {
+                fabMenuLayout.setVisibility(View.GONE);
+                isFabMenuOpen = false;
+            } else {
+                fabMenuLayout.setVisibility(View.VISIBLE);
+                isFabMenuOpen = true;
+            }
+        });
 
-        // esempio: azioni sui bottoni
+        // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> {
-            // Azione FAB1
+            // TODO: Azione FAB1
         });
 
         fab2.setOnClickListener(v -> {
-            // Azione FAB2
+            // TODO: Azione FAB2
         });
 
         fab3.setOnClickListener(v -> {
-            // Azione FAB3
+            // TODO: Azione FAB3
         });
     }
 }

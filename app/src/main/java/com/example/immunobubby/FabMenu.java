@@ -1,6 +1,5 @@
 package com.example.immunobubby;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.view.View;
@@ -25,7 +24,7 @@ public class FabMenu {
     }
 
     private void setup() {
-        // All'inizio i bottoni secondari sono nascosti
+        // All'inizio nascosti
         fab1.setVisibility(View.INVISIBLE);
         fab2.setVisibility(View.INVISIBLE);
         fab3.setVisibility(View.INVISIBLE);
@@ -42,9 +41,9 @@ public class FabMenu {
     }
 
     private void openMenu() {
-        showFab(fab1, -1, -200);
-        showFab(fab2, -200, 0);
-        showFab(fab3, 0, -200);
+        showFab(fab1, -200, 0);   // sposta a sinistra
+        showFab(fab2, 0, -200);   // sposta in alto
+        showFab(fab3, -150, -150); // sposta in diagonale
         isOpen = true;
     }
 
