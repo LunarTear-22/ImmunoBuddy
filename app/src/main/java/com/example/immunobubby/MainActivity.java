@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
         LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);
 
-        FloatingActionButton fab1 = findViewById(R.id.btnReazioni);
-        FloatingActionButton fab2 = findViewById(R.id.btnPromemoria);
-        FloatingActionButton fab3 = findViewById(R.id.btnSintomi);
+        ExtendedFloatingActionButton fab1 = findViewById(R.id.btnReazioni);
+        ExtendedFloatingActionButton fab2 = findViewById(R.id.btnPromemoria);
+        ExtendedFloatingActionButton fab3 = findViewById(R.id.btnSintomi);
 
         // Toggle menu al click sul FAB principale
         fabMain.setOnClickListener(v -> {
