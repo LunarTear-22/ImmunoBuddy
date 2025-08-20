@@ -3,6 +3,11 @@
     <style name="Base.Theme.ImmunoBubby" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Font personalizzato -->
+        <item name="android:fontFamily">@font/inter</item>
+        <!-- Altri attributi del tema -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorOnPrimary">@color/text_dark</item>
     </style>
 
     <style name="Theme.ImmunoBubby" parent="Base.Theme.ImmunoBubby" />

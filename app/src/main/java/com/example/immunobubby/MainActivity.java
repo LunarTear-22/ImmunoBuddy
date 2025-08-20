@@ -1,44 +1,36 @@
 package com.example.immunobubby;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FloatingActionButton fabMenu;
-    private LinearLayout fabMenuLayout;
-    private boolean isMenuOpen = false;
+    private FabMenu fabMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fabMenu = findViewById(R.id.fabMenu);
-        fabMenuLayout = findViewById(R.id.fabMenuLayout);
+        FloatingActionButton fabMain = findViewById(R.id.btnFab);
+        FloatingActionButton fab1 = findViewById(R.id.btnReazioni);
+        FloatingActionButton fab2 = findViewById(R.id.btnPromemoria);
+        FloatingActionButton fab3 = findViewById(R.id.btnSintomi);
 
-        fabMenu.setOnClickListener(v -> toggleFabMenu());
+        fabMenu = new FabMenu(fabMain, fab1, fab2, fab3);
 
-        findViewById(R.id.btnReazioni).setOnClickListener(v ->
-                Toast.makeText(this, "Aggiungi Reazione", Toast.LENGTH_SHORT).show());
+        // esempio: azioni sui bottoni
+        fab1.setOnClickListener(v -> {
+            // Azione FAB1
+        });
 
-        findViewById(R.id.btnPromemoria).setOnClickListener(v ->
-                Toast.makeText(this, "Aggiungi Promemoria Farmaci", Toast.LENGTH_SHORT).show());
+        fab2.setOnClickListener(v -> {
+            // Azione FAB2
+        });
 
-        findViewById(R.id.btnSintomi).setOnClickListener(v ->
-                Toast.makeText(this, "Aggiungi Sintomi", Toast.LENGTH_SHORT).show());
-    }
-
-    private void toggleFabMenu() {
-        if (isMenuOpen) {
-            fabMenuLayout.setVisibility(View.GONE);
-        } else {
-            fabMenuLayout.setVisibility(View.VISIBLE);
-        }
-        isMenuOpen = !isMenuOpen;
+        fab3.setOnClickListener(v -> {
+            // Azione FAB3
+        });
     }
 }
