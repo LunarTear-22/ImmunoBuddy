@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
     android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ebf3ff"
-    android:clipToPadding="false">
+    android:background="@color/background_light"
+    >
 
     <!-- HEADER -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="16dp">
 
         <ImageButton
             android:id="@+id/btnMenu"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_menu" />
+            android:contentDescription="@string/menu"
+            android:src="@drawable/menu_24px" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="ImmunoBuddy"
-            android:textColor="#001229"
-            android:textSize="24sp"
-            android:textFontWeight="600"/>
+            android:text="@string/immunobuddy"
+            android:textColor="@color/text_dark"
+            android:fontFamily="@font/inter_semibold"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -48,25 +51,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="40dp"
-            android:spacing="16dp">
+            android:spacing="16dp"
+            tools:ignore="UselessParent">
 
             <!-- Greeting -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:baselineAligned="false"
                >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1">
 
                     <TextView
-                        android:text="Ciao Francesca!"
+                        android:text="@string/ciao_francesca"
                         android:textSize="22sp"
                         android:textStyle="bold"
+                        android:fontFamily="@font/inter_bold"
                         android:textColor="@color/text_dark"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content" />
@@ -75,11 +81,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        tools:ignore="UseCompoundDrawables">
 
                         <TextView
-                            android:text="Salerno"
+                            android:id="@+id/tvLocation"
+                            android:text="@string/salerno"
                             android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:layout_marginStart="4dp"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
@@ -90,7 +99,8 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginStart="8dp"
-                            android:src="@drawable/ic_location" />
+                            android:src="@drawable/ic_location"
+                            android:contentDescription="@string/pinposizione"/>
 
                     </LinearLayout>
 
@@ -101,19 +111,18 @@
                         android:gravity="center_vertical">
 
                         <TextView
-                            android:text="18°"
+                            android:id="@+id/tvTemperature"
+                            android:text="@string/_18"
                             android:textSize="24sp"
                             android:textStyle="normal"
+                            android:fontFamily="@font/inter_regular"
                             android:layout_marginStart="4dp"
-                            android:textColor="#001229"
+                            android:textColor="@color/text_dark"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content" />
+                            android:layout_width="wrap_content"
+                            android:drawablePadding="8dp"
+                            app:drawableEndCompat="@drawable/ic_sun" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="8dp"
-                            android:src="@drawable/ic_sun" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -124,31 +133,37 @@
 
                         <TextView
                             android:text="Hai bisogno di aiuto?"
-                            android:textColor="#001229"
+                            android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:textSize="12sp"
                             android:layout_marginTop="8dp"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
 
                         <!-- SOS Button -->
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSOS"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:backgroundTint="#ffb3b3"
-                            android:text="SOS"
-                            android:textColor="#b00020"
-                            android:textSize="20sp"
-                            android:textFontWeight="700"
+                            android:backgroundTint="@color/danger"
                             android:drawableLeft="@drawable/ic_phone"
-                            android:paddingHorizontal="20dp"
                             android:drawablePadding="8dp"
+                            android:paddingHorizontal="20dp"
+                            android:radius="30dp"
                             android:shape="rectangle"
-                            android:radius="30dp" />
+                            android:text="SOS"
+                            android:textColor="@color/text_danger"
+                            android:fontFamily="@font/inter_bold"
+                            android:textSize="20sp" />
                 </LinearLayout>
             </LinearLayout>
-
+        <!-- Card-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="16dp">
 
             <!-- Advice Card -->
             <com.google.android.material.card.MaterialCardView
@@ -170,7 +185,8 @@
                         android:src="@drawable/avatar"
                         android:layout_marginEnd="12dp"
                         android:layout_height="55dp"
-                        android:layout_width="55dp" />
+                        android:layout_width="55dp"
+                        android:contentDescription="@string/avatar"/>
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -180,18 +196,21 @@
 
                         <TextView
                             android:text="Consiglio del giorno"
-                            android:textColor="#001229"
+                            android:textColor="@color/text_dark"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            tools:ignore="HardcodedText"/>
 
                         <TextView
                             android:text="Lo sapevi? Il polline aumenta nelle ore centrali della giornata."
-                            android:textColor="#001229"
+                            android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:textSize="14sp"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content" />
+                            android:layout_width="wrap_content"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -201,7 +220,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#ffffff"
+                app:cardBackgroundColor="@color/white"
                 app:strokeWidth="1.5dp"
                 app:strokeColor="@color/text_dark"
                 >
@@ -214,9 +233,9 @@
 
                     <TextView
                         android:text="Ultime Reazioni"
-                        android:textFontWeight="600"
+                        android:fontFamily="@font/inter_semibold"
                         android:textSize="16sp"
-                        android:textColor="#001229"
+                        android:textColor="@color/text_dark"
                         android:layout_marginBottom="8dp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"/>
@@ -229,6 +248,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"/>
                         <TextView
@@ -236,6 +256,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:textStyle="normal"
+                            android:fontFamily="@font/inter_regular"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"/>
                     </LinearLayout>
@@ -249,6 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"/>
 
@@ -257,6 +279,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:textStyle="normal"
+                            android:fontFamily="@font/inter_regular"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"/>
 
@@ -271,6 +294,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:textColor="@color/text_dark"
                             android:textSize="14sp"/>
 
@@ -280,6 +304,7 @@
                             android:layout_width="wrap_content"
                             android:textStyle="normal"
                             android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:textSize="14sp"/>
 
                     </LinearLayout>
@@ -290,7 +315,8 @@
                         android:text="Mostra tutto"
                         android:textColor="@color/text_dark"
                         android:layout_gravity="end"
-                        android:textFontWeight="600"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/inter_bold"
                         app:backgroundTint="@color/primary_medium"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -302,7 +328,7 @@
                 app:strokeColor="@color/text_dark"
                 app:strokeWidth="1.5dp"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#ffffff">
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -312,9 +338,9 @@
 
                     <TextView
                         android:text="Nel tuo Kit:"
-                        android:textFontWeight="600"
+                        android:fontFamily="@font/inter_semibold"
                         android:textSize="16sp"
-                        android:textColor="#001229"
+                        android:textColor="@color/text_dark"
                         android:layout_marginBottom="8dp"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content" />
@@ -326,11 +352,15 @@
                         <TextView
                             android:text="• Jext® 300 mcg"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:textSize="14sp"
+                            android:textColor="@color/text_dark"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:text=" - Adrenalina autoiniettabile"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
@@ -344,11 +374,15 @@
                         <TextView
                             android:text="• Xyzal® 5 mg"
                             android:textStyle="bold"
+                            android:fontFamily="@font/inter_bold"
                             android:textSize="14sp"
+                            android:textColor="@color/text_dark"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
 
                         <TextView
+                            android:textColor="@color/text_dark"
+                            android:fontFamily="@font/inter_regular"
                             android:text=" - Antistaminico orale"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
@@ -361,11 +395,13 @@
                         android:text="Mostra tutto"
                         android:textColor="@color/text_dark"
                         android:layout_gravity="end"
-                        android:textFontWeight="600"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/inter_bold"
                         app:backgroundTint="@color/primary_medium"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
@@ -374,6 +410,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="80dp">
 
         <!-- CAMERA BUTTON (sinistra) -->
@@ -382,9 +419,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera"
-            app:backgroundTint="#9acbfb"
+            app:backgroundTint="@color/primary_medium"
+            app:tint="@color/text_dark"
             android:layout_margin="16dp"
-            app:fabSize="normal"
+            app:fabCustomSize="48dp"
+            app:maxImageSize="24dp"
             android:contentDescription="Camera"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -392,27 +431,29 @@
         <!-- FAB principale (destra) -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnFab"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
             android:src="@drawable/ic_add"
             app:backgroundTint="@color/primary_medium"
             android:layout_margin="16dp"
-            app:fabSize="normal"
-            android:contentDescription="Menu"
+            app:maxImageSize="24dp"
+            app:tint="@color/text_dark"
+            app:fabCustomSize="48dp"
+            app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
+            android:contentDescription="@string/menu"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <!-- Menu dei FAB secondari -->
         <LinearLayout
             android:id="@+id/fabMenuLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_marginBottom="65dp"
+            android:clipToPadding="true"
             android:gravity="end"
+            android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="75dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -420,43 +461,46 @@
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/btnReazioni"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/ic_add_fab"
+                android:paddingHorizontal="20dp"
                 android:text="Reazioni"
                 android:textColor="@color/text_dark"
                 app:backgroundTint="@color/primary_medium"
-                android:paddingHorizontal="20dp"
-                android:icon="@drawable/ic_add_fab"
-                android:layout_marginBottom="8dp"
-                app:elevation="2dp"
-                app:pressedTranslationZ="4dp"/>
+                app:rippleColor="@color/primary_light"
+                app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3" />
 
             <!-- FAB Extended per Promemoria -->
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/btnPromemoria"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/ic_add_fab"
+                android:paddingHorizontal="20dp"
                 android:text="Promemoria Farmaci"
                 android:textColor="@color/text_dark"
                 app:backgroundTint="@color/primary_medium"
-                android:paddingHorizontal="20dp"
-                android:icon="@drawable/ic_add_fab"
-                android:layout_marginBottom="8dp"
-                app:elevation="2dp"
-                app:pressedTranslationZ="4dp"/>
+                app:rippleColor="@color/primary_light"
+                app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3" />
 
             <!-- FAB Extended per Sintomi -->
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/btnSintomi"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="15dp"
+                android:drawableLeft="@drawable/ic_add_fab"
+                android:paddingHorizontal="20dp"
                 android:text="Sintomi"
                 android:textColor="@color/text_dark"
                 app:backgroundTint="@color/primary_medium"
-                android:paddingHorizontal="20dp"
-                android:icon="@drawable/ic_add_fab"
-                android:layout_marginBottom="8dp"
-                app:elevation="2dp"
-                app:pressedTranslationZ="4dp"/>
+                app:rippleColor="@color/primary_light"
+                app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

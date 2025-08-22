@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">ImmunoBubby</string>
+    <string name="app_name">ImmunoBuddy</string>
+    <string name="menu">Menu</string>
+    <string name="immunobuddy">ImmunoBuddy</string>
+    <string name="ciao_francesca">Ciao Francesca!</string>
+    <string name="salerno">Salerno</string>
+    <string name="pinposizione">PinPosizione</string>
+    <string name="_18">18°</string>
+    <string name="avatar">avatar</string>
 </resources>

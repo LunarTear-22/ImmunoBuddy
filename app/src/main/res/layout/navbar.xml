@@ -18,32 +18,40 @@
         android:layout_marginStart="0dp"
         >
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_alert"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_alert"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
+            app:icon="@drawable/ic_alert"
+            app:iconTint="@color/text_dark"
+            app:iconSize="28dp"
+            app:iconGravity="textEnd"
             android:contentDescription="Alert"
             android:layout_weight="1"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_home"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_home"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
+            app:icon="@drawable/ic_home"
+            app:iconTint="@color/text_dark"
+            app:iconSize="28dp"
+            app:iconGravity="textEnd"
             android:contentDescription="Home"
-            android:layout_marginHorizontal="32dp"
             android:layout_weight="1"/>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_user"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_user"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:contentDescription="User"
+            app:icon="@drawable/ic_user"
+            app:iconTint="@color/text_dark"
+            app:iconSize="28dp"
+            app:iconGravity="textEnd"
+            android:contentDescription="Alert"
             android:layout_weight="1"/>
 
     </LinearLayout>
