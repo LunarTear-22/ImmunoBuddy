@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NavbarHelper.setupNavbar(this);
 
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
         LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);

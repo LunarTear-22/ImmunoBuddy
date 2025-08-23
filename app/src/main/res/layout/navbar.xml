@@ -15,8 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginStart="0dp"
-        >
+        android:layout_marginStart="0dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nav_alert"
@@ -43,7 +42,7 @@
             android:layout_weight="1"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/nav_user"
+            android:id="@+id/btnAccountNav"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
@@ -51,7 +50,7 @@
             app:iconTint="@color/text_dark"
             app:iconSize="28dp"
             app:iconGravity="textEnd"
-            android:contentDescription="Alert"
+            android:contentDescription="Account"
             android:layout_weight="1"/>
 
     </LinearLayout>
