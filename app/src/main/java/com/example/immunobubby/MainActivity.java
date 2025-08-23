@@ -94,11 +94,16 @@ public class MainActivity extends AppCompatActivity {
             checkPermission(Manifest.permission.CALL_PHONE, CALL_PERMISSION_REQUEST_CODE, this::makeSOSCall);
         });
 
+        // Bottone fotocamera / scanner
         FloatingActionButton fabCamera = findViewById(R.id.btnCamera);
         fabCamera.setOnClickListener(v -> {
             checkPermission(Manifest.permission.CAMERA,
                     CAMERA_PERMISSION_REQUEST_CODE,
-                    this::openCamera);
+                    () -> {
+                        // Apri la nuova activity per lo scanner
+                        Intent i = new Intent(this, ScannerActivity.class);
+                        startActivity(i);
+                    });
         });
 
     }
@@ -178,13 +183,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Nessuna app fotocamera trovata", Toast.LENGTH_SHORT).show();
-        }
-    }
 
 }

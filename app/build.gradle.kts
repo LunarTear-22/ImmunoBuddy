@@ -37,6 +37,19 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+
+    val camerax_version = "1.4.2"
+
+    implementation ("androidx.camera:camera-core:$camerax_version")
+    implementation ("androidx.camera:camera-camera2:$camerax_version")
+    implementation ("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation ("androidx.camera:camera-view:$camerax_version")
+
+    // ML Kit on-device
+    implementation ("com.google.mlkit:barcode-scanning:17.3.0")
+    implementation ("com.google.mlkit:text-recognition:16.0.1")
+
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     testImplementation(libs.junit)
