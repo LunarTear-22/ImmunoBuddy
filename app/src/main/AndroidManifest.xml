@@ -54,6 +54,17 @@
             android:name=".CategorieAllergeniActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".SalvaAllergeneActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".SottocategoriaActivity"
+            android:exported="true"/>
+
+
+
+
 
 
     </application>

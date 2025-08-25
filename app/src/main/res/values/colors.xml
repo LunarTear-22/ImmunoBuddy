@@ -4,6 +4,7 @@
     <color name="background_light_transparent">#80ebf3ff</color>
     <color name="primary_light">#add7f6</color>
     <color name="primary_medium">#9acbfb</color>
+    <color name="primary_medium_transparent">#809acbfb</color>
     <color name="primary_dark">#5ca8ff</color>
     <color name="text_dark">#001229</color>
     <color name="white">#FFFFFF</color>

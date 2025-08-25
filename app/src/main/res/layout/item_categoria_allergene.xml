@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Riga principale -->
+        <!-- Nome Categoria -->
         <TextView
             android:id="@+id/txtCategoriaAllergene"
             android:layout_width="0dp"
@@ -29,9 +29,7 @@
             android:textColor="@color/text_dark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnChevron"
-            app:layout_constraintHorizontal_bias="0" />
+            app:layout_constraintEnd_toStartOf="@id/btnChevron" />
 
         <!-- Chevron -->
         <ImageView
@@ -42,8 +40,7 @@
             android:contentDescription="expand"
             app:tint="@color/text_dark"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- Contenuto espandibile -->
         <androidx.recyclerview.widget.RecyclerView

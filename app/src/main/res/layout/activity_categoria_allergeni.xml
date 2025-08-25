@@ -79,7 +79,7 @@
         android:id="@+id/btnCeck"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/check_24px"
         app:backgroundTint="@color/primary_medium"
         android:layout_margin="16dp"
         app:maxImageSize="24dp"
@@ -88,7 +88,8 @@
         app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
         android:contentDescription="btnCeck"
         app:layout_constraintBottom_toTopOf="@id/navbar"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="false"/>
 
     <!-- NAVBAR fissata in fondo -->
     <include

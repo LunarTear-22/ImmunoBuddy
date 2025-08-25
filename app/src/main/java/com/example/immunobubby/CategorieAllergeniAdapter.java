@@ -1,6 +1,9 @@
 package com.example.immunobubby;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.transition.AutoTransition;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAllergeniAdapter.AllergeneViewHolder> {
 
     private final Context context;
     private final List<CategoriaAllergene> categorieList;
+    private final Set<Integer> expandedPositions = new HashSet<>();
+    private RecyclerView parentRecyclerView; // RecyclerView principale per le transizioni
 
-    public CategorieAllergeniAdapter(Context context, List<CategoriaAllergene> categorieList) {
+    public CategorieAllergeniAdapter(Context context, List<CategoriaAllergene> categorieList, RecyclerView recyclerView) {
         this.context = context;
         this.categorieList = categorieList;
+        this.parentRecyclerView = recyclerView;
     }
 
     @NonNull
@@ -37,24 +45,39 @@ public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAll
         CategoriaAllergene categoria = categorieList.get(position);
         holder.txtNomeAllergene.setText(categoria.getNome());
 
-        // Crea lista di allergeni come oggetti Allergene
-        List<Allergene> allergeni = categoria.getAllergeni();
+        // Adapter per sottocategorie
+        AllergeneSottocategorieAdapter allergeniAdapter = new AllergeneSottocategorieAdapter(context, categoria.getAllergeni());
+        holder.recyclerAllergeni.setLayoutManager(new LinearLayoutManager(context));
+        holder.recyclerAllergeni.setAdapter(allergeniAdapter);
 
-        // Imposta l'adapter per le sottocategorie
-        AllergeneSottocategorieAdapter adapter = new AllergeneSottocategorieAdapter(context, allergeni);
-        holder.recyclerSottocategorie.setLayoutManager(new LinearLayoutManager(context));
-        holder.recyclerSottocategorie.setAdapter(adapter);
+        // Imposta visibilità iniziale
+        holder.recyclerAllergeni.setVisibility(expandedPositions.contains(position) ? View.VISIBLE : View.GONE);
+        holder.btnChevron.setRotation(expandedPositions.contains(position) ? 180f : 0f);
 
-        // Espansione/collasso
-        holder.cardAllergene.setOnClickListener(v -> {
-            if (holder.recyclerSottocategorie.getVisibility() == View.GONE) {
-                holder.recyclerSottocategorie.setVisibility(View.VISIBLE);
-                holder.btnChevron.animate().rotation(180f).setDuration(200).start();
-            } else {
-                holder.recyclerSottocategorie.setVisibility(View.GONE);
-                holder.btnChevron.animate().rotation(0f).setDuration(200).start();
-            }
-        });
+        // Click listener sulla card intera
+        holder.cardAllergene.setOnClickListener(v -> toggleExpansion(holder, position));
+    }
+
+    private void toggleExpansion(AllergeneViewHolder holder, int position) {
+        // Animazione per tutte le card
+        TransitionManager.beginDelayedTransition(parentRecyclerView, new AutoTransition());
+
+        boolean expanded = expandedPositions.contains(position);
+        if (expanded) {
+            expandedPositions.remove(position);
+            holder.recyclerAllergeni.setVisibility(View.GONE);
+            rotateChevron(holder.btnChevron, 180f, 0f);
+        } else {
+            expandedPositions.add(position);
+            holder.recyclerAllergeni.setVisibility(View.VISIBLE);
+            rotateChevron(holder.btnChevron, 0f, 180f);
+        }
+    }
+
+    private void rotateChevron(ImageView chevron, float from, float to) {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(chevron, "rotation", from, to);
+        animator.setDuration(300); // durata animazione
+        animator.start();
     }
 
     @Override
@@ -63,17 +86,17 @@ public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAll
     }
 
     static class AllergeneViewHolder extends RecyclerView.ViewHolder {
+        public RecyclerView recyclerAllergeni;
         MaterialCardView cardAllergene;
         TextView txtNomeAllergene;
         ImageView btnChevron;
-        RecyclerView recyclerSottocategorie;
 
         public AllergeneViewHolder(@NonNull View itemView) {
             super(itemView);
             cardAllergene = itemView.findViewById(R.id.cardAllergene);
             txtNomeAllergene = itemView.findViewById(R.id.txtCategoriaAllergene);
             btnChevron = itemView.findViewById(R.id.btnChevron);
-            recyclerSottocategorie = itemView.findViewById(R.id.recyclerSottocategorie);
+            recyclerAllergeni = itemView.findViewById(R.id.recyclerSottocategorie);
         }
     }
 }

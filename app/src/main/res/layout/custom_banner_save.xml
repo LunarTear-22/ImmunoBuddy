@@ -1,0 +1,72 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="HardcodedText"
+    android:background="@color/background_light_transparent"
+    android:visibility="gone"
+    android:clickable="true"
+    android:focusable="true"
+    >
+
+
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/customBanner"
+    android:layout_width="350dp"
+    android:layout_height="150dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    app:cardElevation="4dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/save_icon"
+        android:src="@drawable/bookmark_check_24px"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/bannerMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvato con successo!"
+        android:textColor="@color/text_dark"
+        android:fontFamily="@font/inter_semibold"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/save_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="6dp"
+
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bannerAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:icon="@drawable/ic_add"
+        android:rotation="45"
+        app:iconSize="32dp"
+        app:iconGravity="textStart"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
