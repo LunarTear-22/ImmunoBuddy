@@ -10,33 +10,9 @@
     >
 
     <!-- HEADER -->
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <ImageButton
-            android:id="@+id/btnMenu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/menu"
-            android:src="@drawable/menu_24px" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/immunobuddy"
-            android:textColor="@color/text_dark"
-            android:fontFamily="@font/inter_semibold"
-            android:textSize="24sp" />
-
-    </LinearLayout>
+    <include
+        layout="@layout/header_layout_menu"
+    />
 
     <!-- MAIN CONTENT -->
     <LinearLayout

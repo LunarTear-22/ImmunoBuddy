@@ -46,6 +46,14 @@
             android:name=".AccountDataActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".AllergeniActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".CategorieAllergeniActivity"
+            android:exported="true"/>
+
 
 
     </application>

@@ -1,0 +1,23 @@
+<!-- HEADER -->
+<LinearLayout android:id="@+id/header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include
+        layout="@layout/menu_button"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/immunobuddy"
+        android:textColor="@color/text_dark"
+        android:fontFamily="@font/inter_semibold"
+        android:textSize="24sp" />
+
+</LinearLayout>
