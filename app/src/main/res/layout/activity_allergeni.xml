@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/allergeni_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
+
+    <!-- HEADER -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            layout="@layout/header_layout_menu"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- SEZIONE TITOLO + LISTA ALLERGENI -->
+    <TextView
+        android:id="@+id/section_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I tuoi allergeni"
+        android:textColor="@color/text_dark"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- RecyclerView per la lista delle CARD -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allergens_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/section_title"
+        app:layout_constraintBottom_toTopOf="@id/navbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- FAB ADD -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAdd"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primary_medium"
+        android:layout_margin="16dp"
+        app:maxImageSize="24dp"
+        app:tint="@color/text_dark"
+        app:fabCustomSize="48dp"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
+        android:contentDescription="btnAdd"
+        app:layout_constraintBottom_toBottomOf="@id/allergens_recycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+    <!-- NAVIGATION BAR -->
+    <include
+        layout="@layout/navbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

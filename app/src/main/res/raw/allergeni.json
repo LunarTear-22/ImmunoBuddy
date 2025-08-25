@@ -1,0 +1,49 @@
+[
+  {
+    "nome": "Allergeni Alimentari",
+    "allergeni": [
+      { "nome": "Glutine" },
+      { "nome": "Crostacei" },
+      { "nome": "Uova" },
+      {
+        "nome": "Frutta a guscio",
+        "sottocategorie": [
+          { "nome": "Noci" },
+          { "nome": "Mandorle" },
+          { "nome": "Pistacchi" },
+          { "nome": "Anacardi" }
+        ]
+      },
+      { "nome": "Pesce" },
+      { "nome": "Senape" },
+      { "nome": "Sesamo" }
+    ]
+  },
+  {
+    "nome": "Allergeni Ambientali",
+    "allergeni": [
+      { "nome": "Pollini" },
+      { "nome": "Acari della polvere" },
+      { "nome": "Muffe" },
+      { "nome": "Peli di animali" }
+    ]
+  },
+  {
+    "nome": "Allergeni Farmacologici",
+    "allergeni": [
+      { "nome": "Penicillina" },
+      { "nome": "Aspirina" },
+      { "nome": "Ibuprofene" },
+      { "nome": "Sulfamidici" }
+    ]
+  },
+  {
+    "nome": "Allergeni Stagionali",
+    "allergeni": [
+      { "nome": "Betulla" },
+      { "nome": "Graminacee" },
+      { "nome": "Parietaria" },
+      { "nome": "Olivo" }
+    ]
+  }
+]

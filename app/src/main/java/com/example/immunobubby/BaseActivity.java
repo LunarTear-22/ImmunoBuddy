@@ -28,6 +28,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
+
+
     }
 
     private void setupNavbarButtons() {
@@ -43,6 +45,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (btnAccount != null) {
             btnAccount.setOnClickListener(v -> {
                 startActivity(new Intent(this, ImpostazioniAccountActivity.class));
+                overridePendingTransition(0, 0);
+            });
+
+
+        }
+
+        MaterialButton btnAllergeni = findViewById(R.id.btnAllergeni);
+        if (btnAllergeni != null) {
+            btnAllergeni.setOnClickListener(v -> {
+                startActivity(new Intent(this, AllergeniActivity.class));
                 overridePendingTransition(0, 0);
             });
 
