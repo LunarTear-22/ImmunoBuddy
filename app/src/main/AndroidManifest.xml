@@ -42,6 +42,9 @@
         <activity
             android:name=".ScannerActivity"
             android:exported="true"/>
+        <activity
+            android:name=".AccountDataActivity"
+            android:exported="true"/>
 
 
 

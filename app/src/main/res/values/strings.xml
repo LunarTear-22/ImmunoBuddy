@@ -7,4 +7,10 @@
     <string name="pinposizione">PinPosizione</string>
     <string name="_18">18°</string>
     <string name="avatar">avatar</string>
+    <string-array name="gender_options">
+        <item>Uomo</item>
+        <item>Donna</item>
+        <item>Altro</item>
+    </string-array>
+
 </resources>

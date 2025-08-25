@@ -1,9 +1,11 @@
 package com.example.immunobubby;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.immunobubby.R;
+import com.google.android.material.button.MaterialButton;
 
 public class ImpostazioniAccountActivity extends BaseActivity {
 
@@ -12,6 +14,13 @@ public class ImpostazioniAccountActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.impostazioni_account);
 
+        MaterialButton btnAccount = findViewById(R.id.btnAccount);
+        if (btnAccount != null) {
+            btnAccount.setOnClickListener(v -> {
+                startActivity(new Intent(this, AccountDataActivity.class));
+                overridePendingTransition(0, 0);
+            });
+        }
     }
 }
 
