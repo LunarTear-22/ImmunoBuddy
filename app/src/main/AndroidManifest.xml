@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
 
     <application
         android:allowBackup="true"
@@ -33,7 +34,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+        <activity
+            android:name=".ImpostazioniAccountActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ScannerActivity"
+            android:exported="true"/>
+
+
 
     </application>
 

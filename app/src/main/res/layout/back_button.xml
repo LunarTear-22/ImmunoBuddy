@@ -1,0 +1,11 @@
+<com.google.android.material.button.MaterialButton android:id="@+id/btnBack"
+    android:layout_width="24dp"
+    android:layout_height="24dp"
+    android:backgroundTint="@android:color/transparent"
+    app:icon="@drawable/ic_arrow_back"
+    app:iconTint="@color/text_dark"
+    app:iconGravity="textStart"
+    app:iconSize="24dp"
+    android:contentDescription="Indietro"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

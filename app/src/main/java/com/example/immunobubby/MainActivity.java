@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private boolean isFabMenuOpen = false;
     private TextView tvTemperature;
@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NavbarHelper.setupNavbar(this);
 
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
         LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);

@@ -1,16 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base Theme -->
     <style name="Base.Theme.ImmunoBubby" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <!-- Colore testo globale -->
-        <item name="android:textColor">@color/text_dark</item>
-        <!-- Font personalizzato -->
-        <item name="android:fontFamily">@font/inter</item>
-        <!-- Altri attributi del tema -->
+        <!-- Colore della status bar -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <!-- Colore della barra di navigazione (opzionale) -->
+        <item name="android:navigationBarColor">@color/primary_dark</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+
+        <!-- Colori principali -->
         <item name="colorPrimary">@color/primary_light</item>
         <item name="colorOnPrimary">@color/text_dark</item>
+        <item name="colorSecondary">@color/primary_medium</item>
+        <item name="colorOnSecondary">@color/text_dark</item>
+
+        <!-- Colore globale del testo -->
+        <item name="android:textColor">@color/text_dark</item>
+
+        <!-- Font globale -->
+        <item name="android:fontFamily">@font/inter</item>
     </style>
 
+    <!-- Tema finale applicato all'app -->
     <style name="Theme.ImmunoBubby" parent="Base.Theme.ImmunoBubby" />
 </resources>

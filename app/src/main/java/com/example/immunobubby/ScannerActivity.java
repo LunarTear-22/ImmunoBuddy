@@ -3,10 +3,13 @@ package com.example.immunobubby;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Size;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.Preview;
@@ -23,14 +26,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ScannerActivity extends AppCompatActivity {
+public class ScannerActivity extends BaseActivity {
 
     private PreviewView previewView;
     private TextView tvMessage;
     private ChipGroup chipGroupAllergeni;
+    private ImageButton btnFlash;
 
     private com.google.mlkit.vision.barcode.BarcodeScanner barcodeScanner;
     private com.google.mlkit.vision.text.TextRecognizer textRecognizer;
+
+    private Camera camera;
+    private boolean isFlashOn = false;
 
     private static final long SCAN_DELAY_MS = 3_000;
     private long lastScanTime = -1;
@@ -41,9 +48,14 @@ public class ScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
 
+        // Views
         previewView = findViewById(R.id.previewView);
         tvMessage = findViewById(R.id.tvMessage);
         chipGroupAllergeni = findViewById(R.id.chipGroupAllergeni);
+        btnFlash = findViewById(R.id.btnFlash);
+
+        // Flash toggle
+        btnFlash.setOnClickListener(v -> toggleFlash());
 
         // ML Kit Barcode
         barcodeScanner = com.google.mlkit.vision.barcode.BarcodeScanning.getClient(
@@ -66,6 +78,8 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     private void startCamera() {
+        if (previewView == null) return;
+
         ListenableFuture<ProcessCameraProvider> future = ProcessCameraProvider.getInstance(this);
         future.addListener(() -> {
             try {
@@ -110,7 +124,7 @@ public class ScannerActivity extends AppCompatActivity {
                                     String code = barcodes.get(0).getRawValue();
                                     if (code != null && code.matches("\\d{8,14}")) {
                                         fetchIngredientsFromOpenFoodFacts(code, inputImage, imageProxy);
-                                        return; // fetchIngredients chiuderà imageProxy
+                                        return;
                                     }
                                 }
                                 // OCR fallback
@@ -137,13 +151,33 @@ public class ScannerActivity extends AppCompatActivity {
                         .build();
 
                 provider.unbindAll();
-                provider.bindToLifecycle(this, selector, preview, analysis);
+                camera = provider.bindToLifecycle(this, selector, preview, analysis);
 
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Errore avvio camera", Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(this));
+    }
+
+    private void toggleFlash() {
+        if (camera == null) {
+            Toast.makeText(this, "Camera non pronta", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CameraControl control = camera.getCameraControl();
+        isFlashOn = !isFlashOn;
+
+        try {
+            control.enableTorch(isFlashOn);
+            btnFlash.setImageResource(isFlashOn ? R.drawable.flash_off_24px : R.drawable.flash_on_24px);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Flash non disponibile", Toast.LENGTH_SHORT).show();
+            isFlashOn = false;
+            btnFlash.setImageResource(R.drawable.flash_on_24px);
+        }
     }
 
     private void fetchIngredientsFromOpenFoodFacts(String barcode, InputImage fallbackImage, androidx.camera.core.ImageProxy imageProxy) {
@@ -174,9 +208,7 @@ public class ScannerActivity extends AppCompatActivity {
                     };
                     for (String field : fields) {
                         ingredients = product.optString(field, null);
-                        if (ingredients != null && !ingredients.isEmpty()) {
-                            break; // prende il primo match disponibile
-                        }
+                        if (ingredients != null && !ingredients.isEmpty()) break;
                     }
                 }
 
@@ -187,7 +219,7 @@ public class ScannerActivity extends AppCompatActivity {
                 } else {
                     runOnUiThread(() -> {
                         tvMessage.setText("Ingredienti non trovati in OFF, uso OCR…");
-                        chipGroupAllergeni.removeAllViews();
+                        if (chipGroupAllergeni != null) chipGroupAllergeni.removeAllViews();
                     });
                     textRecognizer.process(fallbackImage)
                             .addOnSuccessListener(result -> showAllergeniFromText(result.getText()));
@@ -196,7 +228,7 @@ public class ScannerActivity extends AppCompatActivity {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     tvMessage.setText("Errore OFF: " + e.getMessage() + "\nUso OCR…");
-                    chipGroupAllergeni.removeAllViews();
+                    if (chipGroupAllergeni != null) chipGroupAllergeni.removeAllViews();
                 });
                 textRecognizer.process(fallbackImage)
                         .addOnSuccessListener(result -> showAllergeniFromText(result.getText()));
@@ -211,6 +243,8 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     private void showAllergeniFromText(String ocrText) {
+        if (chipGroupAllergeni == null) return;
+
         String extracted = IngredientExtractor.extract(ocrText);
         if (extracted != null) {
             String detectedLang = detectLanguage(extracted);
@@ -226,9 +260,12 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     private void showAllergeniFromText(String ingredients, String lang) {
+        if (chipGroupAllergeni == null) return;
+
         List<String> allergeni = IngredientExtractor.detectAllergens(ingredients, lang);
         tvMessage.setText(allergeni.isEmpty() ? "Nessun allergene rilevato" : "Allergeni rilevati:");
         chipGroupAllergeni.removeAllViews();
+
         for (String allergene : allergeni) {
             Chip chip = new Chip(this);
             chip.setText(allergene);
