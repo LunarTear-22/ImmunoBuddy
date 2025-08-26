@@ -7,6 +7,7 @@
     <color name="primary_medium_transparent">#809acbfb</color>
     <color name="primary_dark">#5ca8ff</color>
     <color name="text_dark">#001229</color>
+    <color name="text_dark_transparent">#80001229</color>">
     <color name="white">#FFFFFF</color>
     <color name="danger">#FFB6B6</color>
     <color name="text_danger">#b00020</color>

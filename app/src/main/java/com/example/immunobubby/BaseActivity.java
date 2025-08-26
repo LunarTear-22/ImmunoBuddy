@@ -1,16 +1,26 @@
 package com.example.immunobubby;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -28,9 +38,101 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
-
+        setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
     }
+
+    protected void setupExpandableSearchBar(int fabId, int cardContainerId, int closeBtnId, int inputId, int rootLayoutId, int recyclerId) {
+        FloatingActionButton fab = findViewById(fabId);
+        MaterialCardView searchBar = findViewById(cardContainerId);
+        ImageButton btnClose = findViewById(closeBtnId);
+        TextInputEditText input = findViewById(inputId);
+        ConstraintLayout rootLayout = findViewById(rootLayoutId);
+        RecyclerView recycler = findViewById(recyclerId);
+
+        if (fab == null || searchBar == null || btnClose == null || input == null || rootLayout == null) return;
+
+        // Imposta pivot correttamente dopo il layout
+        searchBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                searchBar.removeOnLayoutChangeListener(this);
+                searchBar.setPivotX(searchBar.getWidth());
+                searchBar.setPivotY(searchBar.getHeight() / 2f);
+            }
+        });
+
+        // Funzione per chiudere barra e tastiera
+        Runnable closeSearch = () -> {
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(searchBar, "scaleX", 1f, 0f);
+            ObjectAnimator fadeOut = ObjectAnimator.ofFloat(searchBar, "alpha", 1f, 0f);
+
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(scaleX, fadeOut);
+            set.setDuration(250);
+            set.setInterpolator(new AccelerateDecelerateInterpolator());
+            set.addListener(new android.animation.AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(android.animation.Animator animation) {
+                    searchBar.setVisibility(View.GONE);
+                    fab.show();
+                }
+            });
+            set.start();
+
+            input.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            }
+        };
+
+        fab.setOnClickListener(v -> {
+            if (searchBar.getVisibility() == View.GONE) {
+                searchBar.post(() -> {
+                    searchBar.setScaleX(0f);
+                    searchBar.setAlpha(0f);
+                    searchBar.setVisibility(View.VISIBLE);
+
+                    ObjectAnimator scaleX = ObjectAnimator.ofFloat(searchBar, "scaleX", 0f, 1f);
+                    ObjectAnimator fadeIn = ObjectAnimator.ofFloat(searchBar, "alpha", 0f, 1f);
+
+                    AnimatorSet set = new AnimatorSet();
+                    set.playTogether(scaleX, fadeIn);
+                    set.setDuration(300);
+                    set.setInterpolator(new AccelerateDecelerateInterpolator());
+                    set.start();
+
+                    fab.hide();
+                    input.requestFocus();
+                });
+            }
+        });
+
+        btnClose.setOnClickListener(v -> closeSearch.run());
+
+        // Chiudi barra al tocco fuori (rootLayout o RecyclerView)
+        View.OnTouchListener outsideTouchListener = (v, event) -> {
+            if (searchBar.getVisibility() == View.VISIBLE) {
+                int[] loc = new int[2];
+                searchBar.getLocationOnScreen(loc);
+                float x = event.getRawX();
+                float y = event.getRawY();
+                if (x < loc[0] || x > loc[0] + searchBar.getWidth() ||
+                        y < loc[1] || y > loc[1] + searchBar.getHeight()) {
+                    closeSearch.run();
+                    return true; // intercetta il tocco
+                }
+            }
+            return false;
+        };
+
+        rootLayout.setOnTouchListener(outsideTouchListener);
+        recycler.setOnTouchListener(outsideTouchListener);
+    }
+
+
 
     private void setupNavbarButtons() {
         MaterialButton btnHome = findViewById(R.id.nav_home);

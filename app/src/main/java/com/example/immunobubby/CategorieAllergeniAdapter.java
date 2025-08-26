@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,14 +24,16 @@ import java.util.Set;
 public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAllergeniAdapter.AllergeneViewHolder> {
 
     private final Context context;
-    private final List<CategoriaAllergene> categorieList;
+    private final List<CategoriaAllergene> originalList; // lista completa
+    private List<CategoriaAllergene> filteredList;       // lista filtrata
     private final Set<Integer> expandedPositions = new HashSet<>();
-    private RecyclerView parentRecyclerView; // RecyclerView principale per le transizioni
+    private RecyclerView parentRecyclerView;
 
     public CategorieAllergeniAdapter(Context context, List<CategoriaAllergene> categorieList, RecyclerView recyclerView) {
         this.context = context;
-        this.categorieList = categorieList;
         this.parentRecyclerView = recyclerView;
+        this.originalList = categorieList;
+        this.filteredList = new ArrayList<>(categorieList);
     }
 
     @NonNull
@@ -42,24 +45,20 @@ public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAll
 
     @Override
     public void onBindViewHolder(@NonNull AllergeneViewHolder holder, int position) {
-        CategoriaAllergene categoria = categorieList.get(position);
+        CategoriaAllergene categoria = filteredList.get(position);
         holder.txtNomeAllergene.setText(categoria.getNome());
 
-        // Adapter per sottocategorie
         AllergeneSottocategorieAdapter allergeniAdapter = new AllergeneSottocategorieAdapter(context, categoria.getAllergeni());
         holder.recyclerAllergeni.setLayoutManager(new LinearLayoutManager(context));
         holder.recyclerAllergeni.setAdapter(allergeniAdapter);
 
-        // Imposta visibilità iniziale
         holder.recyclerAllergeni.setVisibility(expandedPositions.contains(position) ? View.VISIBLE : View.GONE);
         holder.btnChevron.setRotation(expandedPositions.contains(position) ? 180f : 0f);
 
-        // Click listener sulla card intera
         holder.cardAllergene.setOnClickListener(v -> toggleExpansion(holder, position));
     }
 
     private void toggleExpansion(AllergeneViewHolder holder, int position) {
-        // Animazione per tutte le card
         TransitionManager.beginDelayedTransition(parentRecyclerView, new AutoTransition());
 
         boolean expanded = expandedPositions.contains(position);
@@ -76,15 +75,47 @@ public class CategorieAllergeniAdapter extends RecyclerView.Adapter<CategorieAll
 
     private void rotateChevron(ImageView chevron, float from, float to) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(chevron, "rotation", from, to);
-        animator.setDuration(300); // durata animazione
+        animator.setDuration(300);
         animator.start();
     }
 
     @Override
     public int getItemCount() {
-        return categorieList.size();
+        return filteredList.size();
     }
 
+    // --- Metodo per filtrare allergeni e sottocategorie ---
+    public void filter(String query) {
+        query = query.toLowerCase();
+        filteredList.clear();
+
+        for (CategoriaAllergene categoria : originalList) {
+            List<Allergene> matchedAllergeni = new ArrayList<>();
+            for (Allergene allergene : categoria.getAllergeni()) {
+                // Check allergene principale
+                if (allergene.getNome().toLowerCase().contains(query)) {
+                    matchedAllergeni.add(allergene);
+                } else if (allergene.getSottocategorie() != null) {
+                    List<Allergene> matchedSub = new ArrayList<>();
+                    for (Allergene sub : allergene.getSottocategorie()) {
+                        if (sub.getNome().toLowerCase().contains(query)) {
+                            matchedSub.add(sub);
+                        }
+                    }
+                    if (!matchedSub.isEmpty()) {
+                        matchedAllergeni.add(new Allergene(allergene.getNome(), matchedSub));
+                    }
+                }
+            }
+            if (!matchedAllergeni.isEmpty()) {
+                filteredList.add(new CategoriaAllergene(categoria.getNome(), matchedAllergeni));
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    // --- ViewHolder ---
     static class AllergeneViewHolder extends RecyclerView.ViewHolder {
         public RecyclerView recyclerAllergeni;
         MaterialCardView cardAllergene;
