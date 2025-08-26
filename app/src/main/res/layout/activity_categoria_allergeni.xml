@@ -41,21 +41,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Search"
-            android:layout_marginEnd="16dp"
-            android:layout_marginVertical="16dp"
-            android:src="@drawable/search_24px"
-            app:backgroundTint="@color/primary_medium"
-            app:fabCustomSize="48dp"
+        <include layout="@layout/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:maxImageSize="24dp"
-            app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
-            app:tint="@color/text_dark" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -79,7 +71,7 @@
         android:id="@+id/btnCeck"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/check_24px"
         app:backgroundTint="@color/primary_medium"
         android:layout_margin="16dp"
         app:maxImageSize="24dp"
@@ -88,7 +80,8 @@
         app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
         android:contentDescription="btnCeck"
         app:layout_constraintBottom_toTopOf="@id/navbar"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="false"/>
 
     <!-- NAVBAR fissata in fondo -->
     <include
