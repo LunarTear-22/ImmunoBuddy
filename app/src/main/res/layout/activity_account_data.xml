@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_light"
     android:orientation="vertical"
     tools:ignore="HardcodedText">
@@ -21,9 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/text_dark"
         android:text="ImmunoBuddy"
         android:textAlignment="center"
+        android:textColor="@color/text_dark"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -33,8 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="16dp"
-        android:textColor="@color/text_dark"
         android:text="Aggiorna i tuoi dati"
+        android:textColor="@color/text_dark"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -106,9 +106,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Cognome"
+                    android:inputType="textPersonName"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="textPersonName"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -130,13 +130,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Email*"
+                    android:inputType="textEmailAddress"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="textEmailAddress"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password -->
@@ -146,10 +145,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="12dp"
-                app:endIconMode="password_toggle"
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
                 app:hintTextColor="@color/text_dark"
+                app:endIconMode="password_toggle"
                 app:endIconTint="@color/text_dark">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -157,9 +156,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Password*"
+                    android:inputType="textPassword"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="textPassword"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -174,17 +173,22 @@
                 android:layout_marginBottom="12dp"
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
+                app:hintTextColor="@color/text_dark"
+                app:endIconMode="custom"
+                app:endIconTint="@color/text_dark"
+                app:endIconDrawable="@drawable/calendar_add_on_24px">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_dob"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
                     android:hint="Data di Nascita"
+                    android:inputType="none"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="date"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -207,9 +211,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Genere"
+                    android:inputType="none"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="none"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -230,9 +234,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Posizione"
+                    android:inputType="text"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
-                    android:inputType="text"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -251,38 +255,36 @@
                     android:id="@+id/check_caregiver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:buttonTint="@color/text_dark"
-                    app:buttonIconTint="@color/primary_dark"
-                    android:textColor="@color/text_dark"
                     android:text="Sei un caregiver?"
+                    android:textColor="@color/text_dark"
                     android:fontFamily="@font/inter_semibold"
-                    />
-
-
+                    app:buttonTint="@color/text_dark"
+                    app:buttonIconTint="@color/primary_dark" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottone invio FISSO sotto -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:paddingEnd="24dp"
-        android:paddingBottom="12dp">
-
-        <ImageButton
-            android:id="@+id/btn_submit"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@drawable/bg_circle_blue"
-            android:src="@drawable/check_24px" />
-    </LinearLayout>
+    <!-- FAB principale (destra) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnFab"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/menu"
+        android:src="@drawable/check_24px"
+        app:backgroundTint="@color/primary_medium"
+        app:fabCustomSize="48dp"
+        app:maxImageSize="24dp"
+        app:elevation="0dp"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
+        app:tint="@color/text_dark" />
 
     <!-- NAVIGATION BAR -->
     <include
         layout="@layout/navbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

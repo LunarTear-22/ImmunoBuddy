@@ -9,6 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.immunobubby.R;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class AccountDataActivity extends BaseActivity {
 
@@ -32,6 +39,27 @@ public class AccountDataActivity extends BaseActivity {
 
         // Collega l'adapter al campo
         autoCompleteTextView.setAdapter(adapter);
+
+        TextInputEditText inputDob = findViewById(R.id.input_dob);
+
+        inputDob.setOnClickListener(v -> {
+            MaterialDatePicker<Long> datePicker =
+                    MaterialDatePicker.Builder.datePicker()
+                            .setTitleText("Seleziona la data di nascita")
+                            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                            .build();
+
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                calendar.setTimeInMillis(selection);
+
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                inputDob.setText(format.format(calendar.getTime()));
+            });
+
+            datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+        });
+
 
     }
 }
