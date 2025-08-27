@@ -61,6 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
+
     <!-- NAVIGATION BAR -->
     <include
         layout="@layout/navbar"

@@ -43,7 +43,56 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupBackButton(R.id.btnBack);
         // Cambia colore ai divider delle tendine
         setupDropdownDividerColor();
+        setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
+
+    }
+
+    protected void setupExpandableCard() {
+        ImageButton expandButton = findViewById(R.id.expandButton);
+        View expandedSection = findViewById(R.id.expandedSection);
+
+        if (expandButton == null || expandedSection == null) return;
+
+        expandButton.setOnClickListener(v -> {
+            if (expandedSection.getVisibility() == View.GONE) {
+                // Espansione fluida
+                expandedSection.setVisibility(View.VISIBLE);
+                expandedSection.setAlpha(0f);
+                expandedSection.setScaleY(0f);
+
+                expandedSection.animate()
+                        .alpha(1f)
+                        .scaleY(1f)
+                        .setDuration(300)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+
+                // Rotazione + cambio icona
+                expandButton.animate()
+                        .rotation(180f) // ruota
+                        .setDuration(250)
+                        .withEndAction(() -> expandButton.setImageResource(R.drawable.unfold_less_24px))
+                        .start();
+
+            } else {
+                // Chiusura fluida
+                expandedSection.animate()
+                        .alpha(0f)
+                        .scaleY(0f)
+                        .setDuration(250)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndAction(() -> expandedSection.setVisibility(View.GONE))
+                        .start();
+
+                // Rotazione inversa + cambio icona
+                expandButton.animate()
+                        .rotation(0f) // torna alla posizione iniziale
+                        .setDuration(250)
+                        .withEndAction(() -> expandButton.setImageResource(R.drawable.unfold_more_24px))
+                        .start();
+            }
+        });
     }
 
 
@@ -168,7 +217,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         }
     }
-        private void setupBackButton ( int backButtonId){
+
+    private void setupBackButton ( int backButtonId){
             View btnBack = findViewById(backButtonId);
             if (btnBack != null) {
                 btnBack.setOnClickListener(v -> onBackPressed());

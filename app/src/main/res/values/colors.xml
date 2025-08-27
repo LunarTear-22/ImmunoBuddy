@@ -7,8 +7,20 @@
     <color name="primary_medium_transparent">#809acbfb</color>
     <color name="primary_dark">#5ca8ff</color>
     <color name="text_dark">#001229</color>
-    <color name="text_dark_transparent">#80001229</color>">
+    <color name="text_dark_transparent">#80001229</color>
     <color name="white">#FFFFFF</color>
     <color name="danger">#FFB6B6</color>
     <color name="text_danger">#b00020</color>
+
+    <!-- Chip color -->
+    <color name="chip_selected">#9acbfb</color>
+    <color name="chip_unselected">#FFFFFF</color>
+
+    <!--Switch Color -->
+    <color name="thumb_enabled">#5CA8FF</color>
+    <color name="thumb_disabled">#ADD7F6</color>
+
+    <color name="track_enabled">#001229</color>
+    <color name="track_disabled">#EBF3FF</color>
+
 </resources>

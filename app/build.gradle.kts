@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = "com.example.immunobubby"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.immunobubby"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -37,6 +37,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+
+    implementation ("com.google.android.material:material:1.12.0")
 
 
     val camerax_version = "1.4.2"
