@@ -82,7 +82,10 @@ public class MainActivity extends BaseActivity {
 
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> { /* TODO: Azione FAB1 */ });
-        fab2.setOnClickListener(v -> { /* TODO: Azione FAB2 */ });
+        fab2.setOnClickListener(v -> {
+            Intent i = new Intent(this, FarmaciActivity.class);
+            startActivity(i);
+        });
         fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
 
         // Controlla permessi posizione all’avvio

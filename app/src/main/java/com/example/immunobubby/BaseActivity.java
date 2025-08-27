@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputEditText;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -39,8 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
-
     }
+
 
     protected void setupExpandableSearchBar(int fabId, int cardContainerId, int closeBtnId, int inputId, int rootLayoutId, int recyclerId) {
         FloatingActionButton fab = findViewById(fabId);
