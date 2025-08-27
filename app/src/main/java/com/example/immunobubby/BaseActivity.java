@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -40,6 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
+        // Cambia colore ai divider delle tendine
+        setupDropdownDividerColor();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
     }
 
@@ -171,4 +174,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                 btnBack.setOnClickListener(v -> onBackPressed());
             }
         }
+
+    /**
+     * Forza il colore dei divider dei dropdown (AutoCompleteTextView).
+     */
+    private void setupDropdownDividerColor() {
+        // Trova tutte le AutoCompleteTextView che potrebbero essere presenti
+        MaterialAutoCompleteTextView dropdown = findViewById(R.id.dropdownGender);
+        if (dropdown != null) {
+            dropdown.setDropDownBackgroundDrawable(
+                    getResources().getDrawable(R.drawable.bg_dropdown) // sfondo personalizzato senza divider
+            );
+        }
+    }
 }
