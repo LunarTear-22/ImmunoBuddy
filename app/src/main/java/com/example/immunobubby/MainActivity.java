@@ -97,7 +97,10 @@ public class MainActivity extends BaseActivity {
         });
 
         // Azioni sui FAB secondari
-        fab1.setOnClickListener(v -> { /* TODO: Azione FAB1 */ });
+        fab1.setOnClickListener(v -> {
+            Intent i = new Intent(this, QualitàAriaActivity.class);
+            startActivity(i);
+        });
         fab2.setOnClickListener(v -> {
             Intent i = new Intent(this, FarmaciActivity.class);
             startActivity(i);
