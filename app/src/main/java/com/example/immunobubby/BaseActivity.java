@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,8 +33,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
+    private ScrollView drawerLayout;
+    private LinearLayout navigationView;
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -54,65 +56,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
-        // Configura Drawer se presente
-        setupDrawer();
+
     }
 
-    /**
-     * Drawer con larghezza 2/3 dello schermo
-     */
-    private void setupDrawer() {
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
 
-        if (drawerLayout != null && navigationView != null && toolbar != null) {
-            setSupportActionBar(toolbar);
 
-            toggle = new ActionBarDrawerToggle(
-                    this,
-                    drawerLayout,
-                    toolbar,
-                    R.string.navigation_drawer_open,
-                    R.string.navigation_drawer_close
-            );
-            drawerLayout.addDrawerListener(toggle);
-            toggle.syncState();
 
-            // Imposta larghezza a 2/3 dello schermo
-            View navView = findViewById(R.id.nav_view);
-            if (navView != null) {
-                int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.66); // 2/3
-                DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) navView.getLayoutParams();
-                params.width = width;
-                navView.setLayoutParams(params);
-            }
-
-            // Gestione click sulle voci di menu
-            navigationView.setNavigationItemSelectedListener(item -> {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_home) {
-                    startActivity(new Intent(this, MainActivity.class));
-                } else if (id == R.id.nav_account) {
-                    startActivity(new Intent(this, ImpostazioniAccountActivity.class));
-                } else if (id == R.id.btnAllergeni) {
-                    startActivity(new Intent(this, AllergeniActivity.class));
-                }
-                drawerLayout.closeDrawers();
-                return true;
-            });
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout != null && navigationView != null && drawerLayout.isDrawerOpen(navigationView)) {
-            drawerLayout.closeDrawers();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     protected void setupExpandableCard() {
         ImageButton expandButton = findViewById(R.id.expandButton);

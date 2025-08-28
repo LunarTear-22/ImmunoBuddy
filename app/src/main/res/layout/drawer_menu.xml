@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#B3D9FF"
@@ -9,16 +10,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/nav_view"
         android:orientation="vertical">
 
-        <!-- Titolo -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Header con bottone e titolo -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ImmunoBuddy"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingBottom="16dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="16dp">
+
+            <!-- Bottone per chiudere menu -->
+            <ImageButton
+                android:id="@+id/btn_close_menu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/menu_open_24px"
+                android:contentDescription="Chiudi menu" />
+
+            <!-- Titolo spostato a destra -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ImmunoBuddy"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
 
         <!-- ================= Sezione principale ================= -->
         <TextView
@@ -109,7 +129,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_allergeni"/>
+                android:src="@drawable/allergy_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,7 +153,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_sintomi"/>
+                android:src="@drawable/symptoms_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -157,7 +177,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_reazioni"/>
+                android:src="@drawable/sentiment_dissatisfied_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -197,12 +217,12 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_farmaci"/>
+                android:src="@drawable/alarm_add_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Farmaci"
+                android:text="Promemoria Farmaci"
                 android:textSize="16sp"/>
         </LinearLayout>
 
@@ -221,7 +241,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_kit"/>
+                android:src="@drawable/medical_services_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -241,7 +261,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aria & Pollini"
+            android:text="Aria e Pollini"
             android:textStyle="bold"
             android:textSize="14sp"
             android:paddingBottom="8dp"/>
@@ -261,7 +281,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_air"/>
+                android:src="@drawable/air_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -285,7 +305,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_map"/>
+                android:src="@drawable/directions_walk_24px"/>
 
             <TextView
                 android:layout_width="wrap_content"
