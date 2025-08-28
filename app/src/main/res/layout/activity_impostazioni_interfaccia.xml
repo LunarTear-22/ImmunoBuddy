@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    tools:context=".InterfacciaActivity">
+
+    <!-- HEADER con back arrow -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            layout="@layout/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="-8dp" />
+    </LinearLayout>
+
+    <!-- TITOLO -->
+    <TextView
+        android:id="@+id/page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ImmunoBuddy"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/page_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Impostazioni Interfaccia"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:textColor="@color/text_dark"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/page_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- CARD HOMEPAGE -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_homepage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/page_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/section_homepage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Homepage"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Opzione: Ultime Reazioni -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/book_24px"
+                    app:tint="@color/text_dark" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ultime Reazioni"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/check_ultime_reazioni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:buttonTint="@color/text_dark"
+                    app:buttonIconTint="@color/primary_dark" />
+            </LinearLayout>
+
+            <!-- Opzione: Dati Pollini -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/air_24px"
+                    android:layout_marginEnd="12dp"
+                    app:tint="@color/text_dark" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Dati Pollini"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/check_dati_pollini"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    app:buttonTint="@color/text_dark"
+                    app:buttonIconTint="@color/primary_dark"/>
+            </LinearLayout>
+
+            <!-- Opzione: Kit di Emergenza -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_alert"
+                    app:tint="@color/text_dark"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Kit di Emergenza"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/check_kit_emergenza"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:buttonTint="@color/text_dark"
+                    app:buttonIconTint="@color/primary_dark"/>
+            </LinearLayout>
+
+            <!-- Opzione: Consiglio del giorno -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/sentiment_excited_24px"
+                    app:tint="@color/text_dark"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Consiglio del giorno"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_dark"/>
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/check_consiglio_giorno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    app:buttonTint="@color/text_dark"
+                    app:buttonIconTint="@color/primary_dark"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- CARD DATI AMBIENTALI -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_env"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:layout_constraintTop_toBottomOf="@id/card_homepage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/section_env"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dati Ambientali"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Riga temperatura -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/thermometer_24px"
+                        app:tint="@color/text_dark"
+                        android:layout_marginEnd="12dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unità di misura temperatura"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_dark"/>
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/radio_temp_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="36dp">
+
+                    <RadioButton
+                        android:id="@+id/radio_celsius"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="C°"
+                        android:textColor="@color/text_dark"
+                        android:buttonTint="@color/primary_medium"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_fahrenheit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="F°"
+                        android:textColor="@color/text_dark"
+                        android:layout_marginStart="24dp"
+                        android:buttonTint="@color/primary_medium"/>
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- NAVBAR -->
+    <include
+        android:id="@+id/navbar"
+        layout="@layout/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

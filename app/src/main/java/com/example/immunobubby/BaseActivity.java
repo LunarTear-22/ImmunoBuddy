@@ -33,6 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(getResources().getColor(R.color.background_light));
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background_light));
+
+
     }
 
     @Override

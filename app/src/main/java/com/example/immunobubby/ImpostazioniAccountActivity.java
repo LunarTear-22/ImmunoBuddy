@@ -21,6 +21,14 @@ public class ImpostazioniAccountActivity extends BaseActivity {
                 overridePendingTransition(0, 0);
             });
         }
+
+        MaterialButton btnSettings = findViewById(R.id.btnSettings);
+        if (btnSettings != null) {
+            btnSettings.setOnClickListener(v -> {
+                startActivity(new Intent(this, InterfacciaActivity.class));
+                overridePendingTransition(0, 0);
+            });
+        }
     }
 }
 

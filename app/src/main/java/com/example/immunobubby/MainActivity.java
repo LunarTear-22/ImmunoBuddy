@@ -2,6 +2,7 @@ package com.example.immunobubby;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -79,6 +81,19 @@ public class MainActivity extends BaseActivity {
                 fabMain.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.primary_medium));
                 isFabMenuOpen = true;
             }
+
+            SharedPreferences prefs = getSharedPreferences("HOME_PREFS", MODE_PRIVATE);
+
+            MaterialCardView cardUltime = findViewById(R.id.cardUltimeReazioni); // assegna ID a MaterialCardView XML
+            //MaterialCardView cardPollini = findViewById(R.id.cardDatiPollini);   // crea ID
+            MaterialCardView cardKit = findViewById(R.id.cardKit);               // crea ID
+            MaterialCardView cardConsiglio = findViewById(R.id.cardConsiglioGiorno); // crea ID
+
+            cardUltime.setVisibility(prefs.getBoolean("ultime_reazioni", true) ? View.VISIBLE : View.GONE);
+            //cardPollini.setVisibility(prefs.getBoolean("dati_pollini", true) ? View.VISIBLE : View.GONE);
+            cardKit.setVisibility(prefs.getBoolean("kit_emergenza", true) ? View.VISIBLE : View.GONE);
+            cardConsiglio.setVisibility(prefs.getBoolean("consiglio_giorno", true) ? View.VISIBLE : View.GONE);
+
         });
 
         // Azioni sui FAB secondari
