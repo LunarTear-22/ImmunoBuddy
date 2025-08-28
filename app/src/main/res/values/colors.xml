@@ -22,5 +22,8 @@
 
     <color name="track_enabled">#001229</color>
     <color name="track_disabled">#EBF3FF</color>
+    <!-- Radio button color -->
+    <color name="radio_selected">#9acbfb</color>
+    <color name="radio_unselected">#001229</color>
 
 </resources>

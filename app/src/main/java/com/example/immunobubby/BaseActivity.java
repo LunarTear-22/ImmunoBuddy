@@ -14,18 +14,26 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,21 +41,77 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(getResources().getColor(R.color.background_light));
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background_light));
-
-
     }
 
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+
         // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
-        // Cambia colore ai divider delle tendine
         setupDropdownDividerColor();
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
+        // Configura Drawer se presente
+        setupDrawer();
+    }
+
+    /**
+     * Drawer con larghezza 2/3 dello schermo
+     */
+    private void setupDrawer() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        if (drawerLayout != null && navigationView != null && toolbar != null) {
+            setSupportActionBar(toolbar);
+
+            toggle = new ActionBarDrawerToggle(
+                    this,
+                    drawerLayout,
+                    toolbar,
+                    R.string.navigation_drawer_open,
+                    R.string.navigation_drawer_close
+            );
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
+
+            // Imposta larghezza a 2/3 dello schermo
+            View navView = findViewById(R.id.nav_view);
+            if (navView != null) {
+                int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.66); // 2/3
+                DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) navView.getLayoutParams();
+                params.width = width;
+                navView.setLayoutParams(params);
+            }
+
+            // Gestione click sulle voci di menu
+            navigationView.setNavigationItemSelectedListener(item -> {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(this, MainActivity.class));
+                } else if (id == R.id.nav_account) {
+                    startActivity(new Intent(this, ImpostazioniAccountActivity.class));
+                } else if (id == R.id.btnAllergeni) {
+                    startActivity(new Intent(this, AllergeniActivity.class));
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            });
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout != null && navigationView != null && drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     protected void setupExpandableCard() {
@@ -58,7 +122,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         expandButton.setOnClickListener(v -> {
             if (expandedSection.getVisibility() == View.GONE) {
-                // Espansione fluida
                 expandedSection.setVisibility(View.VISIBLE);
                 expandedSection.setAlpha(0f);
                 expandedSection.setScaleY(0f);
@@ -70,15 +133,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                         .setInterpolator(new AccelerateDecelerateInterpolator())
                         .start();
 
-                // Rotazione + cambio icona
                 expandButton.animate()
-                        .rotation(180f) // ruota
+                        .rotation(180f)
                         .setDuration(250)
                         .withEndAction(() -> expandButton.setImageResource(R.drawable.unfold_less_24px))
                         .start();
 
             } else {
-                // Chiusura fluida
                 expandedSection.animate()
                         .alpha(0f)
                         .scaleY(0f)
@@ -87,16 +148,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                         .withEndAction(() -> expandedSection.setVisibility(View.GONE))
                         .start();
 
-                // Rotazione inversa + cambio icona
                 expandButton.animate()
-                        .rotation(0f) // torna alla posizione iniziale
+                        .rotation(0f)
                         .setDuration(250)
                         .withEndAction(() -> expandButton.setImageResource(R.drawable.unfold_more_24px))
                         .start();
             }
         });
     }
-
 
     protected void setupExpandableSearchBar(int fabId, int cardContainerId, int closeBtnId, int inputId, int rootLayoutId, int recyclerId) {
         FloatingActionButton fab = findViewById(fabId);
@@ -108,7 +167,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (fab == null || searchBar == null || btnClose == null || input == null || rootLayout == null) return;
 
-        // Imposta pivot correttamente dopo il layout
         searchBar.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
@@ -119,7 +177,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
-        // Funzione per chiudere barra e tastiera
         Runnable closeSearch = () -> {
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(searchBar, "scaleX", 1f, 0f);
             ObjectAnimator fadeOut = ObjectAnimator.ofFloat(searchBar, "alpha", 1f, 0f);
@@ -168,7 +225,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         btnClose.setOnClickListener(v -> closeSearch.run());
 
-        // Chiudi barra al tocco fuori (rootLayout o RecyclerView)
         View.OnTouchListener outsideTouchListener = (v, event) -> {
             if (searchBar.getVisibility() == View.VISIBLE) {
                 int[] loc = new int[2];
@@ -178,7 +234,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (x < loc[0] || x > loc[0] + searchBar.getWidth() ||
                         y < loc[1] || y > loc[1] + searchBar.getHeight()) {
                     closeSearch.run();
-                    return true; // intercetta il tocco
+                    return true;
                 }
             }
             return false;
@@ -187,8 +243,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         rootLayout.setOnTouchListener(outsideTouchListener);
         recycler.setOnTouchListener(outsideTouchListener);
     }
-
-
 
     private void setupNavbarButtons() {
         MaterialButton btnHome = findViewById(R.id.nav_home);
@@ -205,8 +259,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ImpostazioniAccountActivity.class));
                 overridePendingTransition(0, 0);
             });
-
-
         }
 
         MaterialButton btnAllergeni = findViewById(R.id.btnAllergeni);
@@ -215,27 +267,21 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AllergeniActivity.class));
                 overridePendingTransition(0, 0);
             });
-
-
         }
     }
 
-    private void setupBackButton ( int backButtonId){
-            View btnBack = findViewById(backButtonId);
-            if (btnBack != null) {
-                btnBack.setOnClickListener(v -> onBackPressed());
-            }
+    private void setupBackButton(int backButtonId) {
+        View btnBack = findViewById(backButtonId);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> onBackPressed());
         }
+    }
 
-    /**
-     * Forza il colore dei divider dei dropdown (AutoCompleteTextView).
-     */
     private void setupDropdownDividerColor() {
-        // Trova tutte le AutoCompleteTextView che potrebbero essere presenti
         MaterialAutoCompleteTextView dropdown = findViewById(R.id.dropdownGender);
         if (dropdown != null) {
             dropdown.setDropDownBackgroundDrawable(
-                    getResources().getDrawable(R.drawable.bg_dropdown) // sfondo personalizzato senza divider
+                    getResources().getDrawable(R.drawable.bg_dropdown)
             );
         }
     }

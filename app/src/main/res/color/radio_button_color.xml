@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Stato selezionato -->
+    <item android:color="@color/radio_selected" android:state_checked="true"/>
+    <!-- Stato non selezionato -->
+    <item android:color="@color/radio_unselected" android:state_checked="false"/>
+</selector>
