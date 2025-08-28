@@ -143,6 +143,7 @@
 
             <!-- Advice Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardConsiglioGiorno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/primary_dark"
@@ -193,6 +194,7 @@
 
             <!-- Reazioni -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardUltimeReazioni"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -299,6 +301,7 @@
 
             <!-- Kit -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardKit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:strokeColor="@color/text_dark"

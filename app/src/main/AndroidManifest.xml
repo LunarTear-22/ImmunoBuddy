@@ -64,6 +64,10 @@
             android:name=".SottocategoriaActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".InterfacciaActivity"
+            android:exported="true"/>
+
 
 
 
