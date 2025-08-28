@@ -51,7 +51,7 @@
 
         <!-- Home -->
         <LinearLayout
-            android:id="@+id/nav_home"
+            android:id="@+id/home"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
@@ -75,7 +75,7 @@
 
         <!-- Account -->
         <LinearLayout
-            android:id="@+id/nav_account"
+            android:id="@+id/account"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"
@@ -116,7 +116,7 @@
 
         <!-- Allergeni -->
         <LinearLayout
-            android:id="@+id/nav_allergeni"
+            android:id="@+id/allergeni"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:orientation="horizontal"

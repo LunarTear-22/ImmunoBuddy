@@ -8,8 +8,7 @@
     android:background="@color/background_light"
     tools:ignore="HardcodedText">
 
-    <!-- HEADER -->
-    <include layout="@layout/header_layout_menu"/>
+
 
     <!-- SECTION TITLE -->
     <TextView
@@ -70,5 +69,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- HEADER -->
+    <include layout="@layout/header_layout_menu"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

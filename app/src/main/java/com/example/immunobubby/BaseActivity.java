@@ -33,9 +33,10 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private ScrollView drawerLayout;
-    private LinearLayout navigationView;
-    private ActionBarDrawerToggle toggle;
+    private ScrollView drawerMenu;
+    private MaterialButton btnBurger;
+    private ImageButton closeBtnMenu;
+    private boolean isDrawerOpen = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,11 +56,78 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupDropdownDividerColor();
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
-
+        setupBurgerMenu();
 
     }
 
+    private void setupBurgerMenu() {
+        drawerMenu = findViewById(R.id.drawer_layout); // il tuo ScrollView
+        btnBurger = findViewById(R.id.btnMenu);      // l'ImageButton del burger nel header
+        closeBtnMenu = findViewById(R.id.btn_close_menu); // bottone chiudi menu
 
+        LinearLayout home = findViewById(R.id.home);
+        LinearLayout account = findViewById(R.id.account);
+        LinearLayout allergeni = findViewById(R.id.allergeni);
+        LinearLayout sintomi = findViewById(R.id.nav_sintomi);
+        LinearLayout reazioni = findViewById(R.id.nav_reazioni);
+        LinearLayout farmaci = findViewById(R.id.nav_farmaci);
+        LinearLayout kit = findViewById(R.id.nav_kit);
+        LinearLayout qualita = findViewById(R.id.nav_qualita);
+        LinearLayout percorsi = findViewById(R.id.nav_percorsi);
+
+        if (drawerMenu == null || btnBurger == null || closeBtnMenu == null || home == null ||
+                account == null || allergeni == null || sintomi == null || reazioni == null ||
+                farmaci == null || kit == null || qualita == null || percorsi == null) return;
+
+        home.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
+        account.setOnClickListener(v -> startActivity(new Intent(this, ImpostazioniAccountActivity.class)));
+        allergeni.setOnClickListener(v -> startActivity(new Intent(this, AllergeniActivity.class)));
+        farmaci.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
+        kit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
+        qualita.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
+
+
+        // Nascondi menu inizialmente fuori dallo schermo
+        drawerMenu.setTranslationX(-drawerMenu.getWidth());
+        drawerMenu.setVisibility(View.GONE);
+
+        // Apri menu
+        btnBurger.setOnClickListener(v -> {
+            if (!isDrawerOpen) {
+                drawerMenu.setVisibility(View.VISIBLE);
+                drawerMenu.animate()
+                        .translationX(0)
+                        .alpha(1f)
+                        .setDuration(300)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+                isDrawerOpen = true;
+            }
+        });
+
+        // Chiudi menu
+        closeBtnMenu.setOnClickListener(v -> closeDrawer());
+
+        // Chiudi menu toccando lo sfondo
+        drawerMenu.setOnTouchListener((v, event) -> {
+            if (isDrawerOpen) {
+                closeDrawer();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void closeDrawer() {
+        drawerMenu.animate()
+                .translationX(-drawerMenu.getWidth())
+                .alpha(0f)
+                .setDuration(250)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> drawerMenu.setVisibility(View.GONE))
+                .start();
+        isDrawerOpen = false;
+    }
 
 
 

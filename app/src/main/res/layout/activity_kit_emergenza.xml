@@ -10,8 +10,7 @@
     tools:ignore="HardcodedText"
     >
 
-    <!-- HEADER -->
-    <include layout="@layout/header_layout_menu"/>
+
 
     <!-- Titolo pagina -->
     <TextView
@@ -206,5 +205,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- HEADER -->
+    <include layout="@layout/header_layout_menu"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
