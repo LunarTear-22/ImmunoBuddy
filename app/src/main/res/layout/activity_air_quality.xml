@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/air_quality_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    tools:ignore="HardcodedText">
+
+    <!-- HEADER -->
+    <include layout="@layout/header_layout_menu"
+        android:id="@+id/header"/>
+
+    <!-- Titolo pagina -->
+    <TextView
+        android:id="@+id/page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Qualità dell'aria"
+        android:textColor="@color/text_dark"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- ScrollView principale -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/page_title"
+        app:layout_constraintBottom_toTopOf="@id/navbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:clipToPadding="false">
+
+            <!-- Posizione -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:text="Caricamento..."
+                    android:textColor="@color/text_dark"
+                    android:fontFamily="@font/inter_regular"
+                    android:layout_marginStart="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textStyle="normal"
+                    android:textSize="24sp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_location"
+                    android:contentDescription="@string/pinposizione"/>
+            </LinearLayout>
+
+            <!-- Temperatura -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvTemperature"
+                    android:text="Caricamento..."
+                    android:textSize="24sp"
+                    android:textStyle="normal"
+                    android:fontFamily="@font/inter_regular"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/text_dark"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:drawablePadding="8dp"
+                    app:drawableEndCompat="@drawable/ic_sun" />
+
+            </LinearLayout>
+
+            <!-- Warning box -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="16dp">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/rounded_button_bg"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_alert"
+                        android:textColor="@color/text_dark"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvPollenStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6 pollini attivi su 12"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_dark"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- Pollens List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_pollens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:listitem="@layout/item_pollen_card"
+                android:background="@drawable/recycler_bg"/>
+
+            <TextView
+                android:id="@+id/tvEmptyPollens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nessun polline attivo nella zona"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:textColor="@android:color/darker_gray"/>
+
+
+            <!-- Percorsi alternativi -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="16dp"
+                android:paddingHorizontal="10dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/tvPercorsi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    app:cardBackgroundColor="@color/primary_medium"
+                    app:cardCornerRadius="12dp"
+                    app:strokeWidth="1.5dp"
+                    app:strokeColor="@color/primary_light"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pianifica un percorso alternativo"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:fontFamily="@font/inter_bold"
+                        android:padding="4dp"/>
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <ImageButton
+                    android:id="@+id/btnPercorsiArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/arrow_forward_ios_24px"
+                    android:background="@drawable/bg_circle_blue"
+                    android:backgroundTint="@color/primary_medium"
+                    android:contentDescription="pianifica_percorso"
+                    android:layout_marginStart="8dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- NAVBAR -->
+    <include
+        android:id="@+id/navbar"
+        layout="@layout/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

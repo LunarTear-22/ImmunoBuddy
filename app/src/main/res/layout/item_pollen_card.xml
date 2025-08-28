@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:background="@android:color/transparent"
+    android:gravity="center_vertical">
+
+    <!--icona-->
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/pollenIcon"
+        android:layout_weight="1"
+        android:contentDescription="icona_polline"
+        android:src="@drawable/allergy_24px"/>
+
+    <!-- Nome del polline -->
+    <TextView
+        android:id="@+id/tvPollenName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Nome polline"
+        android:textColor="@color/text_dark"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_weight="3"/>
+
+    <!-- Livello (basso, medio, alto) -->
+    <TextView
+        android:id="@+id/tvPollenLevel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Livello"
+        android:textColor="@color/text_dark"
+        android:fontFamily="@font/inter_regular"
+        android:textSize="16sp"
+        android:layout_weight="2"/>
+
+</LinearLayout>

@@ -74,6 +74,12 @@
             android:exported="true"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity
+            android:name=".QualitàAriaActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
+
+
 
         <receiver android:name=".AlarmReceiver"/>
 
