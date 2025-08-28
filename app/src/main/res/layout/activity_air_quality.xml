@@ -62,11 +62,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textStyle="normal"
-                    android:textSize="24sp"/>
+                    android:textSize="20sp"/>
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_location"
                     android:contentDescription="@string/pinposizione"/>
@@ -82,7 +82,7 @@
                 <TextView
                     android:id="@+id/tvTemperature"
                     android:text="Caricamento..."
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="normal"
                     android:fontFamily="@font/inter_regular"
                     android:layout_marginStart="4dp"
@@ -109,6 +109,7 @@
                     android:layout_marginBottom="8dp">
 
                     <ImageView
+                        android:id="@+id/ivPollenState"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
@@ -122,33 +123,31 @@
                     android:id="@+id/tvPollenStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 pollini attivi su 12"
+                    android:text="Caricamento..."
                     android:textSize="16sp"
                     android:textColor="@color/text_dark"
                     android:textStyle="bold"/>
             </LinearLayout>
 
             <!-- Pollens List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_pollens"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                tools:listitem="@layout/item_pollen_card"
-                android:background="@drawable/recycler_bg"/>
-
-            <TextView
-                android:id="@+id/tvEmptyPollens"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nessun polline attivo nella zona"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:padding="16dp"
+                android:id="@+id/containerRecycler"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:strokeColor="@color/primary_medium"
+                app:strokeWidth="1.5dp"
                 android:visibility="gone"
-                android:textColor="@android:color/darker_gray"/>
+                >
 
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_pollens"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    tools:listitem="@layout/item_pollen_card"
+                    android:background="@drawable/recycler_bg"/>
+            </com.google.android.material.card.MaterialCardView>
             <!-- Percorsi alternativi -->
             <LinearLayout
                 android:layout_width="match_parent"

@@ -3,11 +3,10 @@ package com.example.immunobubby;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,17 +36,14 @@ public class PollenManager {
     }
 
     public void fetchPollens(double lat, double lon, PollenCallback callback) {
-        String url = "https://api.breezometer.com/pollen/v2/current-conditions" +
-                "?lat=" + lat +
-                "&lon=" + lon +
-                "&key=" + apiKey +
-                "&features=breezometer_pollen_level,types";
+        // URL aggiornato secondo la tua richiesta
+        String url = "https://pollen.googleapis.com/v1/forecast:lookup?key=" + apiKey +
+                "&location.latitude=" + lat + "&location.longitude=" + lon + "&days=1";
 
         Request request = new Request.Builder().url(url).build();
+        Handler mainHandler = new Handler(Looper.getMainLooper());
 
         client.newCall(request).enqueue(new Callback() {
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-
             @Override
             public void onFailure(Call call, IOException e) {
                 mainHandler.post(() -> callback.onError(e));
@@ -67,15 +63,44 @@ public class PollenManager {
                 List<PollenData> pollenList = new ArrayList<>();
 
                 try {
-                    JsonObject data = root.getAsJsonObject("data").getAsJsonObject("types");
+                    JsonArray dailyInfo = root.getAsJsonArray("dailyInfo");
+                    if (dailyInfo != null && dailyInfo.size() > 0) {
+                        JsonObject firstDay = dailyInfo.get(0).getAsJsonObject();
 
-                    for (String type : new String[]{"tree", "grass", "weed", "mold"}) {
-                        if (data.has(type)) {
-                            JsonObject obj = data.getAsJsonObject(type);
-                            PollenData pd = new PollenData();
-                            pd.name = type;
-                            pd.level = obj.get("index").getAsInt(); // livello pollini
-                            pollenList.add(pd);
+                        JsonArray plantInfo = firstDay.getAsJsonArray("plantInfo");
+                        if (plantInfo != null) {
+                            for (int i = 0; i < plantInfo.size(); i++) {
+                                JsonObject plantObj = plantInfo.get(i).getAsJsonObject();
+                                JsonObject plantDesc = plantObj.has("plantDescription") && !plantObj.get("plantDescription").isJsonNull()
+                                        ? plantObj.getAsJsonObject("plantDescription") : null;
+
+                                // Nome del polline: displayName > commonName > Unknown
+                                String name = "Unknown";
+                                if (plantObj.has("displayName") && !plantObj.get("displayName").isJsonNull()) {
+                                    name = plantObj.get("displayName").getAsString();
+                                } else if (plantDesc != null && plantDesc.has("displayName") && !plantDesc.get("displayName").isJsonNull()) {
+                                    name = plantDesc.get("displayName").getAsString();
+                                }
+
+                                // Categoria/tipo: plantDescription.type > Unknown
+                                String type = (plantDesc != null && plantDesc.has("type")) ? plantDesc.get("type").getAsString() : "Unknown";
+
+                                // Colore: default grigio, oppure se presente in indexInfo.category
+                                int color = 0xFF888888;
+                                if (plantObj.has("indexInfo") && !plantObj.get("indexInfo").isJsonNull()) {
+                                    JsonObject indexInfo = plantObj.getAsJsonObject("indexInfo");
+                                    if (indexInfo.has("category")) {
+                                        switch (indexInfo.get("category").getAsString()) {
+                                            case "Very Low": color = 0xFF00FF00; break; // verde
+                                            case "Low": color = 0xFFFFFF00; break; // giallo
+                                            case "Medium": color = 0xFFFFA500; break; // arancione
+                                            case "High": color = 0xFFFF0000; break; // rosso
+                                        }
+                                    }
+                                }
+
+                                pollenList.add(new PollenData(name, 0, type, color));
+                            }
                         }
                     }
 
