@@ -7,6 +7,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,22 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.card.MaterialCardView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class QualitàAriaActivity extends BaseActivity {
 
@@ -41,15 +33,17 @@ public class QualitàAriaActivity extends BaseActivity {
 
     private TextView tvTemperature;
     private TextView tvLocation;
-    private TextView tvEmptyPollens;
+    private TextView tvPollenStatus;
     private RecyclerView recyclerPollens;
     private PollenAdapter pollenAdapter;
+    private ImageView ivPollenState;
+    private MaterialCardView containerRecycler;
+    private ImageButton btnPercorsiArrow;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private final Map<Integer, Runnable> permissionCallbacks = new HashMap<>();
 
     private final ArrayList<PollenData> pollenList = new ArrayList<>();
-    private final OkHttpClient client = new OkHttpClient();
     private final String POLLEN_API_KEY = "AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU";
 
     private FusedLocationProviderClient fusedLocationClient;
@@ -64,7 +58,10 @@ public class QualitàAriaActivity extends BaseActivity {
         tvTemperature = findViewById(R.id.tvTemperature);
         tvLocation = findViewById(R.id.tvLocation);
         recyclerPollens = findViewById(R.id.recycler_pollens);
-        tvEmptyPollens = findViewById(R.id.tvEmptyPollens);
+        tvPollenStatus = findViewById(R.id.tvPollenStatus);
+        ivPollenState = findViewById(R.id.ivPollenState);
+        containerRecycler = findViewById(R.id.containerRecycler);
+        btnPercorsiArrow = findViewById(R.id.btnPercorsiArrow);
 
         pollenAdapter = new PollenAdapter(pollenList);
         recyclerPollens.setLayoutManager(new LinearLayoutManager(this));
@@ -145,97 +142,57 @@ public class QualitàAriaActivity extends BaseActivity {
                         Toast.makeText(QualitàAriaActivity.this, "Impossibile recuperare il meteo", Toast.LENGTH_SHORT).show()
                 );
             }
-
         });
     }
 
     private void fetchPollenData(double lat, double lon) {
-        String url = "https://pollen.googleapis.com/v1/forecast:lookup?key=" + POLLEN_API_KEY;
-        Log.d(TAG, "Chiamata API pollini: " + url);
-
-        JSONObject jsonBody = new JSONObject();
-        try {
-            JSONObject loc = new JSONObject();
-            loc.put("latitude", lat);
-            loc.put("longitude", lon);
-            jsonBody.put("location", loc);
-            jsonBody.put("days", 3); // previsioni per 3 giorni
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Request request = new Request.Builder()
-                .url(url)
-                .post(RequestBody.create(jsonBody.toString(), MediaType.parse("application/json")))
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
+        PollenManager pollenManager = new PollenManager(this, POLLEN_API_KEY);
+        pollenManager.fetchPollens(lat, lon, new PollenManager.PollenCallback() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e(TAG, "Errore recupero pollini", e);
+            public void onData(List<PollenData> pollens) {
                 runOnUiThread(() -> {
-                    Toast.makeText(QualitàAriaActivity.this, "Errore recupero pollini", Toast.LENGTH_SHORT).show();
-                    recyclerPollens.setVisibility(View.GONE);
-                    tvEmptyPollens.setVisibility(View.VISIBLE);
+                    pollenList.clear();
+                    pollenList.addAll(pollens);
+                    pollenAdapter.notifyDataSetChanged();
+                    updatePollenStatus();
                 });
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d(TAG, "Risposta pollini codice: " + response.code());
-
-                if (response.isSuccessful() && response.body() != null) {
-                    String resStr = response.body().string();
-                    Log.d(TAG, "Risposta pollini body: " + resStr);
-
-                    try {
-                        JSONObject json = new JSONObject(resStr);
-                        JSONArray forecasts = json.optJSONArray("forecasts");
-
-                        pollenList.clear();
-                        if (forecasts != null && forecasts.length() > 0) {
-                            JSONObject firstForecast = forecasts.getJSONObject(0);
-                            JSONObject types = firstForecast.optJSONObject("types");
-                            if (types != null) {
-                                JSONArray names = types.names();
-                                if (names != null) {
-                                    for (int i = 0; i < names.length(); i++) {
-                                        String pollenName = names.getString(i);
-                                        int index = types.getJSONObject(pollenName).optInt("index", 0);
-                                        pollenList.add(new PollenData(pollenName, index));
-                                    }
-                                }
-                            }
-                        }
-
-                        runOnUiThread(() -> {
-                            if (pollenList.isEmpty()) {
-                                Log.d(TAG, "Nessun polline trovato");
-                                recyclerPollens.setVisibility(View.GONE);
-                                tvEmptyPollens.setVisibility(View.VISIBLE);
-                            } else {
-                                Log.d(TAG, "Pollini trovati: " + pollenList.size());
-                                recyclerPollens.setVisibility(View.VISIBLE);
-                                tvEmptyPollens.setVisibility(View.GONE);
-                                pollenAdapter.notifyDataSetChanged();
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        Log.e(TAG, "Errore parsing pollini", e);
-                        runOnUiThread(() -> {
-                            recyclerPollens.setVisibility(View.GONE);
-                            tvEmptyPollens.setVisibility(View.VISIBLE);
-                        });
-                    }
-                } else {
-                    Log.e(TAG, "Risposta pollini non valida, code=" + response.code());
-                    runOnUiThread(() -> {
-                        recyclerPollens.setVisibility(View.GONE);
-                        tvEmptyPollens.setVisibility(View.VISIBLE);
-                    });
-                }
+            public void onError(Exception e) {
+                Log.e(TAG, "Errore recupero pollini", e);
+                runOnUiThread(() -> {
+                    recyclerPollens.setVisibility(View.GONE);
+                    tvPollenStatus.setText("Nessun polline attivo nella zona");
+                    ivPollenState.setImageResource(R.drawable.sentiment_excited_24px);
+                });
             }
         });
+    }
+
+    private void updatePollenStatus() {
+        int totalActive = pollenAdapter.getTotalActivePollens();
+
+        // Aggiorna testo e visibilità
+        if (totalActive > 0) {
+            tvPollenStatus.setText(totalActive + " pollini attivi nella zona");
+            recyclerPollens.setVisibility(View.VISIBLE);
+            containerRecycler.setVisibility(View.VISIBLE);
+        } else {
+            tvPollenStatus.setText("Nessun polline attivo nella zona");
+            recyclerPollens.setVisibility(View.GONE);
+            containerRecycler.setVisibility(View.GONE);
+        }
+
+        // Aggiorna icona ivPollenState
+        if (ivPollenState != null) {
+            if (totalActive <= 4) {
+                ivPollenState.setImageResource(R.drawable.sentiment_excited_24px);      // verde
+            } else if (totalActive < 10) {
+                ivPollenState.setImageResource(R.drawable.sentiment_neutral_24px);   // arancione
+            } else {
+                ivPollenState.setImageResource(R.drawable.sentiment_stressed_24px);     // rosso
+            }
+        }
     }
 }
