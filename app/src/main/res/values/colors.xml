@@ -23,4 +23,10 @@
     <color name="track_enabled">#001229</color>
     <color name="track_disabled">#EBF3FF</color>
 
+    <!--Gravità Color -->
+    <color name="gravity_mild">#FF00911B</color>
+    <color name="gravity_moderate">#FFFBBC05</color>
+    <color name="gravity_significant">#FFFB8805</color>
+    <color name="gravity_severe">#FFEB4335</color>
+
 </resources>

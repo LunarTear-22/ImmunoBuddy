@@ -87,6 +87,10 @@
 
         <receiver android:name=".AlarmReceiver"/>
 
+        <activity
+            android:name=".NuovaReazioneActivity"
+            android:exported="true"/>
+
 
 
     </application>
