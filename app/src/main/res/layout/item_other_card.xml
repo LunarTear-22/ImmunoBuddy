@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="12dp"
+    android:gravity="center_vertical"
+    android:background="@color/background_light">
+
+    <!-- Nome oggetto -->
+    <EditText
+        android:id="@+id/tvOtherName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="Nome oggetto..."
+        android:textColorHint="@color/text_dark_transparent"
+        android:textColor="@color/text_dark"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:background="@android:color/transparent"
+        />
+
+    <!-- Pulsante elimina -->
+    <ImageButton
+        android:id="@+id/btnRemoveOther"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/delete_24px"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Rimuovi oggetto"
+        app:tint="@color/text_danger"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"/>
+</LinearLayout>

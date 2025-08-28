@@ -31,6 +31,7 @@ public class MainActivity extends BaseActivity {
     private boolean isFabMenuOpen = false;
     private TextView tvTemperature;
     private TextView tvLocation;
+    private MaterialButton btnMostraKit;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final int CALL_PERMISSION_REQUEST_CODE = 200;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 300;
@@ -97,7 +98,10 @@ public class MainActivity extends BaseActivity {
 
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> { /* TODO: Azione FAB1 */ });
-        fab2.setOnClickListener(v -> { /* TODO: Azione FAB2 */ });
+        fab2.setOnClickListener(v -> {
+            Intent i = new Intent(this, FarmaciActivity.class);
+            startActivity(i);
+        });
         fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
 
         // Controlla permessi posizione all’avvio
@@ -119,6 +123,12 @@ public class MainActivity extends BaseActivity {
                         Intent i = new Intent(this, ScannerActivity.class);
                         startActivity(i);
                     });
+        });
+
+        btnMostraKit = findViewById(R.id.btnMostraKit);
+        btnMostraKit.setOnClickListener(v -> {
+            Intent i = new Intent(this, KitEmergenzaActivity.class);
+            startActivity(i);
         });
 
     }

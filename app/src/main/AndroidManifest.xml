@@ -68,8 +68,18 @@
             android:name=".InterfacciaActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".FarmaciActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".KitEmergenzaActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
 
 
+        <receiver android:name=".AlarmReceiver"/>
 
 
 
