@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
         });
 
         // FAB secondari
-        fab1.setOnClickListener(v ->{ /* TODO: Azione FAB1 */ });
+        fab1.setOnClickListener(v ->startActivity(new Intent(this, NuovaReazioneActivity.class)));
         fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
         fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
         // Azioni sui FAB secondari
