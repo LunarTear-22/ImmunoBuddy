@@ -1,217 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nuova_reazione_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
+    android:orientation="vertical"
     tools:ignore="HardcodedText">
 
-    <!-- HEADER -->
+    <!-- Back button -->
     <include
-        android:id="@+id/header"
-        layout="@layout/header_layout_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- SEZIONE TITOLO -->
-
-    <TextView
-        android:id="@+id/section_title"
+        layout="@layout/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="6dp"
-        android:padding="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="-8dp" />
+
+    <!-- Titolo -->
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginBottom="8dp"
+       android:text="ImmunoBuddy"
+       android:textAlignment="center"
+       android:textColor="@color/text_dark"
+       android:textSize="22sp"
+       android:textStyle="bold" />
+
+
+    <!-- Sottotitolo -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
         android:text="Nuova Reazione"
         android:textColor="@color/text_dark"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <!-- FORM SCORRIBILE -->
-
+    <!-- FORM SCORREVOLE -->
     <ScrollView
-        android:id="@+id/form_scroll"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/section_title"
-        app:layout_constraintBottom_toTopOf="@id/navbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/form_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="2dp"
-            android:paddingBottom="100dp"
-            android:dividerPadding="0dp">
+            android:orientation="vertical">
 
-            <!-- Data Field -->
+            <!-- Data-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/data_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="10dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_calendar">
+                app:endIconTint="@color/text_dark"
+                app:endIconDrawable="@drawable/calendar_add_on_24px">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/data_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Data*"
+                    android:layout_height="40dp"
                     android:focusable="false"
                     android:clickable="true"
                     android:cursorVisible="false"
-                    android:inputType="none" />
-
+                    android:hint="Data*"
+                    android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Ora Field -->
+            <!-- Ora -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ora_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background"
-                app:endIconMode="custom">
-            <!--app:endIconDrawable="@drawable/ic_clock">-->
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ora_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ora"
-                android:focusable="false"
-                android:clickable="true"
-                android:cursorVisible="false"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ora_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:hint="Ora"
+                    android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Allergene Field -->
+            <!-- Allergene -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/allergene_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/allergene_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:hint="Allergene*"
-                    android:inputType="text" />
-
+                    android:inputType="text"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Gravità Field -->
+            <!-- Gravità -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:id="@+id/gravita_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_arrow_drop_down">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark"
+                app:endIconTint="@color/text_dark">
 
-                <Spinner
-                    android:id="@+id/gravita_spinner"
+                <AutoCompleteTextView
+                    android:id="@+id/gravita_dropdown"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:background="@android:color/transparent"
-                    android:prompt="@string/gravita_prompt" />
-
+                    android:layout_height="40dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:hint="Gravità*"
+                    android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Sintomi Field -->
+            <!-- Sintomi -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sintomi_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_add_fab">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/sintomi_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:hint="Sintomi*"
-                    android:inputType="text" />
-
+                    android:inputType="text"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Farmaci Field -->
+            <!-- Farmaci -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/farmaci_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_add_fab">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/farmaci_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:hint="Farmaci"
-                    android:inputType="text" />
-
+                    android:inputType="text"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Radio Group for Doctor Contact -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hai contattato il medico?"
-                android:textSize="16sp"
-                android:textColor="@color/text_dark"
-                android:layout_marginBottom="2dp" />
-
-            <RadioGroup
-                android:id="@+id/medico_radio_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="2dp">
-
-                <RadioButton
-                    android:id="@+id/si_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Si"
-                    android:layout_marginEnd="24dp" />
-
-                <RadioButton
-                    android:id="@+id/no_radio_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No" />
-
-            </RadioGroup>
-
-            <!-- Note Field -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/note_layout"
+            <!-- Radio Group -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/empty_field_background">
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hai contattato il medico?"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_dark" />
+
+                <RadioGroup
+                    android:id="@+id/medico_radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/si_radio_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Si"
+                        android:textColor="@color/text_dark"
+                        android:layout_marginEnd="16dp"
+                        app:buttonTint="@color/text_dark" />
+
+                    <RadioButton
+                        android:id="@+id/no_radio_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No"
+                        android:textColor="@color/text_dark"
+                        app:buttonTint="@color/text_dark" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <!-- Note -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/note_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/note_edit_text"
@@ -219,17 +274,22 @@
                     android:layout_height="wrap_content"
                     android:hint="Note"
                     android:inputType="textMultiLine"
-                    android:minLines="2" />
-
+                    android:minLines="2"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark"
+                    android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Add Photo Section -->
+            <!-- Photo -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="24dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
@@ -249,32 +309,28 @@
             </LinearLayout>
 
         </LinearLayout>
-
     </ScrollView>
 
-    <!-- FAB check -->
+    <!-- FAB principale (destra) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnCeck"
+        android:layout_gravity="end"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="16dp"
+        android:contentDescription="@string/menu"
         android:src="@drawable/check_24px"
-        android:contentDescription="btnCeck"
         app:backgroundTint="@color/primary_medium"
         app:fabCustomSize="48dp"
         app:maxImageSize="24dp"
-        app:tint="@color/text_dark"
+        app:elevation="0dp"
         app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
-        app:layout_constraintBottom_toTopOf="@id/navbar"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:tint="@color/text_dark" />
 
-    <!-- NAVBAR -->
+    <!-- NAVIGATION BAR -->
     <include
         layout="@layout/navbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_height="wrap_content" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

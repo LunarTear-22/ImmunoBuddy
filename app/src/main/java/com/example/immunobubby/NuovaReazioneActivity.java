@@ -1,77 +1,63 @@
 package com.example.immunobubby;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class NuovaReazioneActivity extends BaseActivity {
 
-    private TextInputEditText dataEditText, oraEditText, allergeneEditText,
-            sintomiEditText, farmaciEditText, noteEditText;
-    private TextInputLayout dataLayout, oraLayout, allergeneLayout,
-            gravitaLayout, sintomiLayout, farmaciLayout;
-    private Spinner gravitaSpinner;
+    private TextInputEditText dataEditText, oraEditText, allergeneEditText, sintomiEditText, farmacEditText, noteEditText;
+    private AutoCompleteTextView gravitaDropdown;
+    private TextInputLayout dataLayout, oraLayout, allergeneLayout, gravitaLayout, sintomiLayout, farmacLayout, noteLayout;
     private RadioGroup medicoRadioGroup;
     private RadioButton siRadioButton, noRadioButton;
-    private FloatingActionButton btnCheck;
-    private View aggiungiImageBtn;
-
-    private Reazione currentReazione;
-
-    private static final int AUTOCOMPLETE_REQUEST_ALLERGENE = 1001;
-    private static final int AUTOCOMPLETE_REQUEST_SINTOMI = 1002;
-    private static final int AUTOCOMPLETE_REQUEST_FARMACI = 1003;
+    private Button aggiungiFotoButton;
+    private FloatingActionButton saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuova_reazione);
 
-        currentReazione = new Reazione();
-
         initializeViews();
         setupClickListeners();
         setupTextWatchers();
-
-        // Populate form from existing Reazione if editing
-        Intent intent = getIntent();
-        Reazione reazioneToEdit = intent.getParcelableExtra("REAZIONE");
-        if (reazioneToEdit != null) {
-            populateFormFromReazione(reazioneToEdit);
-        }
+        setupGravitaDropdown();
     }
 
     private void initializeViews() {
         dataEditText = findViewById(R.id.data_edit_text);
         oraEditText = findViewById(R.id.ora_edit_text);
         allergeneEditText = findViewById(R.id.allergene_edit_text);
-        gravitaSpinner = findViewById(R.id.gravita_spinner);
+        gravitaDropdown = findViewById(R.id.gravita_dropdown);
         sintomiEditText = findViewById(R.id.sintomi_edit_text);
-        farmaciEditText = findViewById(R.id.farmaci_edit_text);
+        farmacEditText = findViewById(R.id.farmaci_edit_text);
         noteEditText = findViewById(R.id.note_edit_text);
 
         dataLayout = findViewById(R.id.data_layout);
@@ -79,117 +65,113 @@ public class NuovaReazioneActivity extends BaseActivity {
         allergeneLayout = findViewById(R.id.allergene_layout);
         gravitaLayout = findViewById(R.id.gravita_layout);
         sintomiLayout = findViewById(R.id.sintomi_layout);
-        farmaciLayout = findViewById(R.id.farmaci_layout);
+        farmacLayout = findViewById(R.id.farmaci_layout);
+        noteLayout = findViewById(R.id.note_layout);
 
         medicoRadioGroup = findViewById(R.id.medico_radio_group);
         siRadioButton = findViewById(R.id.si_radio_button);
         noRadioButton = findViewById(R.id.no_radio_button);
-        btnCheck = findViewById(R.id.btnCeck);
-        aggiungiImageBtn = findViewById(R.id.aggiungi_image_btn);
 
-        setupGravitaSpinner();
+        aggiungiFotoButton = findViewById(R.id.aggiungi_image_btn);
+        saveButton = findViewById(R.id.btnCeck);
     }
 
-    private void setupGravitaSpinner() {
-        String[] gravitaOptions = {"Seleziona gravità*", "Lieve", "Moderato", "Significativo", "Grave"};
-        int[] gravitaColors = {
-                android.R.color.transparent,
-                R.color.gravity_mild,
-                R.color.gravity_moderate,
-                R.color.gravity_significant,
-                R.color.gravity_severe
-        };
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gravitaOptions) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = (TextView) view;
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (DatePicker view, int selectedYear, int selectedMonth, int selectedDay) -> {
+                    String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                    dataEditText.setText(date);
+                },
+                year, month, day
+        );
+        datePickerDialog.show();
+    }
 
-                if (position == 0) {
-                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark_transparent));
-                } else {
-                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark));
+    private void showTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
 
-                    // Add colored dot
-                    GradientDrawable dot = new GradientDrawable();
-                    dot.setShape(GradientDrawable.OVAL);
-                    dot.setColor(ContextCompat.getColor(getContext(), gravitaColors[position]));
-                    dot.setSize(24, 24);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this,
+                (TimePicker view, int selectedHour, int selectedMinute) -> {
+                    String time = String.format("%02d:%02d", selectedHour, selectedMinute);
+                    oraEditText.setText(time);
+                },
+                hour, minute, true
+        );
+        timePickerDialog.show();
+    }
 
-                    textView.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null);
-                    textView.setCompoundDrawablePadding(16);
-                }
+    private static final int PICK_IMAGE_REQUEST = 1;
 
-                return view;
+    private void selectPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri != null) {
+                // Qui potresti mostrare la foto in un ImageView
+                Toast.makeText(this, "Foto selezionata: " + selectedImageUri.toString(), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
 
-            @Override
-            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView textView = (TextView) view;
+    private void saveReaction() {
+        if (validateForm()) {
+            // Qui puoi salvare i dati in un database locale o inviarli a un server
+            Toast.makeText(this, "Reazione salvata con successo!", Toast.LENGTH_SHORT).show();
 
-                if (position == 0) {
-                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark_transparent));
-                } else {
-                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark));
+            // Vai alla pagina ReazioniAllergiche
+            Intent intent = new Intent(NuovaReazioneActivity.this, ReazioniAllergicheActivity.class);
+            startActivity(intent);
 
-                    // Add colored dot
-                    GradientDrawable dot = new GradientDrawable();
-                    dot.setShape(GradientDrawable.OVAL);
-                    dot.setColor(ContextCompat.getColor(getContext(), gravitaColors[position]));
-                    dot.setSize(24, 24);
-
-                    textView.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null);
-                    textView.setCompoundDrawablePadding(16);
-                }
-
-                textView.setPadding(16, 16, 16, 16);
-                return view;
-            }
-        };
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        gravitaSpinner.setAdapter(adapter);
+            finish(); // Chiudi l'activity corrente così non torni indietro con "back"
+        } else {
+            Toast.makeText(this, "Compila tutti i campi obbligatori!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupClickListeners() {
         dataEditText.setOnClickListener(v -> showDatePicker());
         oraEditText.setOnClickListener(v -> showTimePicker());
-
-        allergeneEditText.setOnClickListener(v -> showFieldSearch("allergene"));
-        sintomiEditText.setOnClickListener(v -> showFieldSearch("sintomi"));
-        farmaciEditText.setOnClickListener(v -> showFieldSearch("farmaci"));
-
-        aggiungiImageBtn.setOnClickListener(v -> {
-            // Handle adding photo
-            Toast.makeText(this, "Aggiungi foto", Toast.LENGTH_SHORT).show();
-        });
-
-        btnCheck.setOnClickListener(v -> saveReaction());
+        gravitaDropdown.setOnClickListener(v -> showGravitaDialog());
+        aggiungiFotoButton.setOnClickListener(v -> selectPhoto());
+        saveButton.setOnClickListener(v -> saveReaction());
     }
 
     private void setupTextWatchers() {
         setupFieldWatcher(dataEditText, dataLayout);
         setupFieldWatcher(oraEditText, oraLayout);
         setupFieldWatcher(allergeneEditText, allergeneLayout);
-        setupGravitaSpinnerListener();
         setupFieldWatcher(sintomiEditText, sintomiLayout);
-        setupFieldWatcher(farmaciEditText, farmaciLayout);
-    }
+        setupFieldWatcher(farmacEditText, farmacLayout);
+        setupFieldWatcher(noteEditText, noteLayout);
 
-    private void setupGravitaSpinnerListener() {
-        gravitaSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+        // Setup gravity dropdown watcher
+        gravitaDropdown.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                boolean isFilled = position > 0; // First item is placeholder
-                updateFieldBackground(gravitaLayout, isFilled);
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {
-                updateFieldBackground(gravitaLayout, false);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                updateFieldBackground(gravitaLayout, !s.toString().trim().isEmpty());
             }
         });
     }
@@ -204,187 +186,95 @@ public class NuovaReazioneActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                boolean isFilled = !s.toString().trim().isEmpty();
-                updateFieldBackground(layout, isFilled);
+                updateFieldBackground(layout, !s.toString().trim().isEmpty());
             }
         });
     }
 
     private void updateFieldBackground(TextInputLayout layout, boolean isFilled) {
         if (isFilled) {
-            layout.setBackground(ContextCompat.getDrawable(this, R.drawable.filled_field_background));
+            layout.setBoxBackgroundColor(ContextCompat.getColor(this, R.color.primary_dark));
         } else {
-            layout.setBackground(ContextCompat.getDrawable(this, R.drawable.empty_field_background));
+            layout.setBoxBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         }
     }
 
-    private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, year, month, dayOfMonth) -> {
-                    String date = String.format(Locale.getDefault(), "%02d/%02d/%d", dayOfMonth, month + 1, year);
-                    dataEditText.setText(date);
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        );
-        datePickerDialog.show();
+    private void setupGravitaDropdown() {
+        gravitaDropdown.setKeyListener(null);
+        gravitaDropdown.setFocusable(false);
+        gravitaDropdown.setClickable(true);
     }
 
-    private void showTimePicker() {
-        Calendar calendar = Calendar.getInstance();
-        TimePickerDialog timePickerDialog = new TimePickerDialog(
-                this,
-                (view, hourOfDay, minute) -> {
-                    String time = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                    oraEditText.setText(time);
-                },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                true
-        );
-        timePickerDialog.show();
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
-    private String getTextSafely(TextInputEditText editText) {
-        return editText.getText() != null ? editText.getText().toString().trim() : "";
-    }
+    private void showGravitaDialog() {
+        String[] gravitaOptions = {"Lieve", "Moderato", "Significativo", "Grave"};
+        int[] gravitaColors = {
+                R.color.gravity_mild,
+                R.color.gravity_moderate,
+                R.color.gravity_significant,
+                R.color.gravity_severe
+        };
 
-    private void saveReaction() {
-        String allergeneText = getTextSafely(allergeneEditText);
-        String gravitaText = gravitaSpinner.getSelectedItemPosition() > 0 ?
-                gravitaSpinner.getSelectedItem().toString() : "";
-        String sintomiText = getTextSafely(sintomiEditText);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleziona Gravità");
 
-        // Validate required fields
-        if (allergeneText.isEmpty()) {
-            allergeneEditText.setError("Campo obbligatorio");
-            return;
-        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gravitaOptions) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
 
-        if (gravitaText.isEmpty() || gravitaSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Seleziona la gravità", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                Drawable base = ContextCompat.getDrawable(getContext(), R.drawable.circle_indicator);
+                if (base != null) {
+                    Drawable wrapped = DrawableCompat.wrap(base.mutate());
+                    int color = ContextCompat.getColor(getContext(), gravitaColors[position]);
+                    DrawableCompat.setTint(wrapped, color);
 
-        if (sintomiText.isEmpty()) {
-            sintomiEditText.setError("Campo obbligatorio");
-            return;
-        }
-
-        String dataText = getTextSafely(dataEditText);
-        if (!dataText.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                Date parsedDate = sdf.parse(dataText);
-                currentReazione.setData(parsedDate);
-            } catch (ParseException e) {
-                dataEditText.setError("Formato data non valido");
-                return;
-            }
-        }
-
-        currentReazione.setOra(getTextSafely(oraEditText));
-
-        currentReazione.setAllergene(allergeneText);
-
-        currentReazione.setGravita(gravitaText);
-
-        ArrayList<String> sintomiList = new ArrayList<>();
-        if (!sintomiText.isEmpty()) {
-            sintomiList.addAll(Arrays.asList(sintomiText.split(",\\s*")));
-        }
-        currentReazione.setSintomi(sintomiList);
-
-        String farmaciText = getTextSafely(farmaciEditText);
-        ArrayList<String> farmaciList = new ArrayList<>();
-        if (!farmaciText.isEmpty()) {
-            farmaciList.addAll(Arrays.asList(farmaciText.split(",\\s*")));
-        }
-        currentReazione.setFarmaci(farmaciList);
-
-        currentReazione.setNote(getTextSafely(noteEditText));
-
-        // Get radio button selection
-        int selectedRadioId = medicoRadioGroup.getCheckedRadioButtonId();
-        boolean medicoContattato = selectedRadioId == R.id.si_radio_button;
-        currentReazione.setContattoMedico(medicoContattato);
-
-        saveReazioneToDatabase(currentReazione);
-
-        Toast.makeText(this, "Reazione salvata!", Toast.LENGTH_SHORT).show();
-
-        // 🔹 Dopo il salvataggio apri la lista delle reazioni
-        Intent intent = new Intent(this, ReazioniAllergicheActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-    private void populateFormFromReazione(Reazione reazione) {
-        if (reazione == null) return;
-
-        if (reazione.getData() != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            dataEditText.setText(sdf.format(reazione.getData()));
-        }
-        if (reazione.getOra() != null) {
-            oraEditText.setText(reazione.getOra());
-        }
-
-        if (reazione.getAllergene() != null) {
-            allergeneEditText.setText(reazione.getAllergene());
-        }
-
-        if (reazione.getGravita() != null) {
-            String[] gravitaOptions = {"Seleziona gravità*", "Lieve", "Moderato", "Significativo", "Grave"};
-            for (int i = 0; i < gravitaOptions.length; i++) {
-                if (gravitaOptions[i].equals(reazione.getGravita())) {
-                    gravitaSpinner.setSelection(i);
-                    break;
+                    int size = dpToPx(12); // 12dp: regolalo a piacere
+                    wrapped.setBounds(0, 0, size, size);
+                    tv.setCompoundDrawables(wrapped, null, null, null);
+                    tv.setCompoundDrawablePadding(dpToPx(8));
                 }
+
+                tv.setPadding(dpToPx(16), dpToPx(12), dpToPx(16), dpToPx(12));
+                return tv;
             }
-        }
+        };
 
-        if (reazione.getSintomi() != null && !reazione.getSintomi().isEmpty()) {
-            sintomiEditText.setText(String.join(", ", reazione.getSintomi()));
-        }
-        if (reazione.getFarmaci() != null && !reazione.getFarmaci().isEmpty()) {
-            farmaciEditText.setText(String.join(", ", reazione.getFarmaci()));
-        }
-        if (reazione.getNote() != null) {
-            noteEditText.setText(reazione.getNote());
-        }
+        builder.setAdapter(adapter, (dialog, which) -> {
+            gravitaDropdown.setText(gravitaOptions[which], false);
+            dialog.dismiss();
+        });
 
-        // Set radio button selection
-        if (reazione.isMedicoContattato()) {
-            siRadioButton.setChecked(true);
+        builder.show();
+    }
+
+    private boolean validateForm() {
+        boolean isValid = true;
+
+        if (dataEditText.getText().toString().trim().isEmpty()) {
+            dataLayout.setError("Campo obbligatorio");
+            isValid = false;
         } else {
-            noRadioButton.setChecked(true);
+            dataLayout.setError(null);
         }
-    }
 
-    private void saveReazioneToDatabase(Reazione reazione) {
-        // TODO: Implement database saving logic
-        // This is where you would save the Reazione object to your database
-        // For now, just log the data
-        System.out.println("Saving Reazione: " +
-                "Data: " + reazione.getData() +
-                ", Allergene: " + reazione.getAllergene() +
-                ", Gravità: " + reazione.getGravita());
-    }
+        if (allergeneEditText.getText().toString().trim().isEmpty()) {
+            allergeneLayout.setError("Campo obbligatorio");
+            isValid = false;
+        } else {
+            allergeneLayout.setError(null);
+        }
 
-    private void showFieldSearch(String fieldType) {
-        // This will trigger the expandable search bar from BaseActivity
-        // The search functionality is handled by setupExpandableSearchBar() in BaseActivity
-        Toast.makeText(this, "Cerca " + fieldType, Toast.LENGTH_SHORT).show();
-    }
+        if (sintomiEditText.getText().toString().trim().isEmpty()) {
+            sintomiLayout.setError("Campo obbligatorio");
+            isValid = false;
+        } else {
+            sintomiLayout.setError(null);
+        }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
+        return isValid;
     }
 }
