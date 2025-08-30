@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/percorsi_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_light">
+
+        <!-- HEADER -->
+        <include
+            layout="@layout/header_layout_menu"
+            android:id="@+id/header"/>
+
+        <!-- Titolo pagina -->
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Percorso alternativo"
+            android:textColor="@color/text_dark"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/header"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- Scroll principale -->
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@id/page_title"
+            app:layout_constraintBottom_toTopOf="@id/navbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clipToPadding="false">
+
+                <!-- Modalità trasporto -->
+                <LinearLayout
+                    android:id="@+id/transport_modes_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="start"
+                    android:layout_marginBottom="16dp"
+                    >
+
+                    <!-- Bottone walking -->
+                    <ImageButton
+                        android:id="@+id/btnWalking"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/rounded_button_bg"
+                        android:src="@drawable/directions_walk_24px"
+                        android:gravity="center"/>
+
+                    <!-- Bottone car -->
+                    <ImageButton
+                        android:id="@+id/btnCar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/rounded_button_bg"
+                        android:src="@drawable/directions_car_24px"
+                        android:gravity="center"/>
+
+                    <!-- Bottone pubblico -->
+                    <ImageButton
+                        android:id="@+id/btnPublicTransport"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/rounded_button_bg"
+                        android:src="@drawable/directions_bus_24px"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <!-- Input da -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_button_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Da"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_dark"
+                        android:fontFamily="@font/inter_medium"
+                        android:layout_marginBottom="4dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFromLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:hint="La tua posizione"
+                        android:textColorHint="@color/text_dark_transparent"
+                        android:padding="12dp"
+                        android:textColor="@color/text_dark"
+                        android:fontFamily="@font/inter_regular"
+                        android:drawableEnd="@drawable/cancel_24px"/>
+                </LinearLayout>
+
+                <!-- Input a -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_button_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_dark"
+                        android:fontFamily="@font/inter_medium"
+                        android:layout_marginBottom="4dp"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etToLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Destinazione"
+                        android:textColorHint="@color/text_dark_transparent"
+                        android:padding="12dp"
+                        android:textColor="@color/text_dark"
+                        android:fontFamily="@font/inter_regular"
+                        android:drawableEnd="@drawable/cancel_24px"/>
+                </LinearLayout>
+
+                <fragment
+                    android:id="@+id/map_fragment"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/etToLocation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+            </LinearLayout>
+        </ScrollView>
+
+
+        <!-- NAVBAR -->
+        <include
+            android:id="@+id/navbar"
+            layout="@layout/navbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/drawer_menu"
+        android:visibility="gone"/>
+</androidx.drawerlayout.widget.DrawerLayout>

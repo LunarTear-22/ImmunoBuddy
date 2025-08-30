@@ -1,6 +1,7 @@
 package com.example.immunobubby;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -73,6 +74,10 @@ public class QualitàAriaActivity extends BaseActivity {
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,
                 LOCATION_PERMISSION_REQUEST_CODE,
                 this::fetchLocationWeatherAndPollens);
+
+        btnPercorsiArrow.setOnClickListener(view -> {
+            startActivity(new Intent(QualitàAriaActivity.this, PercorsiAlternativiActivity.class));
+        });
     }
 
     private void checkPermission(String permission, int requestCode, Runnable onGranted) {

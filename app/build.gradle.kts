@@ -40,6 +40,8 @@ dependencies {
 
 
     implementation ("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.libraries.places:places:3.3.0")
+    implementation(libs.play.services.maps)
 
 
     val camerax_version = "1.4.2"

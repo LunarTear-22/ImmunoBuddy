@@ -128,6 +128,19 @@ public class MainActivity extends BaseActivity {
         fab1.setOnClickListener(v ->{ /* TODO: Azione FAB1 */ });
         fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
         fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
+        // Azioni sui FAB secondari
+        fab1.setOnClickListener(v -> {
+            Intent i = new Intent(this, NuovaReazioneActivity.class);
+            startActivity(i);
+        });
+        fab2.setOnClickListener(v -> {
+            Intent i = new Intent(this, FarmaciActivity.class);
+            startActivity(i);
+        });
+        fab3.setOnClickListener(v -> {
+            //Intent i = new Intent(this, SintomiActivity.class);
+            //startActivity(i);
+        });
 
         // Permessi posizione
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::fetchLocationAndWeather);
@@ -252,6 +265,7 @@ public class MainActivity extends BaseActivity {
                 .withEndAction(() -> fab.setVisibility(View.GONE)).start();
     }
 
+    // Metodo universale per i permessi
     private void checkPermission(String permission, int requestCode, Runnable onGranted) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             permissionCallbacks.put(requestCode, onGranted);
@@ -261,10 +275,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    // Gestione della risposta ai permessi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Runnable callback = permissionCallbacks.get(requestCode);
             if (callback != null) {
@@ -281,6 +297,7 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    // Recupero posizione + meteo
     private void fetchLocationAndWeather() {
         WeatherManager weatherManager = new WeatherManager(this, "7ad36df0013e9b8963d7d47bcca7cfec");
         weatherManager.fetchWeather(new WeatherManager.WeatherCallback() {

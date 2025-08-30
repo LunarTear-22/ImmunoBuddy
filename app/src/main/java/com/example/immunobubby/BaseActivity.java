@@ -55,6 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (btnBurger != null) {
             setupBurgerMenu();
         }
+
     }
 
     private void setupBurgerMenu() {
@@ -85,6 +86,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         kit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
         qualita.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
 
+        percorsi.setOnClickListener(v -> startActivity(new Intent(this, PercorsiAlternativiActivity.class)));
+
         // Nascondi menu inizialmente fuori dallo schermo
         drawerMenu.setTranslationX(-drawerMenu.getWidth());
         drawerMenu.setVisibility(View.GONE);
@@ -92,6 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Apri menu
         btnBurger.setOnClickListener(v -> {
             if (!isDrawerOpen) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.primary_light));
                 drawerMenu.setVisibility(View.VISIBLE);
                 drawerMenu.animate()
                         .translationX(0)
@@ -117,6 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void closeDrawer() {
+        getWindow().setStatusBarColor(getResources().getColor(R.color.background_light));
         drawerMenu.animate()
                 .translationX(-drawerMenu.getWidth())
                 .alpha(0f)
