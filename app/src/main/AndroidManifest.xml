@@ -83,6 +83,15 @@
             android:exported="true"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity
+            android:name=".PercorsiAlternativiActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".PercorsoMappaActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
 
 
         <receiver android:name=".AlarmReceiver"/>
@@ -91,7 +100,9 @@
             android:name=".NuovaReazioneActivity"
             android:exported="true"/>
 
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU"/>
 
     </application>
 
