@@ -56,13 +56,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupDropdownDividerColor();
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
-        setupBurgerMenu();
+
+        btnBurger = findViewById(R.id.btnMenu);
+        // l'ImageButton del burger nel header
+        if (btnBurger != null) {
+            setupBurgerMenu();
+        }
+        //setupBurgerMenu();
 
     }
 
     private void setupBurgerMenu() {
+
         drawerMenu = findViewById(R.id.drawer_layout); // il tuo ScrollView
-        btnBurger = findViewById(R.id.btnMenu);      // l'ImageButton del burger nel header
         closeBtnMenu = findViewById(R.id.btn_close_menu); // bottone chiudi menu
 
         LinearLayout home = findViewById(R.id.home);
@@ -126,6 +132,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(() -> drawerMenu.setVisibility(View.GONE))
                 .start();
+
+        // Configura navbar e back button automaticamente
+        setupNavbarButtons();
+        setupBackButton(R.id.btnBack);
+        setupDropdownDividerColor();
+        setupExpandableCard();
+        setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
+
         isDrawerOpen = false;
     }
 

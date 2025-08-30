@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/air_quality_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_light"
-    tools:ignore="HardcodedText">
-
-
-
+    >
+    
     <!-- Titolo pagina -->
     <TextView
         android:id="@+id/page_title"
@@ -22,7 +25,8 @@
         android:textStyle="bold"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- ScrollView principale -->
@@ -60,7 +64,8 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:textStyle="normal"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp"
+                    android:ellipsize="end"/>
 
                 <ImageView
                     android:layout_width="20dp"
@@ -210,3 +215,9 @@
         android:id="@+id/header"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/drawer_menu"
+        android:visibility="gone"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
