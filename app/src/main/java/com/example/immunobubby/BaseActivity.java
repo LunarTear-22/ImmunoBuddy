@@ -4,30 +4,24 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -58,18 +52,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
         btnBurger = findViewById(R.id.btnMenu);
-        // l'ImageButton del burger nel header
         if (btnBurger != null) {
             setupBurgerMenu();
         }
-        //setupBurgerMenu();
-
     }
 
     private void setupBurgerMenu() {
 
-        drawerMenu = findViewById(R.id.drawer_layout); // il tuo ScrollView
-        closeBtnMenu = findViewById(R.id.btn_close_menu); // bottone chiudi menu
+        drawerMenu = findViewById(R.id.drawer_layout); // ScrollView del menu
+        closeBtnMenu = findViewById(R.id.btn_close_menu); // bottone chiusura
 
         LinearLayout home = findViewById(R.id.home);
         LinearLayout account = findViewById(R.id.account);
@@ -85,13 +76,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 account == null || allergeni == null || sintomi == null || reazioni == null ||
                 farmaci == null || kit == null || qualita == null || percorsi == null) return;
 
+
+        // Listener pulsanti
         home.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
         account.setOnClickListener(v -> startActivity(new Intent(this, ImpostazioniAccountActivity.class)));
         allergeni.setOnClickListener(v -> startActivity(new Intent(this, AllergeniActivity.class)));
         farmaci.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
         kit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
         qualita.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
-
 
         // Nascondi menu inizialmente fuori dallo schermo
         drawerMenu.setTranslationX(-drawerMenu.getWidth());
@@ -133,7 +125,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 .withEndAction(() -> drawerMenu.setVisibility(View.GONE))
                 .start();
 
-        // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
         setupDropdownDividerColor();
@@ -142,8 +133,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         isDrawerOpen = false;
     }
-
-
 
     protected void setupExpandableCard() {
         ImageButton expandButton = findViewById(R.id.expandButton);
