@@ -101,7 +101,7 @@
                 android:id="@+id/allergene_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="2dp"
                 android:background="@drawable/empty_field_background">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -123,15 +123,16 @@
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/ic_arrow_drop_down">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/gravita_edit_text"
+                <Spinner
+                    android:id="@+id/gravita_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Gravità*"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:inputType="none" />
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@android:color/transparent"
+                    android:prompt="@string/gravita_prompt" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

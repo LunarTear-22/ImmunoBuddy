@@ -14,5 +14,6 @@
         <item>Donna</item>
         <item>Altro</item>
     </string-array>
+    <string name="gravita_prompt">Seleziona gravità</string>
 
 </resources>

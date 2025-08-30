@@ -91,6 +91,10 @@
             android:name=".NuovaReazioneActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".ReazioniAllergicheActivity"
+            android:exported="true"/>
+
 
 
     </application>

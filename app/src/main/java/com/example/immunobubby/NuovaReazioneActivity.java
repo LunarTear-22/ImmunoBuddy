@@ -3,7 +3,6 @@ package com.example.immunobubby;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -20,15 +20,21 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class NuovaReazioneActivity extends BaseActivity {
 
     private TextInputEditText dataEditText, oraEditText, allergeneEditText,
-            gravitaEditText, sintomiEditText, farmaciEditText, noteEditText;
+            sintomiEditText, farmaciEditText, noteEditText;
     private TextInputLayout dataLayout, oraLayout, allergeneLayout,
             gravitaLayout, sintomiLayout, farmaciLayout;
+    private Spinner gravitaSpinner;
     private RadioGroup medicoRadioGroup;
     private RadioButton siRadioButton, noRadioButton;
     private FloatingActionButton btnCheck;
@@ -63,7 +69,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         dataEditText = findViewById(R.id.data_edit_text);
         oraEditText = findViewById(R.id.ora_edit_text);
         allergeneEditText = findViewById(R.id.allergene_edit_text);
-        gravitaEditText = findViewById(R.id.gravita_edit_text);
+        gravitaSpinner = findViewById(R.id.gravita_spinner);
         sintomiEditText = findViewById(R.id.sintomi_edit_text);
         farmaciEditText = findViewById(R.id.farmaci_edit_text);
         noteEditText = findViewById(R.id.note_edit_text);
@@ -80,12 +86,77 @@ public class NuovaReazioneActivity extends BaseActivity {
         noRadioButton = findViewById(R.id.no_radio_button);
         btnCheck = findViewById(R.id.btnCeck);
         aggiungiImageBtn = findViewById(R.id.aggiungi_image_btn);
+
+        setupGravitaSpinner();
+    }
+
+    private void setupGravitaSpinner() {
+        String[] gravitaOptions = {"Seleziona gravità*", "Lieve", "Moderato", "Significativo", "Grave"};
+        int[] gravitaColors = {
+                android.R.color.transparent,
+                R.color.gravity_mild,
+                R.color.gravity_moderate,
+                R.color.gravity_significant,
+                R.color.gravity_severe
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, gravitaOptions) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+
+                if (position == 0) {
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark_transparent));
+                } else {
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark));
+
+                    // Add colored dot
+                    GradientDrawable dot = new GradientDrawable();
+                    dot.setShape(GradientDrawable.OVAL);
+                    dot.setColor(ContextCompat.getColor(getContext(), gravitaColors[position]));
+                    dot.setSize(24, 24);
+
+                    textView.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null);
+                    textView.setCompoundDrawablePadding(16);
+                }
+
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView textView = (TextView) view;
+
+                if (position == 0) {
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark_transparent));
+                } else {
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_dark));
+
+                    // Add colored dot
+                    GradientDrawable dot = new GradientDrawable();
+                    dot.setShape(GradientDrawable.OVAL);
+                    dot.setColor(ContextCompat.getColor(getContext(), gravitaColors[position]));
+                    dot.setSize(24, 24);
+
+                    textView.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null);
+                    textView.setCompoundDrawablePadding(16);
+                }
+
+                textView.setPadding(16, 16, 16, 16);
+                return view;
+            }
+        };
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gravitaSpinner.setAdapter(adapter);
     }
 
     private void setupClickListeners() {
         dataEditText.setOnClickListener(v -> showDatePicker());
         oraEditText.setOnClickListener(v -> showTimePicker());
-        gravitaEditText.setOnClickListener(v -> showGravitaOptions());
 
         allergeneEditText.setOnClickListener(v -> showFieldSearch("allergene"));
         sintomiEditText.setOnClickListener(v -> showFieldSearch("sintomi"));
@@ -103,49 +174,24 @@ public class NuovaReazioneActivity extends BaseActivity {
         setupFieldWatcher(dataEditText, dataLayout);
         setupFieldWatcher(oraEditText, oraLayout);
         setupFieldWatcher(allergeneEditText, allergeneLayout);
-        setupFieldWatcher(gravitaEditText, gravitaLayout);
+        setupGravitaSpinnerListener();
         setupFieldWatcher(sintomiEditText, sintomiLayout);
         setupFieldWatcher(farmaciEditText, farmaciLayout);
-        // Notes field excluded from color changes
     }
 
-    private void showGravitaOptions() {
-        String[] gravitaOptions = {"Lieve", "Moderato", "Significativo", "Grave"};
-        int[] gravitaColors = {
-                R.color.gravity_mild,
-                R.color.gravity_moderate,
-                R.color.gravity_significant,
-                R.color.gravity_severe
-        };
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-
-        // Create custom adapter for colored options
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gravitaOptions) {
-            @NonNull
+    private void setupGravitaSpinnerListener() {
+        gravitaSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView textView = view.findViewById(android.R.id.text1);
-
-                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_light));
-
-                // Add colored dot before text
-                GradientDrawable dot = new GradientDrawable();
-                dot.setShape(GradientDrawable.OVAL);
-                dot.setColor(ContextCompat.getColor(getContext(), gravitaColors[position]));
-                dot.setSize(24, 24);
-
-                textView.setCompoundDrawablesWithIntrinsicBounds(dot, null, null, null);
-                textView.setCompoundDrawablePadding(16);
-                textView.setPadding(16, 16, 16, 16);
-
-                return view;
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                boolean isFilled = position > 0; // First item is placeholder
+                updateFieldBackground(gravitaLayout, isFilled);
             }
-        };
 
-        builder.setAdapter(adapter, (dialog, which) -> gravitaEditText.setText(gravitaOptions[which]));
-        builder.show();
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                updateFieldBackground(gravitaLayout, false);
+            }
+        });
     }
 
     private void setupFieldWatcher(TextInputEditText editText, TextInputLayout layout) {
@@ -208,7 +254,8 @@ public class NuovaReazioneActivity extends BaseActivity {
 
     private void saveReaction() {
         String allergeneText = getTextSafely(allergeneEditText);
-        String gravitaText = getTextSafely(gravitaEditText);
+        String gravitaText = gravitaSpinner.getSelectedItemPosition() > 0 ?
+                gravitaSpinner.getSelectedItem().toString() : "";
         String sintomiText = getTextSafely(sintomiEditText);
 
         // Validate required fields
@@ -217,8 +264,8 @@ public class NuovaReazioneActivity extends BaseActivity {
             return;
         }
 
-        if (gravitaText.isEmpty()) {
-            gravitaEditText.setError("Campo obbligatorio");
+        if (gravitaText.isEmpty() || gravitaSpinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Seleziona la gravità", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -227,25 +274,52 @@ public class NuovaReazioneActivity extends BaseActivity {
             return;
         }
 
-        currentReazione.setData(getTextSafely(dataEditText));
+        String dataText = getTextSafely(dataEditText);
+        if (!dataText.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date parsedDate = sdf.parse(dataText);
+                currentReazione.setData(parsedDate);
+            } catch (ParseException e) {
+                dataEditText.setError("Formato data non valido");
+                return;
+            }
+        }
+
         currentReazione.setOra(getTextSafely(oraEditText));
 
-        Allergene allergene = new Allergene(allergeneText, null);
-        currentReazione.setAllergene(allergene);
+        currentReazione.setAllergene(allergeneText);
 
         currentReazione.setGravita(gravitaText);
-        currentReazione.setSintomi(sintomiText);
-        currentReazione.setFarmaci(getTextSafely(farmaciEditText));
+
+        ArrayList<String> sintomiList = new ArrayList<>();
+        if (!sintomiText.isEmpty()) {
+            sintomiList.addAll(Arrays.asList(sintomiText.split(",\\s*")));
+        }
+        currentReazione.setSintomi(sintomiList);
+
+        String farmaciText = getTextSafely(farmaciEditText);
+        ArrayList<String> farmaciList = new ArrayList<>();
+        if (!farmaciText.isEmpty()) {
+            farmaciList.addAll(Arrays.asList(farmaciText.split(",\\s*")));
+        }
+        currentReazione.setFarmaci(farmaciList);
+
         currentReazione.setNote(getTextSafely(noteEditText));
 
         // Get radio button selection
         int selectedRadioId = medicoRadioGroup.getCheckedRadioButtonId();
         boolean medicoContattato = selectedRadioId == R.id.si_radio_button;
-        currentReazione.setMedicoContattato(medicoContattato);
+        currentReazione.setContattoMedico(medicoContattato);
 
         saveReazioneToDatabase(currentReazione);
 
         Toast.makeText(this, "Reazione salvata!", Toast.LENGTH_SHORT).show();
+
+        // 🔹 Dopo il salvataggio apri la lista delle reazioni
+        Intent intent = new Intent(this, ReazioniAllergicheActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 
@@ -253,25 +327,32 @@ public class NuovaReazioneActivity extends BaseActivity {
         if (reazione == null) return;
 
         if (reazione.getData() != null) {
-            dataEditText.setText(reazione.getData());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            dataEditText.setText(sdf.format(reazione.getData()));
         }
         if (reazione.getOra() != null) {
             oraEditText.setText(reazione.getOra());
         }
 
-        if (reazione.getAllergene() != null && reazione.getAllergene().getNome() != null) {
-            allergeneEditText.setText(reazione.getAllergene().getNome());
+        if (reazione.getAllergene() != null) {
+            allergeneEditText.setText(reazione.getAllergene());
         }
 
         if (reazione.getGravita() != null) {
-            gravitaEditText.setText(reazione.getGravita());
+            String[] gravitaOptions = {"Seleziona gravità*", "Lieve", "Moderato", "Significativo", "Grave"};
+            for (int i = 0; i < gravitaOptions.length; i++) {
+                if (gravitaOptions[i].equals(reazione.getGravita())) {
+                    gravitaSpinner.setSelection(i);
+                    break;
+                }
+            }
         }
 
-        if (reazione.getSintomi() != null) {
-            sintomiEditText.setText(reazione.getSintomi());
+        if (reazione.getSintomi() != null && !reazione.getSintomi().isEmpty()) {
+            sintomiEditText.setText(String.join(", ", reazione.getSintomi()));
         }
-        if (reazione.getFarmaci() != null) {
-            farmaciEditText.setText(reazione.getFarmaci());
+        if (reazione.getFarmaci() != null && !reazione.getFarmaci().isEmpty()) {
+            farmaciEditText.setText(String.join(", ", reazione.getFarmaci()));
         }
         if (reazione.getNote() != null) {
             noteEditText.setText(reazione.getNote());
@@ -291,7 +372,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         // For now, just log the data
         System.out.println("Saving Reazione: " +
                 "Data: " + reazione.getData() +
-                ", Allergene: " + (reazione.getAllergene() != null ? reazione.getAllergene().getNome() : "null") +
+                ", Allergene: " + reazione.getAllergene() +
                 ", Gravità: " + reazione.getGravita());
     }
 
