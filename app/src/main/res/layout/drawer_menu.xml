@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +29,8 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/menu_open_24px"
-                android:contentDescription="Chiudi menu" />
+                android:contentDescription="Chiudi menu"
+                app:tint="@color/text_dark" />
 
             <!-- Titolo spostato a destra -->
             <TextView
@@ -37,7 +39,8 @@
                 android:text="ImmunoBuddy"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginStart="12dp"/>
+                android:layout_marginStart="12dp"
+                android:textColor="@color/text_dark" />
         </LinearLayout>
 
         <!-- ================= Sezione principale ================= -->
@@ -47,7 +50,8 @@
             android:text="Sezione principale"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_dark" />
 
         <!-- Home -->
         <LinearLayout
@@ -64,13 +68,14 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_home"/>
+                android:src="@drawable/ic_home" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark" />
         </LinearLayout>
 
         <!-- Account -->
@@ -88,13 +93,14 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_user"/>
+                android:src="@drawable/ic_user" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Account"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark" />
         </LinearLayout>
 
         <!-- Separatore -->
@@ -103,7 +109,8 @@
             android:layout_height="1dp"
             android:background="#80AAAAAA"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/text_dark"/>
 
         <!-- ================= Allergie ================= -->
         <TextView
@@ -112,7 +119,8 @@
             android:text="Allergie"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_dark" />
 
         <!-- Allergeni -->
         <LinearLayout
@@ -129,13 +137,14 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/allergy_24px"/>
+                android:src="@drawable/allergy_24px" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Allergeni"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark" />
         </LinearLayout>
 
         <!-- Sintomi -->
@@ -153,13 +162,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/symptoms_24px"/>
+                android:src="@drawable/symptoms_24px"
+                app:tint="@color/text_dark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sintomi"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
         <!-- Reazioni -->
@@ -177,13 +188,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/sentiment_dissatisfied_24px"/>
+                android:src="@drawable/sentiment_dissatisfied_24px"
+                app:tint="@color/text_dark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reazioni"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
         <View
@@ -191,7 +204,8 @@
             android:layout_height="1dp"
             android:background="#80AAAAAA"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/text_dark"/>
 
         <!-- ================= Medicine ================= -->
         <TextView
@@ -200,7 +214,8 @@
             android:text="Medicine"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_dark"/>
 
         <!-- Farmaci -->
         <LinearLayout
@@ -217,13 +232,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/alarm_add_24px"/>
+                android:src="@drawable/alarm_add_24px"
+                app:tint="@color/text_dark"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Promemoria Farmaci"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
         <!-- Kit Emergenza -->
@@ -241,13 +258,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/medical_services_24px"/>
+                android:src="@drawable/medical_services_24px"
+                app:tint="@color/text_dark"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kit Emergenza"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
         <View
@@ -255,7 +274,8 @@
             android:layout_height="1dp"
             android:background="#80AAAAAA"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"/>
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/text_dark"/>
 
         <!-- ================= Aria & Pollini ================= -->
         <TextView
@@ -264,7 +284,8 @@
             android:text="Aria e Pollini"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:textColor="@color/text_dark"/>
 
         <!-- Qualità dell'aria -->
         <LinearLayout
@@ -281,13 +302,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/air_24px"/>
+                android:src="@drawable/air_24px"
+                app:tint="@color/text_dark"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Qualità dell'aria"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
         <!-- Percorsi Alternativi -->
@@ -305,13 +328,15 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/directions_walk_24px"/>
+                android:src="@drawable/directions_walk_24px"
+                app:tint="@color/text_dark"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Percorsi Alternativi"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"/>
         </LinearLayout>
 
     </LinearLayout>
