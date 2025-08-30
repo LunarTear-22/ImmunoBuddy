@@ -100,6 +100,11 @@
             android:name=".NuovaReazioneActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".ReazioniAllergicheActivity"
+            android:exported="true"/>
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU"/>

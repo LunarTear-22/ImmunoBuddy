@@ -98,14 +98,17 @@ public class MainActivity extends BaseActivity {
 
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> {
-            Intent i = new Intent(this, QualitàAriaActivity.class);
+            Intent i = new Intent(this, NuovaReazioneActivity.class);
             startActivity(i);
         });
         fab2.setOnClickListener(v -> {
             Intent i = new Intent(this, FarmaciActivity.class);
             startActivity(i);
         });
-        fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
+        fab3.setOnClickListener(v -> {
+            //Intent i = new Intent(this, SintomiActivity.class);
+            //startActivity(i);
+        });
 
         // Controlla permessi posizione all’avvio
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::fetchLocationAndWeather);
