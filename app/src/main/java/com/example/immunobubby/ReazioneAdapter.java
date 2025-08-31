@@ -1,12 +1,14 @@
 package com.example.immunobubby;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -50,7 +52,12 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
         holder.reactionDate.setText(dateFormat.format(reaction.getData()));
 
         int colorRes = getSeverityColor(reaction.getGravita());
-        holder.severityIndicator.setBackgroundColor(ContextCompat.getColor(context, colorRes));
+        Drawable background = holder.severityIndicator.getBackground();
+        if (background != null) {
+            background = DrawableCompat.wrap(background.mutate());
+            DrawableCompat.setTint(background, ContextCompat.getColor(context, colorRes));
+            holder.severityIndicator.setBackground(background);
+        }
 
         boolean isExpanded = position == expandedPosition;
         holder.detailLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -110,12 +117,16 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
     private int getSeverityColor(String gravita) {
         if (gravita == null) return R.color.gravity_mild;
 
-        switch (gravita.toLowerCase()) {
+        String g = gravita.trim().toLowerCase(Locale.ROOT);
+
+        switch (g) {
             case "lieve":
                 return R.color.gravity_mild;
+            case "moderato":
             case "moderata":
             case "media":
                 return R.color.gravity_moderate;
+            case "significativo":
             case "significativa":
                 return R.color.gravity_significant;
             case "grave":
@@ -124,6 +135,7 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
                 return R.color.gravity_mild;
         }
     }
+
 
     public void updateReactions(List<Reazione> newReactions) {
         this.reactions = newReactions;
@@ -164,7 +176,7 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
         TextView reactionName;
         TextView reactionDate;
         View severityIndicator;
-        View detailLayout;
+        ViewGroup detailLayout;
         TextView closeButton;
         TextView detailTitle;
         TextView detailData;
