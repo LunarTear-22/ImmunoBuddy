@@ -2,6 +2,7 @@ package com.example.immunobubby;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +14,7 @@ public class InterfacciaActivity extends BaseActivity {
     private MaterialCheckBox checkPollini;
     private MaterialCheckBox checkKit;
     private MaterialCheckBox checkConsiglio;
+    private RadioGroup radioTempUnit;
 
     private SharedPreferences prefs;
 
@@ -48,5 +50,24 @@ public class InterfacciaActivity extends BaseActivity {
 
         checkConsiglio.setOnCheckedChangeListener((buttonView, isChecked) ->
                 prefs.edit().putBoolean("consiglio_giorno", isChecked).apply());
+
+        radioTempUnit = findViewById(R.id.radio_temp_unit);
+
+        // Imposta lo stato iniziale in base alla preference
+        String tempUnit = prefs.getString("temp_unit", "C");
+        if (tempUnit.equals("C")) {
+            radioTempUnit.check(R.id.radio_celsius);
+        } else {
+            radioTempUnit.check(R.id.radio_fahrenheit);
+        }
+
+        // Listener per salvare la scelta
+        radioTempUnit.setOnCheckedChangeListener((group, checkedId) -> {
+            String selectedUnit = (checkedId == R.id.radio_celsius) ? "C" : "F";
+            prefs.edit().putString("temp_unit", selectedUnit).apply();
+        });
     }
+
+
+
 }

@@ -2,6 +2,7 @@ package com.example.immunobubby;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -128,7 +129,32 @@ public class QualitàAriaActivity extends BaseActivity {
 
         WeatherManager weatherManager = new WeatherManager(this, "7ad36df0013e9b8963d7d47bcca7cfec");
         weatherManager.fetchWeather(new WeatherManager.WeatherCallback() {
+
             @Override
+            public void onWeatherUpdated(String temperature, int iconResId, String Location) {
+                SharedPreferences prefs = getSharedPreferences("HOME_PREFS", MODE_PRIVATE);
+                String tempUnit = prefs.getString("temp_unit", "C");
+
+                String displayTemp = temperature;
+                if ("F".equals(tempUnit)) {
+                    try {
+                        // Converti da Celsius a Fahrenheit
+                        float tempC = Float.parseFloat(temperature.replace("°C", ""));
+                        float tempF = tempC * 9 / 5 + 32;
+                        displayTemp = Math.round(tempF) + "°F";
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                tvTemperature.setText(displayTemp);
+                Drawable weatherIcon = ContextCompat.getDrawable(QualitàAriaActivity.this, iconResId);
+                tvTemperature.setCompoundDrawablesWithIntrinsicBounds(null, null, weatherIcon, null);
+                tvLocation.setText(Location);
+                fetchPollenData(lat, lon);
+            }
+
+            /*@Override
             public void onWeatherUpdated(String temperature, int iconResId, String locationName) {
                 Log.d(TAG, "Meteo ottenuto: " + temperature + " @ " + locationName);
 
@@ -138,7 +164,7 @@ public class QualitàAriaActivity extends BaseActivity {
                 tvLocation.setText(locationName);
 
                 fetchPollenData(lat, lon);
-            }
+            }*/
 
             @Override
             public void onError(Exception e) {
