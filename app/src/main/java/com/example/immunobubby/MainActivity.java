@@ -7,38 +7,60 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
     private boolean isFabMenuOpen = false;
-    private TextView tvTemperature;
-    private TextView tvLocation;
-    private MaterialButton btnMostraKit;
+    private TextView tvTemperature, tvLocation, tvConsiglio;
+    private TextView tvPolline1, tvPolline2, tvPolline3;
+    private MaterialButton btnMostraKit, btnMostraPollini;
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final int CALL_PERMISSION_REQUEST_CODE = 200;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 300;
 
+    private final String[] consigli = {
+            "Arieggia la casa al mattino presto, quando i pollini sono meno presenti.",
+            "Lava i capelli la sera per non portare pollini a letto.",
+            "Usa occhiali da sole grandi per proteggere gli occhi dai pollini.",
+            "Preferisci le uscite dopo la pioggia: l’aria è più pulita.",
+            "Tieni le finestre chiuse nei giorni di vento forte.",
+            "Evita di stendere i panni all’aperto in primavera.",
+            "Porta sempre con te un fazzoletto di cotone pulito.",
+            "Usa filtri antipolline in auto e climatizzatori.",
+            "Lava spesso le mani e il viso quando torni a casa.",
+            "Controlla il bollettino pollinico della tua zona.",
+            "Indossa una mascherina leggera nei periodi di alta concentrazione.",
+            "Evita di tagliare il prato se sei allergico alle graminacee.",
+            "Mantieni puliti tappeti e tende per ridurre gli acari.",
+            "Preferisci pavimenti lavabili invece della moquette.",
+            "Riduci i peluche in camera da letto se sei allergico alla polvere.",
+            "Viaggia con farmaci d’emergenza prescritti dal medico.",
+            "Usa federe e coprimaterassi antiacaro.",
+            "Non toccarti il viso con le mani sporche.",
+            "Bevi acqua frequentemente per mantenere idratate le mucose.",
+            "Consulta regolarmente il tuo allergologo per aggiornare la terapia."
+    };
 
-
-    // Mappa per gestire i callback dei permessi
     private final Map<Integer, Runnable> permissionCallbacks = new HashMap<>();
 
     @Override
@@ -46,24 +68,43 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // FAB principale e secondari
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
         LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);
-
         ExtendedFloatingActionButton fab1 = findViewById(R.id.btnReazioni);
         ExtendedFloatingActionButton fab2 = findViewById(R.id.btnPromemoria);
         ExtendedFloatingActionButton fab3 = findViewById(R.id.btnSintomi);
 
+        // TextView principali
         tvTemperature = findViewById(R.id.tvTemperature);
         tvLocation = findViewById(R.id.tvLocation);
+        tvConsiglio = findViewById(R.id.tvConsiglio);
 
-        // Toggle menu al click sul FAB principale
+        // TextView anteprima pollini
+        tvPolline1 = findViewById(R.id.tvPolline1);
+        tvPolline2 = findViewById(R.id.tvPolline2);
+        tvPolline3 = findViewById(R.id.tvPolline3);
+
+        // Bottoni
+        btnMostraKit = findViewById(R.id.btnMostraKit);
+        btnMostraPollini = findViewById(R.id.btnMostraPollini);
+
+        // Mostra consiglio del giorno
+        mostraConsiglioGiornaliero();
+
+        // Mostra visibilità card
+        aggiornaVisibilitaCard();
+
+        // Carica i primi 3 pollini
+        caricaPollini();
+
+        // Toggle FAB menu
         fabMain.setOnClickListener(v -> {
             if (isFabMenuOpen) {
                 fabMain.animate().rotation(0f).setDuration(300).start();
                 closeFab(fab1, 0);
                 closeFab(fab2, 50);
                 closeFab(fab3, 100);
-
                 fabMenuLayout.setVisibility(View.GONE);
                 fabMain.setImageResource(R.drawable.ic_add);
                 fabMain.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.primary_medium));
@@ -74,7 +115,6 @@ public class MainActivity extends BaseActivity {
                 openFab(fab1, 0);
                 openFab(fab2, 50);
                 openFab(fab3, 100);
-
                 fabMenuLayout.setVisibility(View.VISIBLE);
                 fabMain.setImageResource(R.drawable.ic_add);
                 fabMain.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.text_dark));
@@ -82,20 +122,12 @@ public class MainActivity extends BaseActivity {
                 isFabMenuOpen = true;
             }
 
-            SharedPreferences prefs = getSharedPreferences("HOME_PREFS", MODE_PRIVATE);
-
-            MaterialCardView cardUltime = findViewById(R.id.cardUltimeReazioni); // assegna ID a MaterialCardView XML
-            //MaterialCardView cardPollini = findViewById(R.id.cardDatiPollini);   // crea ID
-            MaterialCardView cardKit = findViewById(R.id.cardKit);               // crea ID
-            MaterialCardView cardConsiglio = findViewById(R.id.cardConsiglioGiorno); // crea ID
-
-            cardUltime.setVisibility(prefs.getBoolean("ultime_reazioni", true) ? View.VISIBLE : View.GONE);
-            //cardPollini.setVisibility(prefs.getBoolean("dati_pollini", true) ? View.VISIBLE : View.GONE);
-            cardKit.setVisibility(prefs.getBoolean("kit_emergenza", true) ? View.VISIBLE : View.GONE);
-            cardConsiglio.setVisibility(prefs.getBoolean("consiglio_giorno", true) ? View.VISIBLE : View.GONE);
-
         });
 
+        // FAB secondari
+        fab1.setOnClickListener(v ->startActivity(new Intent(this, NuovaReazioneActivity.class)));
+        fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
+        fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> {
             Intent i = new Intent(this, NuovaReazioneActivity.class);
@@ -110,55 +142,127 @@ public class MainActivity extends BaseActivity {
             //startActivity(i);
         });
 
-        // Controlla permessi posizione all’avvio
+        // Permessi posizione
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::fetchLocationAndWeather);
 
         // Bottone SOS
-        MaterialButton btnSOS = findViewById(R.id.btnSOS);
-        btnSOS.setOnClickListener(v -> {
-            checkPermission(Manifest.permission.CALL_PHONE, CALL_PERMISSION_REQUEST_CODE, this::makeSOSCall);
-        });
+        findViewById(R.id.btnSOS).setOnClickListener(v ->
+                checkPermission(Manifest.permission.CALL_PHONE, CALL_PERMISSION_REQUEST_CODE, this::makeSOSCall));
 
         // Bottone fotocamera / scanner
-        FloatingActionButton fabCamera = findViewById(R.id.btnCamera);
-        fabCamera.setOnClickListener(v -> {
-            checkPermission(Manifest.permission.CAMERA,
-                    CAMERA_PERMISSION_REQUEST_CODE,
-                    () -> {
-                        // Apri la nuova activity per lo scanner
-                        Intent i = new Intent(this, ScannerActivity.class);
-                        startActivity(i);
-                    });
-        });
+        findViewById(R.id.btnCamera).setOnClickListener(v ->
+                checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_REQUEST_CODE,
+                        () -> startActivity(new Intent(this, ScannerActivity.class))));
 
-        btnMostraKit = findViewById(R.id.btnMostraKit);
-        btnMostraKit.setOnClickListener(v -> {
-            Intent i = new Intent(this, KitEmergenzaActivity.class);
-            startActivity(i);
-        });
-
+        // Bottoni kit e pollini
+        btnMostraKit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
+        btnMostraPollini.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
     }
+
+    private void aggiornaVisibilitaCard() {
+        SharedPreferences prefs = getSharedPreferences("HOME_PREFS", MODE_PRIVATE);
+
+        MaterialCardView cardUltime = findViewById(R.id.cardUltimeReazioni);
+        MaterialCardView cardPollini = findViewById(R.id.cardPollini);
+        MaterialCardView cardKit = findViewById(R.id.cardKit);
+        MaterialCardView cardConsiglio = findViewById(R.id.cardConsiglioGiorno);
+
+        cardUltime.setVisibility(prefs.getBoolean("ultime_reazioni", true) ? View.VISIBLE : View.GONE);
+        cardPollini.setVisibility(prefs.getBoolean("dati_pollini", true) ? View.VISIBLE : View.GONE);
+        cardKit.setVisibility(prefs.getBoolean("kit_emergenza", true) ? View.VISIBLE : View.GONE);
+        cardConsiglio.setVisibility(prefs.getBoolean("consiglio_giorno", true) ? View.VISIBLE : View.GONE);
+    }
+
+
+    private void mostraConsiglioGiornaliero() {
+        SharedPreferences prefs = getSharedPreferences("CONSILGIO_PREFS", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        long lastSavedDay = prefs.getLong("last_day", -1);
+        int savedIndex = prefs.getInt("last_index", -1);
+        long today = System.currentTimeMillis() / (1000 * 60 * 60 * 24);
+
+        int indexToShow;
+        if (today == lastSavedDay && savedIndex != -1) {
+            indexToShow = savedIndex;
+        } else {
+            indexToShow = (int) (Math.random() * consigli.length);
+            editor.putLong("last_day", today);
+            editor.putInt("last_index", indexToShow);
+            editor.apply();
+        }
+        tvConsiglio.setText(consigli[indexToShow]);
+    }
+
+    private void caricaPollini() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            double lat = location.getLatitude();
+                            double lon = location.getLongitude();
+
+                            PollenManager pollenManager = new PollenManager(this, "AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU");
+                            pollenManager.fetchPollens(lat, lon, new PollenManager.PollenCallback() {
+                                @Override
+                                public void onData(List<PollenData> pollens) {
+                                    runOnUiThread(() -> {
+                                        Map<String, String> pollenNamesIt = new HashMap<String, String>() {{
+                                            put("alder", "Ontano"); put("hazel", "Nocciolo"); put("ash", "Frassino"); put("fraxinus", "Frassino");
+                                            put("birch", "Betulla"); put("poplar", "Pioppo"); put("willow", "Salice"); put("oak", "Quercia");
+                                            put("olive", "Olivo"); put("pine", "Pino"); put("cedar", "Cedro"); put("japanese_cedar", "Cedro giapponese");
+                                            put("japanese_cypress", "Cipresso giapponese"); put("maple", "Acero"); put("elm", "Olmo");
+                                            put("juniper", "Ginepro"); put("mulberry", "Gelso"); put("cottonwood", "Pioppo da cotone"); put("hornbeam", "Carpino");
+                                            put("beech", "Faggio"); put("cypress_pine", "Pino cipresso");
+
+                                            put("grass", "Graminacee"); put("rye", "Segale"); put("timothy", "Timoteo"); put("plantain", "Piantaggine");
+                                            put("herbs", "Erbe"); put("bluegrass", "Festuca"); put("fescue", "Fescua"); put("bentgrass", "Poacea");
+                                            put("oat", "Avena"); put("ryegrass", "Lolium"); put("meadowgrass", "Erba medica"); put("sweet_vernal_grass", "Erba dolce");
+                                            put("redtop", "Erba rossa"); put("creeping_bentgrass", "Poa strisciante"); put("timothy_hay", "Fieno di timoteo");
+
+                                            put("ragweed", "Ambrosia"); put("ambrosia", "Ambrosia"); put("mugwort", "Artemisia"); put("artemisia", "Artemisia");
+                                            put("chamomile", "Camomilla"); put("nettle", "Ortica"); put("dock", "Acetosella"); put("sagebrush", "Artemisia");
+                                            put("thistle", "Cardo"); put("pigweed", "Poligono"); put("lamb's_quarters", "Chenopodio"); put("goosefoot", "Chenopodio");
+                                            put("sowthistle", "Sonchus"); put("dandelion", "Dente di leone"); put("plantain_weed", "Piantaggine");
+                                            put("common_ragweed", "Ambrosia comune"); put("giant_ragweed", "Ambrosia gigante"); put("common_mugwort", "Artemisia comune"); put("giant_hogweed", "Erba del diavolo");
+
+                                            put("mold", "Muffa"); put("alternaria", "Alternaria"); put("cladosporium", "Cladosporium");
+                                            put("aspergillus", "Aspergillus"); put("penicillium", "Penicillium");
+                                        }};
+
+                                        if (pollens.size() > 0) tvPolline1.setText(pollenNamesIt.getOrDefault(pollens.get(0).getName().toLowerCase(), pollens.get(0).getName()));
+                                        if (pollens.size() > 1) tvPolline2.setText(pollenNamesIt.getOrDefault(pollens.get(1).getName().toLowerCase(), pollens.get(1).getName()));
+                                        if (pollens.size() > 2) tvPolline3.setText(pollenNamesIt.getOrDefault(pollens.get(2).getName().toLowerCase(), pollens.get(2).getName()));
+                                    });
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Errore caricamento pollini", Toast.LENGTH_SHORT).show());
+                                }
+                            });
+                        } else {
+                            Toast.makeText(this, "Posizione non disponibile", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::caricaPollini);
+        }
+    }
+
+
 
     private void openFab(ExtendedFloatingActionButton fab, int delay) {
         fab.setVisibility(View.VISIBLE);
         fab.setAlpha(0f);
         fab.setTranslationY(100f);
-        fab.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setStartDelay(delay)
-                .setDuration(300)
-                .start();
+        fab.animate().alpha(1f).translationY(0f).setStartDelay(delay).setDuration(300).start();
     }
 
     private void closeFab(ExtendedFloatingActionButton fab, int delay) {
-        fab.animate()
-                .alpha(0f)
-                .translationY(100f)
-                .setStartDelay(delay)
-                .setDuration(300)
-                .withEndAction(() -> fab.setVisibility(View.GONE))
-                .start();
+        fab.animate().alpha(0f).translationY(100f).setStartDelay(delay).setDuration(300)
+                .withEndAction(() -> fab.setVisibility(View.GONE)).start();
     }
 
     // Metodo universale per i permessi
@@ -173,7 +277,8 @@ public class MainActivity extends BaseActivity {
 
     // Gestione della risposta ai permessi
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -187,10 +292,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    // Chiamata SOS
     private void makeSOSCall() {
-        String phoneNumber = "118";
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:118"));
         startActivity(intent);
     }
 
@@ -200,11 +303,27 @@ public class MainActivity extends BaseActivity {
         weatherManager.fetchWeather(new WeatherManager.WeatherCallback() {
             @Override
             public void onWeatherUpdated(String temperature, int iconResId, String Location) {
-                tvTemperature.setText(temperature);
+                SharedPreferences prefs = getSharedPreferences("HOME_PREFS", MODE_PRIVATE);
+                String tempUnit = prefs.getString("temp_unit", "C");
+
+                String displayTemp = temperature;
+                if ("F".equals(tempUnit)) {
+                    try {
+                        // Converti da Celsius a Fahrenheit
+                        float tempC = Float.parseFloat(temperature.replace("°C", ""));
+                        float tempF = tempC * 9 / 5 + 32;
+                        displayTemp = Math.round(tempF) + "°F";
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                tvTemperature.setText(displayTemp);
                 Drawable weatherIcon = ContextCompat.getDrawable(MainActivity.this, iconResId);
                 tvTemperature.setCompoundDrawablesWithIntrinsicBounds(null, null, weatherIcon, null);
                 tvLocation.setText(Location);
             }
+
 
             @Override
             public void onError(Exception e) {
@@ -213,6 +332,4 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
-
 }
