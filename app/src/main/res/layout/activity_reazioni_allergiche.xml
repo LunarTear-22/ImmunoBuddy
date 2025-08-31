@@ -22,6 +22,10 @@
             layout="@layout/header_layout_menu"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        layout="@layout/drawer_menu"
+        android:visibility="gone"/>
+
     <!-- TITOLO SEZIONE -->
     <TextView
         android:id="@+id/section_title"
