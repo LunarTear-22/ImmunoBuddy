@@ -137,6 +137,7 @@
 
             <!-- Gravità -->
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputGravitaLayout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -297,10 +298,11 @@
 
                 <Button
                     android:id="@+id/aggiungi_image_btn"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="@drawable/ic_add_fab"
                     android:contentDescription="Aggiungi foto"
+                    app:backgroundTint="@color/text_dark"
                     android:text="" />
             </LinearLayout>
 

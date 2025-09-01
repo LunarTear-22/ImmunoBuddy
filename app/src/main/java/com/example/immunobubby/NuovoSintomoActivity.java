@@ -1,5 +1,6 @@
 package com.example.immunobubby;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,17 +35,20 @@ public class NuovoSintomoActivity extends BaseActivity {
             this.colorRes = colorRes;
         }
     }
+    private TextInputEditText oraEditText;
+    private AutoCompleteTextView autoCompleteTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuovo_sintomo);
+        autoCompleteTextView = findViewById(R.id.dropdown);
+        setupGravitaDropdown();
 
         // Trova la view dal layout
-        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdown);
+
 
         String[] options = {"Lieve", "Moderato", "Significativo", "Grave"};
-        AutoCompleteTextView dropdown = findViewById(R.id.dropdown);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.dropdown_gravita, options) {
             @NonNull
@@ -95,9 +101,6 @@ public class NuovoSintomoActivity extends BaseActivity {
             }
         };
 
-
-        dropdown.setAdapter(adapter);
-
         autoCompleteTextView.setAdapter(adapter);
 
         // Campo per la data
@@ -121,6 +124,36 @@ public class NuovoSintomoActivity extends BaseActivity {
                 datePicker.show(getSupportFragmentManager(), "DATE_PICKER_SINTOMO");
             });
         }
+
+        oraEditText = findViewById(R.id.ora_edit_text);
+        oraEditText.setOnClickListener(v -> showTimePicker());
     }
 
+    private void showTimePicker() {
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(hour)
+                .setMinute(minute)
+                .setTitleText("Scegli l'orario")
+                .build();
+
+        picker.addOnPositiveButtonClickListener(v -> {
+            int selectedHour = picker.getHour();
+            int selectedMinute = picker.getMinute();
+
+            oraEditText.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+        });
+
+        picker.show(getSupportFragmentManager(), "TIME_PICKER");
+    }
+
+    private void setupGravitaDropdown() {
+        autoCompleteTextView.setKeyListener(null);
+        autoCompleteTextView.setFocusable(false);
+        autoCompleteTextView.setClickable(true);
+    }
 }

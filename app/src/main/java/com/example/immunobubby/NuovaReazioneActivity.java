@@ -55,13 +55,13 @@ public class NuovaReazioneActivity extends BaseActivity {
 
         initializeViews();
         setupClickListeners();
-        setupTextWatchers();
+        //setupTextWatchers();
         setupGravitaDropdown();
 
+        // Trova la view dal layout
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdown);
 
         String[] options = {"Lieve", "Moderato", "Significativo", "Grave"};
-        AutoCompleteTextView dropdown = findViewById(R.id.dropdown);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.dropdown_gravita, options) {
             @NonNull
@@ -114,8 +114,6 @@ public class NuovaReazioneActivity extends BaseActivity {
             }
         };
 
-
-        dropdown.setAdapter(adapter);
         autoCompleteTextView.setAdapter(adapter);
     }
 
@@ -232,7 +230,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         saveButton.setOnClickListener(v -> saveReaction());
     }
 
-    private void setupTextWatchers() {
+   /* private void setupTextWatchers() {
         setupFieldWatcher(dataEditText, dataLayout);
         setupFieldWatcher(oraEditText, oraLayout);
         setupFieldWatcher(allergeneEditText, allergeneLayout);
@@ -250,7 +248,7 @@ public class NuovaReazioneActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateFieldBackground(gravitaLayout, !s.toString().trim().isEmpty());
+               // updateFieldBackground(gravitaLayout, !s.toString().trim().isEmpty());
             }
         });
     }
@@ -265,18 +263,18 @@ public class NuovaReazioneActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateFieldBackground(layout, !s.toString().trim().isEmpty());
+               // updateFieldBackground(layout, !s.toString().trim().isEmpty());
             }
         });
     }
 
-    private void updateFieldBackground(TextInputLayout layout, boolean isFilled) {
+    /*private void updateFieldBackground(TextInputLayout layout, boolean isFilled) {
         if (isFilled) {
             layout.setBoxBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         } else {
             layout.setBoxBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
         }
-    }
+    }*/
 
     private void setupGravitaDropdown() {
         gravitaDropdown.setKeyListener(null);
