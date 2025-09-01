@@ -57,8 +57,8 @@
             <!-- INDICATORE GRAVITÀ -->
             <View
                 android:id="@+id/severity_indicator"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_marginStart="12dp"
                 android:background="@drawable/circle_indicator"
                 app:layout_constraintTop_toTopOf="parent"

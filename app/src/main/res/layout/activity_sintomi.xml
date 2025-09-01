@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sintomi_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    tools:ignore="HardcodedText">
+
+    <!-- HEADER -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            layout="@layout/header_layout_menu"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/drawer_menu"
+        android:visibility="gone"/>
+
+    <!-- TITOLO PAGINA -->
+    <TextView
+        android:id="@+id/section_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sintomi registrati"
+        android:textColor="@color/text_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- INTESTAZIONE LISTA (Sintomi | Frequenza | Gravità) -->
+    <LinearLayout
+        android:id="@+id/list_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintTop_toBottomOf="@id/section_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/header_sintomi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sintomi"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/header_frequenza"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequenza"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp"
+            android:layout_gravity="end"/>
+
+        <TextView
+            android:id="@+id/header_gravita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gravità"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp"
+            android:layout_gravity="end"/>
+    </LinearLayout>
+
+    <!-- RECYCLER VIEW LISTA SINTOMI -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sintomi_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:layout_constraintTop_toBottomOf="@id/list_header"
+        app:layout_constraintBottom_toTopOf="@+id/btnAggiornaFrequenza"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_sintomo" />
+
+    <!-- CONTENITORE BOTTONI -->
+    <LinearLayout
+        android:id="@+id/buttons_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/sintomi_recycler"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navbar">
+
+        <!-- Bottone AGGIORNA FREQUENZA -->
+        <Button
+            android:id="@+id/btnAggiorna"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aggiorna frequenza"
+            android:backgroundTint="@color/primary_light"
+            android:textColor="@color/text_dark"
+            app:cornerRadius="24dp" />
+
+        <!-- Bottone ANNULLA -->
+        <Button
+            android:id="@+id/btnAnnulla"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annulla"
+            android:visibility="gone"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/primary_light"
+            android:textColor="@color/text_dark"
+            app:cornerRadius="24dp" />
+
+        <!-- Bottone SALVA -->
+        <Button
+            android:id="@+id/btnSalva"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salva"
+            android:visibility="gone"
+            android:backgroundTint="@color/primary_medium"
+            android:textColor="@color/text_dark"
+            app:cornerRadius="24dp" />
+    </LinearLayout>
+
+    <!-- FAB PER NUOVO SINTOMO -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddSintomo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primary_medium"
+        android:layout_margin="16dp"
+        app:maxImageSize="24dp"
+        app:tint="@color/text_dark"
+        app:fabCustomSize="56dp"
+        android:contentDescription="Aggiungi sintomo"
+        app:layout_constraintBottom_toTopOf="@id/navbar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- NAVIGATION BAR -->
+    <include
+        layout="@layout/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
