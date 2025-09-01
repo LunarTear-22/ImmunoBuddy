@@ -1,8 +1,12 @@
 package com.example.immunobubby;
 
 import android.content.Context;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +27,20 @@ import java.util.List;
 
 public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.MedicineViewHolder> {
 
-    private List<MedicineReminder> reminders;
-    private OnTimeClickListener timeClickListener;
+    private static final String TAG = "FarmaciAdapter";
+
+    private final List<MedicineReminder> reminders;
+    private final OnTimeClickListener timeClickListener;
+    private final Runnable saveCallback;
 
     public interface OnTimeClickListener {
         void onTimeClick(int position, MaterialButton btnTime);
     }
 
-    public MedicinesAdapter(List<MedicineReminder> reminders, OnTimeClickListener listener) {
+    public MedicinesAdapter(List<MedicineReminder> reminders, OnTimeClickListener listener, Runnable saveCallback) {
         this.reminders = reminders;
         this.timeClickListener = listener;
+        this.saveCallback = saveCallback;
     }
 
     @NonNull
@@ -45,47 +53,86 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
 
     @Override
     public void onBindViewHolder(@NonNull MedicineViewHolder holder, int position) {
-        MedicineReminder reminder = reminders.get(position);
+        int adapterPosition = holder.getAdapterPosition();
+        if (adapterPosition == RecyclerView.NO_POSITION) return;
+
+        MedicineReminder reminder = reminders.get(adapterPosition);
 
         holder.txtName.setText(reminder.getName());
-        holder.btnTime.setText(String.format("%02d:%02d", reminder.getHour(), reminder.getMinute()));
+        Log.d(TAG, "[Bind] Posizione " + adapterPosition + ", nome iniziale: '" + reminder.getName() + "'");
 
-        // Espansione card + sezione interna con animazione
+        // --- Handler per debounce ---
+        final Handler handler = new Handler();
+        final Runnable[] saveRunnable = new Runnable[1];
+
+        holder.txtName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                reminder.setName(s.toString());
+                Log.d(TAG, "[TextChanged] Posizione " + adapterPosition + ", nome aggiornato: '" + s + "'");
+
+                // Rimuove eventuale salvataggio precedente
+                if (saveRunnable[0] != null) handler.removeCallbacks(saveRunnable[0]);
+
+                // Programma il salvataggio dopo 500 ms di inattività
+                saveRunnable[0] = () -> {
+                    saveCallback.run();
+                    Log.d(TAG, "[DebounceSave] Nome salvato: '" + reminder.getName() + "' (posizione " + adapterPosition + ")");
+                };
+                handler.postDelayed(saveRunnable[0], 500);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        // --- Resto del bind invariato ---
+        holder.btnTime.setText(String.format("%02d:%02d", reminder.getHour(), reminder.getMinute()));
+        holder.btnTime.setOnClickListener(v -> {
+            if (timeClickListener != null) timeClickListener.onTimeClick(adapterPosition, holder.btnTime);
+            Log.d(TAG, "[TimeClick] Click su ora (posizione " + adapterPosition + ")");
+        });
+
+        // Espansione card
         holder.expandButton.setOnClickListener(v -> {
             boolean isExpanded = holder.expandedSection.getVisibility() == View.VISIBLE;
-
             TransitionManager.beginDelayedTransition(holder.card, new AutoTransition().setDuration(300));
-
-            if (isExpanded) {
-                holder.expandedSection.setVisibility(View.GONE);
-                holder.expandButton.animate().rotation(0f).setDuration(300).start();
-            } else {
-                holder.expandedSection.setVisibility(View.VISIBLE);
-                holder.expandButton.animate().rotation(180f).setDuration(300).start();
-            }
+            holder.expandedSection.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+            holder.expandButton.animate().rotation(isExpanded ? 0f : 180f).setDuration(300).start();
+            Log.d(TAG, "[ExpandClick] Card " + (isExpanded ? "chiusa" : "aperta") + " (posizione " + adapterPosition + ")");
         });
 
-        // Click su ora
-        holder.btnTime.setOnClickListener(v -> {
-            if (timeClickListener != null) {
-                timeClickListener.onTimeClick(position, holder.btnTime);
-            }
-        });
-
-        // Aggiorna chip selezionati dai giorni
+        // Chip giorni
         for (int i = 0; i < holder.chipGroup.getChildCount(); i++) {
             Chip chip = (Chip) holder.chipGroup.getChildAt(i);
             int day = mapChipToDayOfWeek(chip.getId());
+
+            chip.setOnCheckedChangeListener(null);
             chip.setChecked(reminder.getDays().contains(day));
 
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     if (!reminder.getDays().contains(day)) reminder.getDays().add(day);
+                    Log.d(TAG, "[ChipChecked] Giorno aggiunto: " + day + " (posizione " + adapterPosition + ")");
                 } else {
                     reminder.getDays().remove((Integer) day);
+                    Log.d(TAG, "[ChipChecked] Giorno rimosso: " + day + " (posizione " + adapterPosition + ")");
                 }
+                saveCallback.run();
             });
         }
+
+        // Switch attivo
+        holder.switchButton.setOnCheckedChangeListener(null);
+        holder.switchButton.setChecked(reminder.isActive());
+        holder.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            reminder.setActive(isChecked);
+            Log.d(TAG, "[Switch] Stato promemoria: " + (isChecked ? "attivo" : "inattivo") + " (posizione " + adapterPosition + ")");
+            saveCallback.run();
+        });
 
         // Chiudi tastiera al click esterno
         holder.card.setOnClickListener(v -> {
@@ -94,26 +141,21 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
                 hideKeyboard(holder.txtName);
             }
         });
-
-        holder.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            reminder.setActive(isChecked); // aggiorna lo stato del promemoria
-        });
-
     }
+
+
+
 
     @Override
     public int getItemCount() {
         return reminders.size();
     }
 
-    // Metodo helper per nascondere tastiera
     private void hideKeyboard(View view) {
         if (view == null) return;
         Context context = view.getContext();
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static class MedicineViewHolder extends RecyclerView.ViewHolder {
@@ -134,8 +176,6 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
             expandedSection = itemView.findViewById(R.id.expandedSection);
             chipGroup = itemView.findViewById(R.id.chipGroupDays);
             switchButton = itemView.findViewById(R.id.switchButton);
-
-            // Disabilita linea sottostante del TextInputEditText
             txtName.setBackground(null);
         }
     }
