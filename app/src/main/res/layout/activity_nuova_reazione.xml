@@ -240,7 +240,7 @@
                         android:text="Si"
                         android:textColor="@color/text_dark"
                         android:layout_marginEnd="16dp"
-                        app:buttonTint="@color/text_dark" />
+                        app:buttonTint="@color/radio_button_color" />
 
                     <RadioButton
                         android:id="@+id/no_radio_button"
@@ -248,7 +248,7 @@
                         android:layout_height="wrap_content"
                         android:text="No"
                         android:textColor="@color/text_dark"
-                        app:buttonTint="@color/text_dark" />
+                        app:buttonTint="@color/radio_button_color"/>
 
                 </RadioGroup>
             </LinearLayout>

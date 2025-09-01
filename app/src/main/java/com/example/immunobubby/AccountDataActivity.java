@@ -46,9 +46,10 @@ public class AccountDataActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_data);
 
+
+
         prefs = getSharedPreferences("UserData", Context.MODE_PRIVATE);
         // Trova la view dal layout
-        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdown);
 
         // campi form
         inputNome = findViewById(R.id.input_nome);
@@ -57,6 +58,8 @@ public class AccountDataActivity extends BaseActivity {
         dropdownGender = findViewById(R.id.dropdown);
         checkCaregiver = findViewById(R.id.check_caregiver);
         btnFab = findViewById(R.id.btnFab);
+
+        setupGenderDropdown();
 
         // banner
         background = findViewById(R.id.background);
@@ -96,6 +99,12 @@ public class AccountDataActivity extends BaseActivity {
 
         btnFab.setOnClickListener(v -> saveUserData());
         bannerAction.setOnClickListener(v -> closeBanner());
+    }
+
+    private void setupGenderDropdown() {
+        dropdownGender.setKeyListener(null);
+        dropdownGender.setFocusable(false);
+        dropdownGender.setClickable(true);
     }
 
     private void saveUserData() {
