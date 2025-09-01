@@ -83,7 +83,7 @@ public class ReazioniAllergicheActivity extends BaseActivity {
     private void setupRecyclerView() {
         reactionsList = new ArrayList<>();
         adapter = new ReazioneAdapter(this, reactionsList);
-        //adapter.setOnReactionClickListener(this::onReactionClick);
+        adapter.setOnReactionClickListener(this::onReactionClick);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
@@ -171,28 +171,6 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    /* private void showSortMenu(View anchor) {
-        PopupMenu popup = new PopupMenu(this, anchor);
-        popup.getMenu().add(Menu.NONE, 1, 1, "Data ↓");
-        popup.getMenu().add(Menu.NONE, 2, 2, "Data ↑");
-        popup.getMenu().add(Menu.NONE, 3, 3, "Gravità ↓");
-        popup.getMenu().add(Menu.NONE, 4, 4, "Gravità ↑");
-
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case 1: sortByDateDesc(); break;
-                case 2: sortByDateAsc(); break;
-                case 3: sortByGravityDesc(); break;
-                case 4: sortByGravityAsc(); break;
-            }
-            adapter.notifyDataSetChanged();
-            return true;
-        });
-
-        popup.show();
-    }
-    */
-
     private void sortByDateDesc() {
         Collections.sort(reactionsList, (r1, r2) -> r2.getData().compareTo(r1.getData()));
     }
@@ -209,8 +187,6 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         Collections.sort(reactionsList, Comparator.comparingInt(Reazione::getGravitaValue));
     }
 
-    // --------------------
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -221,4 +197,3 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         }
     }
 }
-

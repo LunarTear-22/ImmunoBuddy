@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
     private boolean isFabMenuOpen = false;
     private TextView tvTemperature, tvLocation, tvConsiglio;
     private TextView tvPolline1, tvPolline2, tvPolline3;
-    private MaterialButton btnMostraKit, btnMostraPollini;
+    private MaterialButton btnMostraKit, btnMostraPollini, btnMostraReazioni;
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     private static final int CALL_PERMISSION_REQUEST_CODE = 200;
@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity {
         // Bottoni
         btnMostraKit = findViewById(R.id.btnMostraKit);
         btnMostraPollini = findViewById(R.id.btnMostraPollini);
+        btnMostraReazioni = findViewById(R.id.btnMostraReazioni);
 
         // Mostra consiglio del giorno
         mostraConsiglioGiornaliero();
@@ -172,6 +173,8 @@ public class MainActivity extends BaseActivity {
         // Bottoni kit e pollini
         btnMostraKit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
         btnMostraPollini.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
+        btnMostraReazioni.setOnClickListener(v -> startActivity(new Intent(this, ReazioniAllergicheActivity.class)));
+
     }
 
     private void aggiornaVisibilitaCard() {
