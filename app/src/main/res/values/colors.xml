@@ -6,6 +6,7 @@
     <color name="primary_medium">#9acbfb</color>
     <color name="primary_medium_transparent">#809acbfb</color>
     <color name="primary_dark">#5ca8ff</color>
+    <color name="primary_dark_transparent">#805ca8ff</color>
     <color name="text_dark">#001229</color>
     <color name="text_dark_transparent">#80001229</color>
     <color name="white">#FFFFFF</color>

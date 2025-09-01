@@ -58,6 +58,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="12dp"
                 android:hint="Sintomo*"
+                android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
                 app:hintTextColor="@color/text_dark">
 
@@ -66,6 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:inputType="textCapSentences"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -79,6 +82,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="12dp"
                 android:hint="Data*"
+                android:textColorHint="@color/text_dark"
                 app:endIconMode="custom"
                 app:endIconDrawable="@drawable/calendar_add_on_24px"
                 app:endIconTint="@color/text_dark"
@@ -93,6 +97,8 @@
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -106,6 +112,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="12dp"
                 android:hint="Ora"
+                android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
                 app:hintTextColor="@color/text_dark">
 
@@ -117,6 +124,8 @@
                     android:clickable="true"
                     android:cursorVisible="false"
                     android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
                     android:textColor="@color/text_dark"
                     android:textColorHint="@color/text_dark"
                     android:textCursorDrawable="@null"/>
@@ -130,11 +139,13 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="12dp"
                 android:hint="Gravità*"
+                android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
+                app:hintTextColor="@color/text_dark"
+                app:endIconTint="@color/text_dark">
 
                 <AutoCompleteTextView
-                    android:id="@+id/dropdownGravitaSintomo"
+                    android:id="@+id/dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:inputType="none"

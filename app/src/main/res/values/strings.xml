@@ -14,6 +14,12 @@
         <item>Donna</item>
         <item>Altro</item>
     </string-array>
-    <string name="gravita_prompt">Seleziona gravità</string>
+    <string-array name="gravita_sintomo">
+        <item>Lieve 🟢</item>
+        <item>Moderato 🟡</item>
+        <item>Significativo 🟠</item>
+        <item>Grave 🔴</item>
+    </string-array>
+
 
 </resources>

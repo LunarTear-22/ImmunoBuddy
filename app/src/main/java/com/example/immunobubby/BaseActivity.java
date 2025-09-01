@@ -304,7 +304,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void setupDropdownDividerColor() {
-        MaterialAutoCompleteTextView dropdown = findViewById(R.id.dropdownGender);
+        MaterialAutoCompleteTextView dropdown = findViewById(R.id.dropdown);
         if (dropdown != null) {
             dropdown.setDropDownBackgroundDrawable(
                     getResources().getDrawable(R.drawable.bg_dropdown)

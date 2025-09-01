@@ -47,12 +47,14 @@ public class AccountDataActivity extends BaseActivity {
         setContentView(R.layout.activity_account_data);
 
         prefs = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        // Trova la view dal layout
+        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdown);
 
         // campi form
         inputNome = findViewById(R.id.input_nome);
         inputCognome = findViewById(R.id.input_cognome);
         inputDob = findViewById(R.id.input_dob);
-        dropdownGender = findViewById(R.id.dropdownGender);
+        dropdownGender = findViewById(R.id.dropdown);
         checkCaregiver = findViewById(R.id.check_caregiver);
         btnFab = findViewById(R.id.btnFab);
 

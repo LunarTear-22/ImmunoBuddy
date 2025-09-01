@@ -57,7 +57,6 @@ public class FarmaciActivity extends BaseActivity {
                 .setHour(hour)
                 .setMinute(minute)
                 .setTitleText("Scegli l'orario")
-                .setPositiveButtonText("Imposta il promemoria")
                 .build();
 
         picker.addOnPositiveButtonClickListener(v -> {

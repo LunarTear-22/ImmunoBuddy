@@ -31,7 +31,6 @@ import java.util.Map;
 public class MainActivity extends BaseActivity {
 
     private boolean isFabMenuOpen = false;
-
     private TextView tvTemperature, tvLocation, tvConsiglio;
     private TextView tvPolline1, tvPolline2, tvPolline3;
     private MaterialButton btnMostraKit, btnMostraPollini;
