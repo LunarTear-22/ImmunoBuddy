@@ -153,10 +153,7 @@ public class MainActivity extends BaseActivity {
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> startActivity(new Intent(this, NuovaReazioneActivity.class)));
         fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
-        fab3.setOnClickListener(v -> {
-            //Intent i = new Intent(this, NuovoSintomoActivity.class);
-            //startActivity(i);
-        });
+        fab3.setOnClickListener(v -> startActivity(new Intent(this, NuovoSintomoActivity.class)));
 
         // Permessi posizione → richiesta unica
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, () -> {
