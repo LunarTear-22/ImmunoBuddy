@@ -1,6 +1,7 @@
 package com.example.immunobubby;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -68,6 +69,34 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences userPrefs = getSharedPreferences("UserData", MODE_PRIVATE);
+        boolean profileCompleted = userPrefs.getBoolean("profile_completed", false);
+        boolean firstLaunchDone = userPrefs.getBoolean("first_launch_done", false);
+
+        if (!firstLaunchDone) {
+            // Segna che la prima apertura è stata gestita
+            userPrefs.edit().putBoolean("first_launch_done", true).apply();
+
+            // Mostra welcome screen
+            startActivity(new Intent(this, WelcomeActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            finish();
+            return; // interrompe l'esecuzione di onCreate
+        }
+
+        setContentView(R.layout.activity_main);
+
+        // Se il profilo non è ancora completato, manda l'utente a completarlo
+        if (!profileCompleted) {
+            startActivity(new Intent(this, AccountDataActivity.class));
+            finish();
+            return;
+        }
+
+        TextView tvWelcome = findViewById(R.id.tvWelcome);
+
+        tvWelcome.setText("Ciao, " + userPrefs.getString("nome", "Utente"));
+
         // FAB principale e secondari
         FloatingActionButton fabMain = findViewById(R.id.btnFab);
         LinearLayout fabMenuLayout = findViewById(R.id.fabMenuLayout);
@@ -95,9 +124,6 @@ public class MainActivity extends BaseActivity {
         // Mostra visibilità card
         aggiornaVisibilitaCard();
 
-        // Carica i primi 3 pollini
-        caricaPollini();
-
         // Toggle FAB menu
         fabMain.setOnClickListener(v -> {
             if (isFabMenuOpen) {
@@ -121,26 +147,21 @@ public class MainActivity extends BaseActivity {
                 fabMain.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.primary_medium));
                 isFabMenuOpen = true;
             }
-
         });
-
 
         // Azioni sui FAB secondari
-        fab1.setOnClickListener(v -> {
-            Intent i = new Intent(this, NuovaReazioneActivity.class);
-            startActivity(i);
-        });
-        fab2.setOnClickListener(v -> {
-            Intent i = new Intent(this, FarmaciActivity.class);
-            startActivity(i);
-        });
+        fab1.setOnClickListener(v -> startActivity(new Intent(this, NuovaReazioneActivity.class)));
+        fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
         fab3.setOnClickListener(v -> {
-            Intent i = new Intent(this, NuovoSintomoActivity.class);
-            startActivity(i);
+            //Intent i = new Intent(this, NuovoSintomoActivity.class);
+            //startActivity(i);
         });
 
-        // Permessi posizione
-        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::fetchLocationAndWeather);
+        // Permessi posizione → richiesta unica
+        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, () -> {
+            fetchLocationAndWeather();
+            caricaPollini();
+        });
 
         // Bottone SOS
         findViewById(R.id.btnSOS).setOnClickListener(v ->
@@ -170,7 +191,6 @@ public class MainActivity extends BaseActivity {
         cardConsiglio.setVisibility(prefs.getBoolean("consiglio_giorno", true) ? View.VISIBLE : View.GONE);
     }
 
-
     private void mostraConsiglioGiornaliero() {
         SharedPreferences prefs = getSharedPreferences("CONSILGIO_PREFS", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -190,65 +210,60 @@ public class MainActivity extends BaseActivity {
         tvConsiglio.setText(consigli[indexToShow]);
     }
 
+    @SuppressLint("MissingPermission")
     private void caricaPollini() {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, location -> {
-                        if (location != null) {
-                            double lat = location.getLatitude();
-                            double lon = location.getLongitude();
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        double lat = location.getLatitude();
+                        double lon = location.getLongitude();
 
-                            PollenManager pollenManager = new PollenManager(this, "AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU");
-                            pollenManager.fetchPollens(lat, lon, new PollenManager.PollenCallback() {
-                                @Override
-                                public void onData(List<PollenData> pollens) {
-                                    runOnUiThread(() -> {
-                                        Map<String, String> pollenNamesIt = new HashMap<String, String>() {{
-                                            put("alder", "Ontano"); put("hazel", "Nocciolo"); put("ash", "Frassino"); put("fraxinus", "Frassino");
-                                            put("birch", "Betulla"); put("poplar", "Pioppo"); put("willow", "Salice"); put("oak", "Quercia");
-                                            put("olive", "Olivo"); put("pine", "Pino"); put("cedar", "Cedro"); put("japanese_cedar", "Cedro giapponese");
-                                            put("japanese_cypress", "Cipresso giapponese"); put("maple", "Acero"); put("elm", "Olmo");
-                                            put("juniper", "Ginepro"); put("mulberry", "Gelso"); put("cottonwood", "Pioppo da cotone"); put("hornbeam", "Carpino");
-                                            put("beech", "Faggio"); put("cypress_pine", "Pino cipresso");
+                        PollenManager pollenManager = new PollenManager(this, "AIzaSyAdeZWce_XP6K9Iq5GuTz6-bGHZ8XcWMsU");
+                        pollenManager.fetchPollens(lat, lon, new PollenManager.PollenCallback() {
+                            @Override
+                            public void onData(List<PollenData> pollens) {
+                                runOnUiThread(() -> {
+                                    Map<String, String> pollenNamesIt = new HashMap<String, String>() {{
+                                        put("alder", "Ontano"); put("hazel", "Nocciolo"); put("ash", "Frassino"); put("fraxinus", "Frassino");
+                                        put("birch", "Betulla"); put("poplar", "Pioppo"); put("willow", "Salice"); put("oak", "Quercia");
+                                        put("olive", "Olivo"); put("pine", "Pino"); put("cedar", "Cedro"); put("japanese_cedar", "Cedro giapponese");
+                                        put("japanese_cypress", "Cipresso giapponese"); put("maple", "Acero"); put("elm", "Olmo");
+                                        put("juniper", "Ginepro"); put("mulberry", "Gelso"); put("cottonwood", "Pioppo da cotone"); put("hornbeam", "Carpino");
+                                        put("beech", "Faggio"); put("cypress_pine", "Pino cipresso");
 
-                                            put("grass", "Graminacee"); put("rye", "Segale"); put("timothy", "Timoteo"); put("plantain", "Piantaggine");
-                                            put("herbs", "Erbe"); put("bluegrass", "Festuca"); put("fescue", "Fescua"); put("bentgrass", "Poacea");
-                                            put("oat", "Avena"); put("ryegrass", "Lolium"); put("meadowgrass", "Erba medica"); put("sweet_vernal_grass", "Erba dolce");
-                                            put("redtop", "Erba rossa"); put("creeping_bentgrass", "Poa strisciante"); put("timothy_hay", "Fieno di timoteo");
+                                        put("grass", "Graminacee"); put("rye", "Segale"); put("timothy", "Timoteo"); put("plantain", "Piantaggine");
+                                        put("herbs", "Erbe"); put("bluegrass", "Festuca"); put("fescue", "Fescua"); put("bentgrass", "Poacea");
+                                        put("oat", "Avena"); put("ryegrass", "Lolium"); put("meadowgrass", "Erba medica"); put("sweet_vernal_grass", "Erba dolce");
+                                        put("redtop", "Erba rossa"); put("creeping_bentgrass", "Poa strisciante"); put("timothy_hay", "Fieno di timoteo");
 
-                                            put("ragweed", "Ambrosia"); put("ambrosia", "Ambrosia"); put("mugwort", "Artemisia"); put("artemisia", "Artemisia");
-                                            put("chamomile", "Camomilla"); put("nettle", "Ortica"); put("dock", "Acetosella"); put("sagebrush", "Artemisia");
-                                            put("thistle", "Cardo"); put("pigweed", "Poligono"); put("lamb's_quarters", "Chenopodio"); put("goosefoot", "Chenopodio");
-                                            put("sowthistle", "Sonchus"); put("dandelion", "Dente di leone"); put("plantain_weed", "Piantaggine");
-                                            put("common_ragweed", "Ambrosia comune"); put("giant_ragweed", "Ambrosia gigante"); put("common_mugwort", "Artemisia comune"); put("giant_hogweed", "Erba del diavolo");
+                                        put("ragweed", "Ambrosia"); put("ambrosia", "Ambrosia"); put("mugwort", "Artemisia"); put("artemisia", "Artemisia");
+                                        put("chamomile", "Camomilla"); put("nettle", "Ortica"); put("dock", "Acetosella"); put("sagebrush", "Artemisia");
+                                        put("thistle", "Cardo"); put("pigweed", "Poligono"); put("lamb's_quarters", "Chenopodio"); put("goosefoot", "Chenopodio");
+                                        put("sowthistle", "Sonchus"); put("dandelion", "Dente di leone"); put("plantain_weed", "Piantaggine");
+                                        put("common_ragweed", "Ambrosia comune"); put("giant_ragweed", "Ambrosia gigante"); put("common_mugwort", "Artemisia comune"); put("giant_hogweed", "Erba del diavolo");
 
-                                            put("mold", "Muffa"); put("alternaria", "Alternaria"); put("cladosporium", "Cladosporium");
-                                            put("aspergillus", "Aspergillus"); put("penicillium", "Penicillium");
-                                        }};
+                                        put("mold", "Muffa"); put("alternaria", "Alternaria"); put("cladosporium", "Cladosporium");
+                                        put("aspergillus", "Aspergillus"); put("penicillium", "Penicillium");
+                                    }};
 
-                                        if (pollens.size() > 0) tvPolline1.setText(pollenNamesIt.getOrDefault(pollens.get(0).getName().toLowerCase(), pollens.get(0).getName()));
-                                        if (pollens.size() > 1) tvPolline2.setText(pollenNamesIt.getOrDefault(pollens.get(1).getName().toLowerCase(), pollens.get(1).getName()));
-                                        if (pollens.size() > 2) tvPolline3.setText(pollenNamesIt.getOrDefault(pollens.get(2).getName().toLowerCase(), pollens.get(2).getName()));
-                                    });
-                                }
+                                    if (pollens.size() > 0) tvPolline1.setText(pollenNamesIt.getOrDefault(pollens.get(0).getName().toLowerCase(), pollens.get(0).getName()));
+                                    if (pollens.size() > 1) tvPolline2.setText(pollenNamesIt.getOrDefault(pollens.get(1).getName().toLowerCase(), pollens.get(1).getName()));
+                                    if (pollens.size() > 2) tvPolline3.setText(pollenNamesIt.getOrDefault(pollens.get(2).getName().toLowerCase(), pollens.get(2).getName()));
+                                });
+                            }
 
-                                @Override
-                                public void onError(Exception e) {
-                                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Errore caricamento pollini", Toast.LENGTH_SHORT).show());
-                                }
-                            });
-                        } else {
-                            Toast.makeText(this, "Posizione non disponibile", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_PERMISSION_REQUEST_CODE, this::caricaPollini);
-        }
+                            @Override
+                            public void onError(Exception e) {
+                                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Errore caricamento pollini", Toast.LENGTH_SHORT).show());
+                            }
+                        });
+                    } else {
+                        Toast.makeText(this, "Posizione non disponibile", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
-
-
 
     private void openFab(ExtendedFloatingActionButton fab, int delay) {
         fab.setVisibility(View.VISIBLE);
@@ -262,7 +277,6 @@ public class MainActivity extends BaseActivity {
                 .withEndAction(() -> fab.setVisibility(View.GONE)).start();
     }
 
-    // Metodo universale per i permessi
     private void checkPermission(String permission, int requestCode, Runnable onGranted) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             permissionCallbacks.put(requestCode, onGranted);
@@ -272,7 +286,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    // Gestione della risposta ai permessi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -294,7 +307,6 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    // Recupero posizione + meteo
     private void fetchLocationAndWeather() {
         WeatherManager weatherManager = new WeatherManager(this, "7ad36df0013e9b8963d7d47bcca7cfec");
         weatherManager.fetchWeather(new WeatherManager.WeatherCallback() {
@@ -306,7 +318,6 @@ public class MainActivity extends BaseActivity {
                 String displayTemp = temperature;
                 if ("F".equals(tempUnit)) {
                     try {
-                        // Converti da Celsius a Fahrenheit
                         float tempC = Float.parseFloat(temperature.replace("°C", ""));
                         float tempF = tempC * 9 / 5 + 32;
                         displayTemp = Math.round(tempF) + "°F";
@@ -321,12 +332,14 @@ public class MainActivity extends BaseActivity {
                 tvLocation.setText(Location);
             }
 
-
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                Toast.makeText(MainActivity.this, "Impossibile recuperare il meteo", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() ->
+                        Toast.makeText(MainActivity.this, "Impossibile recuperare il meteo", Toast.LENGTH_SHORT).show()
+                );
             }
+
         });
     }
 }

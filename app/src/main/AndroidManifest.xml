@@ -104,6 +104,13 @@
             android:name=".ReazioniAllergicheActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".WelcomeActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".SintomiActivity"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

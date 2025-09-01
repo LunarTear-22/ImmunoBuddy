@@ -4,12 +4,12 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +19,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class SottocategoriaActivity extends BaseActivity {
+
+    private static final String TAG = "SottocategoriaActivity";
 
     private TextView txtNomeSottocategoria;
     private ImageView btnChevron;
@@ -33,10 +35,8 @@ public class SottocategoriaActivity extends BaseActivity {
         setContentView(R.layout.activity_sottocategoria);
 
         FloatingActionButton btnCheck = findViewById(R.id.btnCeck);
-
         btnCheck.setEnabled(false);
-        btnCheck.setAlpha(0.5f); // opzionale: per indicare visivamente che è disabilitato
-
+        btnCheck.setAlpha(0.5f);
 
         txtNomeSottocategoria = findViewById(R.id.txtNomeSottocategoria);
         btnChevron = findViewById(R.id.btnChevron);
@@ -46,12 +46,17 @@ public class SottocategoriaActivity extends BaseActivity {
         // Recupera dati dall'Intent
         String nomeSottocategoria = getIntent().getStringExtra("categoria_nome");
         ArrayList<String> allergeni = getIntent().getStringArrayListExtra("sottocategorie");
+        String categoriaPadre = getIntent().getStringExtra("categoria_padre");
+
+        Log.d(TAG, "Intent ricevuto - categoria_nome: " + nomeSottocategoria +
+                ", categoria_padre: " + categoriaPadre +
+                ", numero sottocategorie: " + (allergeni != null ? allergeni.size() : 0));
 
         txtNomeSottocategoria.setText(nomeSottocategoria);
 
         // Imposta RecyclerView
         recyclerSottocategorie.setLayoutManager(new LinearLayoutManager(this));
-        AllergeniSpecificiAdapter adapter = new AllergeniSpecificiAdapter(this, allergeni);
+        AllergeniSpecificiAdapter adapter = new AllergeniSpecificiAdapter(this, allergeni, categoriaPadre);
         recyclerSottocategorie.setAdapter(adapter);
 
         // Click sulla card per espandere/chiudere
@@ -61,6 +66,8 @@ public class SottocategoriaActivity extends BaseActivity {
     private void toggleExpansion() {
         expanded = !expanded;
 
+        Log.d(TAG, "toggleExpansion - expanded: " + expanded);
+
         // Animazione apertura/chiusura
         TransitionManager.beginDelayedTransition(cardSottocategoriaAllergene, new AutoTransition());
         recyclerSottocategorie.setVisibility(expanded ? View.VISIBLE : View.GONE);
@@ -68,6 +75,7 @@ public class SottocategoriaActivity extends BaseActivity {
     }
 
     private void rotateChevron(ImageView chevron, float from, float to) {
+        Log.d(TAG, "rotateChevron - from: " + from + ", to: " + to);
         ObjectAnimator animator = ObjectAnimator.ofFloat(chevron, "rotation", from, to);
         animator.setDuration(300);
         animator.start();

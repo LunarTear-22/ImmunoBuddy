@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            app:icon="@drawable/ic_alert"
+            app:icon="@drawable/allergy_24px"
             app:iconTint="@color/text_dark"
             app:iconSize="28dp"
             app:iconGravity="textEnd"

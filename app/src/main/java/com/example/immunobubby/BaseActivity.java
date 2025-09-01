@@ -85,8 +85,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         farmaci.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
         kit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
         qualita.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
-
+        sintomi.setOnClickListener(view -> startActivity(new Intent(this, SintomiActivity.class)));
         percorsi.setOnClickListener(v -> startActivity(new Intent(this, PercorsiAlternativiActivity.class)));
+        reazioni.setOnClickListener(view -> startActivity(new Intent(this, ReazioniAllergicheActivity.class)));
 
         // Nascondi menu inizialmente fuori dallo schermo
         drawerMenu.setTranslationX(-drawerMenu.getWidth());

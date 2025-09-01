@@ -8,6 +8,10 @@
     android:orientation="vertical"
     tools:ignore="HardcodedText">
 
+    <include
+        layout="@layout/custom_banner_save"
+        />
+
     <!-- Back button -->
     <include
         layout="@layout/back_button"
@@ -38,12 +42,15 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
+
+
     <!-- Avatar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:gravity="center">
+
 
         <ImageView
             android:layout_width="80dp"
@@ -81,7 +88,7 @@
                     android:id="@+id/input_nome"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:hint="Nome"
+                    android:hint="Nome*"
                     android:inputType="textPersonName"
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
@@ -207,10 +214,14 @@
         app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
         app:tint="@color/text_dark" />
 
+
+
     <!-- NAVIGATION BAR -->
     <include
         layout="@layout/navbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+
 
 </LinearLayout>

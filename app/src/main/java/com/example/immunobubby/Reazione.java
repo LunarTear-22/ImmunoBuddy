@@ -129,6 +129,18 @@ public class Reazione implements Serializable {
         }
     }
 
+    public int getGravitaValue() {
+        if (gravita == null) return 0;
+        switch (gravita.toLowerCase()) {
+            case "lieve": return 1;
+            case "moderato": return 2;
+            case "significativo": return 3;
+            case "grave": return 4;
+            default: return 0;
+        }
+    }
+
+
     // Validation method for required fields
     public boolean isValid() {
         return data != null &&

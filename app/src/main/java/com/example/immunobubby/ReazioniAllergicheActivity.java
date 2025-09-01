@@ -2,24 +2,27 @@ package com.example.immunobubby;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
-public class ReazioniAllergicheActivity extends AppCompatActivity {
+public class ReazioniAllergicheActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private ReazioneAdapter adapter;
     private List<Reazione> reactionsList;
     private FloatingActionButton fabAddReaction;
+    private boolean isDateAscending = true;
+    private boolean isGravitaAscending = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,24 @@ public class ReazioniAllergicheActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reazioni_allergiche);
 
         initViews();
+        TextView sortByDate = findViewById(R.id.sortByDate);
+        TextView sortByGravita = findViewById(R.id.sortByGravita);
+
+        sortByDate.setOnClickListener(v -> {
+            sortByDate(isDateAscending);
+            isDateAscending = !isDateAscending; // toggle
+            adapter.notifyDataSetChanged();
+        });
+
+        sortByGravita.setOnClickListener(v -> {
+            sortByGravita(isGravitaAscending);
+            isGravitaAscending = !isGravitaAscending; // toggle
+            adapter.notifyDataSetChanged();
+        });
+
         setupRecyclerView();
         loadReactions();
+        sortByDateDesc(); // ordinamento di default
         setupClickListeners();
     }
 
@@ -37,16 +56,42 @@ public class ReazioniAllergicheActivity extends AppCompatActivity {
         fabAddReaction = findViewById(R.id.btnAddReaction);
     }
 
+    private void sortByDate(boolean ascending) {
+        reactionsList.sort((r1, r2) -> {
+            if (r1.getData() == null || r2.getData() == null) return 0;
+            int cmp = r1.getData().compareTo(r2.getData());
+            return ascending ? cmp : -cmp;
+        });
+    }
+
+    private void sortByGravita(boolean ascending) {
+        java.util.Map<String, Integer> gravitaMap = new java.util.HashMap<>();
+        gravitaMap.put("Lieve", 1);
+        gravitaMap.put("Moderato", 2);
+        gravitaMap.put("Significativo", 3);
+        gravitaMap.put("Grave", 4);
+
+        reactionsList.sort((r1, r2) -> {
+            int g1 = gravitaMap.getOrDefault(r1.getGravita(), 0);
+            int g2 = gravitaMap.getOrDefault(r2.getGravita(), 0);
+            int cmp = Integer.compare(g1, g2);
+            return ascending ? cmp : -cmp;
+        });
+    }
+
+
     private void setupRecyclerView() {
         reactionsList = new ArrayList<>();
         adapter = new ReazioneAdapter(this, reactionsList);
-        adapter.setOnReactionClickListener(this::onReactionClick);
+        //adapter.setOnReactionClickListener(this::onReactionClick);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
 
     private void loadReactions() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        reactionsList.clear();
 
         try {
             Reazione reaction1 = new Reazione();
@@ -103,6 +148,20 @@ public class ReazioniAllergicheActivity extends AppCompatActivity {
             Intent intent = new Intent(this, NuovaReazioneActivity.class);
             startActivityForResult(intent, 1001);
         });
+
+        TextView sortByDate = findViewById(R.id.sortByDate);
+        TextView sortByGravita = findViewById(R.id.sortByGravita);
+
+        sortByDate.setOnClickListener(v -> {
+            sortByDateDesc(); // o alterna asc/desc
+            adapter.notifyDataSetChanged();
+        });
+
+        sortByGravita.setOnClickListener(v -> {
+            sortByGravityDesc(); // o alterna asc/desc
+            adapter.notifyDataSetChanged();
+        });
+
     }
 
     private void onReactionClick(Reazione reaction) {
@@ -112,14 +171,54 @@ public class ReazioniAllergicheActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /* private void showSortMenu(View anchor) {
+        PopupMenu popup = new PopupMenu(this, anchor);
+        popup.getMenu().add(Menu.NONE, 1, 1, "Data ↓");
+        popup.getMenu().add(Menu.NONE, 2, 2, "Data ↑");
+        popup.getMenu().add(Menu.NONE, 3, 3, "Gravità ↓");
+        popup.getMenu().add(Menu.NONE, 4, 4, "Gravità ↑");
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case 1: sortByDateDesc(); break;
+                case 2: sortByDateAsc(); break;
+                case 3: sortByGravityDesc(); break;
+                case 4: sortByGravityAsc(); break;
+            }
+            adapter.notifyDataSetChanged();
+            return true;
+        });
+
+        popup.show();
+    }
+    */
+
+    private void sortByDateDesc() {
+        Collections.sort(reactionsList, (r1, r2) -> r2.getData().compareTo(r1.getData()));
+    }
+
+    private void sortByDateAsc() {
+        Collections.sort(reactionsList, Comparator.comparing(Reazione::getData));
+    }
+
+    private void sortByGravityDesc() {
+        Collections.sort(reactionsList, (r1, r2) -> Integer.compare(r2.getGravitaValue(), r1.getGravitaValue()));
+    }
+
+    private void sortByGravityAsc() {
+        Collections.sort(reactionsList, Comparator.comparingInt(Reazione::getGravitaValue));
+    }
+
+    // --------------------
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
             loadReactions();
+            sortByDateDesc();
+            adapter.notifyDataSetChanged();
         }
     }
-
-
-
 }
+
