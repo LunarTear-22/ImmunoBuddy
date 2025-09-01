@@ -25,7 +25,7 @@ public class AccountDataActivity extends BaseActivity {
         setContentView(R.layout.activity_account_data);
 
         // Trova la view dal layout
-        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdownGender);
+        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.dropdown);
 
         // Prende l'array di opzioni definito in strings.xml
         String[] items = getResources().getStringArray(R.array.gender_options);

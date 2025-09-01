@@ -124,10 +124,7 @@ public class MainActivity extends BaseActivity {
 
         });
 
-        // FAB secondari
-        fab1.setOnClickListener(v ->startActivity(new Intent(this, NuovaReazioneActivity.class)));
-        fab2.setOnClickListener(v -> startActivity(new Intent(this, FarmaciActivity.class)));
-        fab3.setOnClickListener(v -> { /* TODO: Azione FAB3 */ });
+
         // Azioni sui FAB secondari
         fab1.setOnClickListener(v -> {
             Intent i = new Intent(this, NuovaReazioneActivity.class);
@@ -138,8 +135,8 @@ public class MainActivity extends BaseActivity {
             startActivity(i);
         });
         fab3.setOnClickListener(v -> {
-            //Intent i = new Intent(this, SintomiActivity.class);
-            //startActivity(i);
+            Intent i = new Intent(this, NuovoSintomoActivity.class);
+            startActivity(i);
         });
 
         // Permessi posizione

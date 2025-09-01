@@ -157,7 +157,7 @@
                 app:endIconTint="@color/text_dark">
 
                 <AutoCompleteTextView
-                    android:id="@+id/dropdownGender"
+                    android:id="@+id/dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:hint="Genere"
