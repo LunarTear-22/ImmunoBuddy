@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
             android:id="@+id/Welcome"
-            android:text="Benvent* in ImmunoBuddy!"
+            android:text="Benvenuto in ImmunoBuddy!"
             android:textColor="@color/text_dark"
             android:textSize="24sp"
             android:fontFamily="@font/inter_bold"

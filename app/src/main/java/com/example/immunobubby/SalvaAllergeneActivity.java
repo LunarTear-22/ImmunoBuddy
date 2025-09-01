@@ -1,6 +1,7 @@
 package com.example.immunobubby;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +12,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SalvaAllergeneActivity extends BaseActivity {
 
@@ -71,9 +80,35 @@ public class SalvaAllergeneActivity extends BaseActivity {
     }
 
     private boolean salvaAllergene(String allergene) {
-        // TODO: implementa il salvataggio reale
-        return true;
+        try {
+            SharedPreferences prefs = getSharedPreferences("AllergeniPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            Gson gson = new Gson();
+            String json = prefs.getString("allergeni", "[]");
+
+            Type listType = new TypeToken<ArrayList<Allergene>>(){}.getType();
+            List<Allergene> allergeni = gson.fromJson(json, listType);
+            if (allergeni == null) allergeni = new ArrayList<>();
+
+            // Recupero categoria dall’intent
+            String categoria = getIntent().getStringExtra("categoria_nome");
+
+            // Creo e aggiungo l’allergene con categoria
+            allergeni.add(new Allergene(allergene, categoria, null));
+
+            editor.putString("allergeni", gson.toJson(allergeni));
+            editor.apply();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
+
+
 
     private void showBannerSave(String messaggio) {
         setupBanner(messaggio, R.color.text_dark, R.drawable.bookmark_check_24px,

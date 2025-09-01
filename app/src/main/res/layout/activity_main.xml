@@ -47,7 +47,8 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:text="@string/ciao_francesca"
+                        android:text="Ciao!"
+                        android:id="@+id/tvWelcome"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/inter_bold"
