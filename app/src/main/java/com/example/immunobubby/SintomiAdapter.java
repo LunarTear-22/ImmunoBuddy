@@ -1,16 +1,14 @@
 package com.example.immunobubby;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import androidx.appcompat.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -38,44 +36,47 @@ public class SintomiAdapter extends RecyclerView.Adapter<SintomiAdapter.SintomiV
     public void onBindViewHolder(@NonNull SintomiViewHolder holder, int position) {
         Sintomi sintomo = sintomiList.get(position);
 
+        // Nome e frequenza
         holder.txtNome.setText(sintomo.getNome());
         holder.txtFrequenza.setText(sintomo.getFrequenza() != null ? sintomo.getFrequenza() : "");
 
-        // Colore del pallino in base alla gravità (string compare, case-insensitive)
-        String grav = sintomo.getGravita();
+        // Colore del pallino gravità
         int colorRes = getSeverityColor(sintomo.getGravita());
-        Drawable background = holder.severityIndicator.getBackground();
-        if (background != null) {
-            background = DrawableCompat.wrap(background.mutate());
-            DrawableCompat.setTint(background, ContextCompat.getColor(context, colorRes));
-            holder.severityIndicator.setBackground(background);
-        }
-
-        // Assicurati che statusDot abbia un background (es. drawable dot_circle)
-        if (holder.statusDot.getBackground() != null) {
-            holder.statusDot.getBackground().setTint(ContextCompat.getColor(context, colorRes));
-        } else {
-            holder.statusDot.setBackgroundColor(ContextCompat.getColor(context, colorRes));
-        }
+        holder.statusDot.getBackground().setTint(ContextCompat.getColor(context, colorRes));
 
         // Click sulla frequenza SOLO se siamo in modalità modifica
-        holder.frequenzaTextView.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Seleziona frequenza");
+        if (isEditingMode) {
+            holder.txtFrequenza.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Seleziona frequenza");
 
-            String[] opzioni = {"Molto frequente", "Frequente", "Raro", "Molto raro"};
+                String[] opzioni = {"Molto frequente", "Frequente", "Raro", "Molto raro"};
 
-            builder.setItems(opzioni, (dialog, which) -> {
-                String nuovaFrequenza = opzioni[which];
-                sintomo.setFrequenza(nuovaFrequenza);
-                notifyItemChanged(holder.getAdapterPosition());
+                builder.setItems(opzioni, (dialog, which) -> {
+                    String nuovaFrequenza = opzioni[which];
+                    sintomo.setFrequenza(nuovaFrequenza);
+                    notifyItemChanged(holder.getAdapterPosition());
+                });
+
+                builder.show();
             });
-
-            builder.show();
-        });
-
+        } else {
+            holder.txtFrequenza.setOnClickListener(null);
+        }
     }
 
+    @Override
+    public int getItemCount() {
+        return sintomiList.size();
+    }
+
+    /** Cambia modalità modifica */
+    public void setEditingMode(boolean editing) {
+        this.isEditingMode = editing;
+        notifyDataSetChanged();
+    }
+
+    /** Mappa gravità → colore */
     private int getSeverityColor(String gravita) {
         if (gravita == null) return R.color.gravity_mild;
 
@@ -98,25 +99,9 @@ public class SintomiAdapter extends RecyclerView.Adapter<SintomiAdapter.SintomiV
         }
     }
 
-
-    @Override
-    public int getItemCount() {
-        return sintomiList.size();
-    }
-
-    public void setEditingMode(boolean editing) {
-        this.isEditingMode = editing;
-        notifyDataSetChanged();
-    }
-
-    public List<Sintomi> getSintomiList() {
-        return sintomiList;
-    }
-
+    /** ViewHolder */
     static class SintomiViewHolder extends RecyclerView.ViewHolder {
-        View frequenzaTextView;
         TextView txtNome, txtFrequenza;
-        View severityIndicator;
         View statusDot;
 
         SintomiViewHolder(@NonNull View itemView) {
@@ -127,3 +112,4 @@ public class SintomiAdapter extends RecyclerView.Adapter<SintomiAdapter.SintomiV
         }
     }
 }
+

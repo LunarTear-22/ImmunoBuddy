@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -59,22 +60,24 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
             holder.severityIndicator.setBackground(background);
         }
 
+        // Espansione
         boolean isExpanded = position == expandedPosition;
-        holder.detailLayout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.detailsContainer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
         if (isExpanded) {
             populateDetailView(holder, reaction);
         }
 
+        // Toggle espansione con click sulla riga
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             if (currentPosition == RecyclerView.NO_POSITION) return;
 
             int previousExpandedPosition = expandedPosition;
             if (currentPosition == expandedPosition) {
-                expandedPosition = -1;
+                expandedPosition = -1; // chiudi
             } else {
-                expandedPosition = currentPosition;
+                expandedPosition = currentPosition; // apri
             }
 
             if (previousExpandedPosition != -1) {
@@ -83,13 +86,6 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
             notifyItemChanged(currentPosition);
         });
 
-        holder.closeButton.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
-            if (currentPosition == RecyclerView.NO_POSITION) return;
-
-            expandedPosition = -1;
-            notifyItemChanged(currentPosition);
-        });
     }
 
     @Override
@@ -146,8 +142,6 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-        holder.detailTitle.setText(generateReactionName(reaction));
-        holder.detailData.setText(dateFormat.format(reaction.getData()));
         holder.detailOra.setText(reaction.getOra() != null ? timeFormat.format(reaction.getOra()) : "Non specificato");
         holder.detailAllergeni.setText(reaction.getAllergene() != null ? reaction.getAllergene() : "Non specificato");
 
@@ -176,17 +170,14 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
         TextView reactionName;
         TextView reactionDate;
         View severityIndicator;
-        ViewGroup detailLayout;
-        TextView closeButton;
-        TextView detailTitle;
-        TextView detailData;
+        ViewGroup detailsContainer;
         TextView detailOra;
         TextView detailAllergeni;
         TextView detailSintomi;
         TextView detailMedico;
         TextView detailFarmaci;
         TextView detailNote;
-        RecyclerView detailPhotosRecycler;
+        ImageView detailPhotos;
 
         public ReactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -194,17 +185,14 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
             reactionDate = itemView.findViewById(R.id.reaction_date);
             severityIndicator = itemView.findViewById(R.id.severity_indicator);
 
-            detailLayout = itemView.findViewById(R.id.detail_layout);
-            closeButton = itemView.findViewById(R.id.close_button);
-            detailTitle = itemView.findViewById(R.id.detail_title);
-            detailData = itemView.findViewById(R.id.detail_data);
+            detailsContainer = itemView.findViewById(R.id.details_container);
             detailOra = itemView.findViewById(R.id.detail_ora);
             detailAllergeni = itemView.findViewById(R.id.detail_allergeni);
             detailSintomi = itemView.findViewById(R.id.detail_sintomi);
             detailMedico = itemView.findViewById(R.id.detail_medico);
             detailFarmaci = itemView.findViewById(R.id.detail_farmaci);
             detailNote = itemView.findViewById(R.id.detail_note);
-            detailPhotosRecycler = itemView.findViewById(R.id.detail_photos_recycler);
+            detailPhotos = itemView.findViewById(R.id.detail_photos_recycler);
         }
     }
 }
