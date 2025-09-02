@@ -3,9 +3,12 @@ package com.example.immunobubby;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,31 +26,31 @@ public class ReazioniAllergicheActivity extends BaseActivity {
     private boolean isDateAscending = true;
     private boolean isGravitaAscending = true;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reazioni_allergiche);
 
         initViews();
-        TextView sortByDate = findViewById(R.id.sortByDate);
-        TextView sortByGravita = findViewById(R.id.sortByGravita);
+        setupRecyclerView();
+        loadReactions();
+        sortByDateDesc(); // ordinamento di default
 
-        sortByDate.setOnClickListener(v -> {
+        TextView tvSortByDate = findViewById(R.id.header_data);
+        TextView tvSortByGravita = findViewById(R.id.header_gravita);
+
+        tvSortByDate.setOnClickListener(v -> {
             sortByDate(isDateAscending);
             isDateAscending = !isDateAscending; // toggle
             adapter.notifyDataSetChanged();
         });
 
-        sortByGravita.setOnClickListener(v -> {
+        tvSortByGravita.setOnClickListener(v -> {
             sortByGravita(isGravitaAscending);
             isGravitaAscending = !isGravitaAscending; // toggle
             adapter.notifyDataSetChanged();
         });
 
-        setupRecyclerView();
-        loadReactions();
-        sortByDateDesc(); // ordinamento di default
         setupClickListeners();
     }
 
@@ -55,30 +58,6 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         recyclerView = findViewById(R.id.reactions_recycler);
         fabAddReaction = findViewById(R.id.btnAddReaction);
     }
-
-    private void sortByDate(boolean ascending) {
-        reactionsList.sort((r1, r2) -> {
-            if (r1.getData() == null || r2.getData() == null) return 0;
-            int cmp = r1.getData().compareTo(r2.getData());
-            return ascending ? cmp : -cmp;
-        });
-    }
-
-    private void sortByGravita(boolean ascending) {
-        java.util.Map<String, Integer> gravitaMap = new java.util.HashMap<>();
-        gravitaMap.put("Lieve", 1);
-        gravitaMap.put("Moderato", 2);
-        gravitaMap.put("Significativo", 3);
-        gravitaMap.put("Grave", 4);
-
-        reactionsList.sort((r1, r2) -> {
-            int g1 = gravitaMap.getOrDefault(r1.getGravita(), 0);
-            int g2 = gravitaMap.getOrDefault(r2.getGravita(), 0);
-            int cmp = Integer.compare(g1, g2);
-            return ascending ? cmp : -cmp;
-        });
-    }
-
 
     private void setupRecyclerView() {
         reactionsList = new ArrayList<>();
@@ -90,14 +69,13 @@ public class ReazioniAllergicheActivity extends BaseActivity {
 
     private void loadReactions() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
         reactionsList.clear();
 
         try {
             Reazione reaction1 = new Reazione();
             reaction1.setData(dateFormat.parse("17/08/2025"));
             reaction1.setAllergene("pistacchi");
-            reaction1.setGravita("Media");
+            reaction1.setGravita("Moderato"); // cambiato da "Media"
             reaction1.addSintomo("Gonfiore");
             reactionsList.add(reaction1);
 
@@ -125,7 +103,7 @@ public class ReazioniAllergicheActivity extends BaseActivity {
             Reazione reaction5 = new Reazione();
             reaction5.setData(dateFormat.parse("06/05/2025"));
             reaction5.setAllergene("frutta secca");
-            reaction5.setGravita("Media");
+            reaction5.setGravita("Moderato"); // cambiato da "Media"
             reaction5.addSintomo("Prurito orale");
             reactionsList.add(reaction5);
 
@@ -143,32 +121,13 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void setupClickListeners() {
-        fabAddReaction.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NuovaReazioneActivity.class);
-            startActivityForResult(intent, 1001);
+    // ORDINAMENTO PER DATA
+    private void sortByDate(boolean ascending) {
+        reactionsList.sort((r1, r2) -> {
+            if (r1.getData() == null || r2.getData() == null) return 0;
+            int cmp = r1.getData().compareTo(r2.getData());
+            return ascending ? cmp : -cmp;
         });
-
-        TextView sortByDate = findViewById(R.id.sortByDate);
-        TextView sortByGravita = findViewById(R.id.sortByGravita);
-
-        sortByDate.setOnClickListener(v -> {
-            sortByDateDesc(); // o alterna asc/desc
-            adapter.notifyDataSetChanged();
-        });
-
-        sortByGravita.setOnClickListener(v -> {
-            sortByGravityDesc(); // o alterna asc/desc
-            adapter.notifyDataSetChanged();
-        });
-
-    }
-
-    private void onReactionClick(Reazione reaction) {
-        Intent intent = new Intent(this, NuovaReazioneActivity.class);
-        intent.putExtra("edit_mode", true);
-        intent.putExtra("reaction_data", reaction);
-        startActivity(intent);
     }
 
     private void sortByDateDesc() {
@@ -179,12 +138,34 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         Collections.sort(reactionsList, Comparator.comparing(Reazione::getData));
     }
 
-    private void sortByGravityDesc() {
-        Collections.sort(reactionsList, (r1, r2) -> Integer.compare(r2.getGravitaValue(), r1.getGravitaValue()));
+    // ORDINAMENTO PER GRAVITÀ
+    private void sortByGravita(boolean ascending) {
+        java.util.Map<String, Integer> gravitaMap = new java.util.HashMap<>();
+        gravitaMap.put("Lieve", 1);
+        gravitaMap.put("Moderato", 2);
+        gravitaMap.put("Significativo", 3);
+        gravitaMap.put("Grave", 4);
+
+        reactionsList.sort((r1, r2) -> {
+            int g1 = gravitaMap.getOrDefault(r1.getGravita(), 0);
+            int g2 = gravitaMap.getOrDefault(r2.getGravita(), 0);
+            int cmp = Integer.compare(g1, g2);
+            return ascending ? cmp : -cmp;
+        });
     }
 
-    private void sortByGravityAsc() {
-        Collections.sort(reactionsList, Comparator.comparingInt(Reazione::getGravitaValue));
+    private void setupClickListeners() {
+        fabAddReaction.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NuovaReazioneActivity.class);
+            startActivityForResult(intent, 1001);
+        });
+    }
+
+    private void onReactionClick(Reazione reaction) {
+        Intent intent = new Intent(this, NuovaReazioneActivity.class);
+        intent.putExtra("edit_mode", true);
+        intent.putExtra("reaction_data", reaction);
+        startActivity(intent);
     }
 
     @Override

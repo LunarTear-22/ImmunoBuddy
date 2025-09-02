@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Nome Contatto..."
                 android:textColorHint="@color/text_dark_transparent"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_dark"
                 android:layout_weight="2"
@@ -37,7 +37,7 @@
 
         <!-- Icona azione (es. chiamata) -->
         <ImageButton
-            android:id="@+id/contactAction"
+            android:id="@+id/btnAction"
             android:layout_width="0dp"
             android:layout_height="32dp"
             android:src="@drawable/delete_24px"

@@ -10,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +54,17 @@ public class SintomiActivity extends BaseActivity {
 
     /** Carica i dati di esempio */
     private void loadSintomi() {
+
         sintomiList.clear();
 
-        sintomiList.add(new Sintomi("Mal di testa", "Frequente", "Moderato"));
-        sintomiList.add(new Sintomi("Nausea", "Raro", "Lieve"));
-        sintomiList.add(new Sintomi("Febbre", "Molto raro", "Significativo"));
+        Sintomi sintomo1 = new Sintomi("Mal di testa", "frequente", "Moderato");
+        sintomiList.add(sintomo1);
+
+        Sintomi sintomo2 = new Sintomi("Nausea", "Raro", "Lieve");
+        sintomiList.add(sintomo2);
+
+        Sintomi sintomo3 = new Sintomi("Febbre", "Molto raro", "Significativo");
+        sintomiList.add(sintomo3);
 
         adapter.notifyDataSetChanged();
     }
