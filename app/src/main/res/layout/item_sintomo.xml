@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
-    android:gravity="center_vertical">
+    android:orientation="vertical"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="8dp">
 
-    <!-- Colonna: Sintomo -->
+    <!-- Riga compatta -->
+    <LinearLayout
+        android:id="@+id/compact_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Colonna: Frequenza (cliccabile in modalità modifica) -->
     <TextView
         android:id="@+id/txtSintomoNome"
         android:layout_width="0dp"
+        android:layout_weight="2.5"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Nome sintomo"
-        android:textSize="16sp"
-        android:textColor="@color/text_dark"
         android:ellipsize="end"
-        android:singleLine="true"
-        android:paddingEnd="8dp" />
+        android:maxLines="1"
+        android:text="Reazione"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:textSize="14sp"/>
 
     <!-- Colonna: Frequenza (cliccabile in modalità modifica) -->
     <TextView
         android:id="@+id/txtSintomoFrequenza"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1.5"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Frequenza"
-        android:textSize="14sp"
+        android:textSize="11sp"
         android:textColor="@color/text_dark"
-        android:paddingEnd="8dp"
         android:clickable="true"
         android:focusable="true" />
 
@@ -35,8 +45,8 @@
         android:id="@+id/gravita"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:background="@drawable/circle_indicator"
-        android:layout_marginEnd="4dp" />
+        android:background="@drawable/circle_indicator"/>
 
-</TableRow>
+    </LinearLayout>
 
+</LinearLayout>

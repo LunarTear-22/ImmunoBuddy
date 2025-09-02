@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -20,10 +23,10 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
     private List<Reazione> reactions;
     private Context context;
     private OnReactionClickListener listener;
-    private int expandedPosition = -1;
+    private boolean open = false;
 
     public interface OnReactionClickListener {
-        void onReactionClick(Reazione reaction);
+        void onReactionNameClick(Reazione reaction);
     }
 
     public ReazioneAdapter(Context context, List<Reazione> reactions) {
@@ -50,7 +53,7 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
         holder.reactionName.setText(reactionName);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        holder.reactionDate.setText(dateFormat.format(reaction.getData()));
+        holder.reactionDate.setText(reaction.getData() != null ? dateFormat.format(reaction.getData()) : "Non specificato");
 
         int colorRes = getSeverityColor(reaction.getGravita());
         Drawable background = holder.severityIndicator.getBackground();
@@ -60,33 +63,14 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
             holder.severityIndicator.setBackground(background);
         }
 
-        // Espansione
-        boolean isExpanded = position == expandedPosition;
-        holder.detailsContainer.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-
-        if (isExpanded) {
-            populateDetailView(holder, reaction);
-        }
-
-        // Toggle espansione con click sulla riga
-        holder.itemView.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
-            if (currentPosition == RecyclerView.NO_POSITION) return;
-
-            int previousExpandedPosition = expandedPosition;
-            if (currentPosition == expandedPosition) {
-                expandedPosition = -1; // chiudi
-            } else {
-                expandedPosition = currentPosition; // apri
+        // Click sul nome per mostrare la card
+        holder.reactionName.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onReactionNameClick(reaction);
             }
-
-            if (previousExpandedPosition != -1) {
-                notifyItemChanged(previousExpandedPosition);
-            }
-            notifyItemChanged(currentPosition);
         });
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -140,37 +124,58 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
 
     private void populateDetailView(ReactionViewHolder holder, Reazione reaction) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-        holder.detailOra.setText(reaction.getOra() != null ? timeFormat.format(reaction.getOra()) : "Non specificato");
-        holder.detailAllergeni.setText(reaction.getAllergene() != null ? reaction.getAllergene() : "Non specificato");
+        if(reaction.getOra()!=null){
+            holder.detailAllergeni.setText(reaction.getAllergene() != null ? reaction.getAllergene() : "Non specificato");
+            holder.detailOra.setText(reaction.getOra());
+        }
 
-        // Format symptoms list
+        /*if(reaction.getFoto() != null) {
+            holder.detailPhotos.setImageBitmap(reaction.getFoto());
+
+        }*/
+
+        // Data
+        if (reaction.getData() != null) {
+            holder.reactionDate.setText(dateFormat.format(reaction.getData()));
+        } else {
+            holder.reactionDate.setText("Non specificato");
+        }
+
+        // Ora (già String)
+        holder.detailOra.setText(reaction.getOra() != null && !reaction.getOra().isEmpty()
+                ? reaction.getOra()
+                : "Non specificato");
+
+        // Sintomi
         List<String> sintomi = reaction.getSintomi();
-        if (sintomi != null && !sintomi.isEmpty()) {
-            holder.detailSintomi.setText(String.join(", ", sintomi));
-        } else {
-            holder.detailSintomi.setText("Nessuno");
-        }
+        holder.detailSintomi.setText(sintomi != null && !sintomi.isEmpty()
+                ? String.join(", ", sintomi)
+                : "Nessuno");
 
-        holder.detailMedico.setText(reaction.getContattoMedico() != null ? (reaction.getContattoMedico() ? "Sì" : "No") : "Non specificato");
+        // Medico contattato
+        holder.detailMedico.setText(reaction.getContattoMedico() != null
+                ? (reaction.getContattoMedico() ? "Sì" : "No")
+                : "Non specificato");
 
-        // Format medications list
+        // Farmaci
         List<String> farmaci = reaction.getFarmaci();
-        if (farmaci != null && !farmaci.isEmpty()) {
-            holder.detailFarmaci.setText(String.join(", ", farmaci));
-        } else {
-            holder.detailFarmaci.setText("Nessuno");
-        }
+        holder.detailFarmaci.setText(farmaci != null && !farmaci.isEmpty()
+                ? String.join(", ", farmaci)
+                : "Nessuno");
 
-        holder.detailNote.setText(reaction.getNote() != null && !reaction.getNote().isEmpty() ? reaction.getNote() : "Assenti");
+        // Note
+        holder.detailNote.setText(reaction.getNote() != null && !reaction.getNote().isEmpty()
+                ? reaction.getNote()
+                : "Assenti");
     }
+
 
     static class ReactionViewHolder extends RecyclerView.ViewHolder {
         TextView reactionName;
         TextView reactionDate;
         View severityIndicator;
-        ViewGroup detailsContainer;
+        MaterialCardView detailsCardContainer;
         TextView detailOra;
         TextView detailAllergeni;
         TextView detailSintomi;
@@ -184,15 +189,14 @@ public class ReazioneAdapter extends RecyclerView.Adapter<ReazioneAdapter.Reacti
             reactionName = itemView.findViewById(R.id.reaction_name);
             reactionDate = itemView.findViewById(R.id.reaction_date);
             severityIndicator = itemView.findViewById(R.id.severity_indicator);
-
-            detailsContainer = itemView.findViewById(R.id.details_container);
+            detailsCardContainer = itemView.findViewById(R.id.reaction_detail_card);
             detailOra = itemView.findViewById(R.id.detail_ora);
             detailAllergeni = itemView.findViewById(R.id.detail_allergeni);
             detailSintomi = itemView.findViewById(R.id.detail_sintomi);
             detailMedico = itemView.findViewById(R.id.detail_medico);
             detailFarmaci = itemView.findViewById(R.id.detail_farmaci);
             detailNote = itemView.findViewById(R.id.detail_note);
-            detailPhotos = itemView.findViewById(R.id.detail_photos_recycler);
+            detailPhotos = itemView.findViewById(R.id.detail_photo);
         }
     }
 }
