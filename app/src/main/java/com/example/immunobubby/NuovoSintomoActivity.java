@@ -2,6 +2,7 @@ package com.example.immunobubby;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,19 +11,24 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 public class NuovoSintomoActivity extends BaseActivity {
@@ -38,8 +44,10 @@ public class NuovoSintomoActivity extends BaseActivity {
             this.colorRes = colorRes;
         }
     }
+    private TextInputEditText editNomeSintomo;
     private AutoCompleteTextView autoCompleteTextView;
     private AutoCompleteTextView autoCompleteFrequenza;
+    private FloatingActionButton saveBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,10 @@ public class NuovoSintomoActivity extends BaseActivity {
         autoCompleteTextView = findViewById(R.id.dropdown);
         setupDropdown(autoCompleteTextView);
         setupDropdownDividerColor(autoCompleteTextView);
+        editNomeSintomo = findViewById(R.id.inputSintomo);
+
+        saveBtn = findViewById(R.id.btnFab);
+        saveBtn.setOnClickListener(v -> salvaSintomo());
 
         // Trova la view dal layout
 
@@ -154,6 +166,62 @@ public class NuovoSintomoActivity extends BaseActivity {
         autoCompleteTextView.setClickable(true);
     }
 
+    private boolean validateSintomoForm() {
+        boolean isValid = true;
+
+        if (Objects.requireNonNull(editNomeSintomo.getText()).toString().trim().isEmpty()) {
+            editNomeSintomo.setError("Campo obbligatorio");
+            isValid = false;
+        } else {
+            editNomeSintomo.setError(null);
+        }
+
+        if (autoCompleteTextView.getText().toString().trim().isEmpty()) {
+            autoCompleteTextView.setError("Seleziona la gravità");
+            isValid = false;
+        } else {
+            autoCompleteTextView.setError(null);
+        }
+
+        if (autoCompleteFrequenza.getText().toString().trim().isEmpty()) {
+            autoCompleteFrequenza.setError("Seleziona la frequenza");
+            isValid = false;
+        } else {
+            autoCompleteFrequenza.setError(null);
+        }
+
+        return isValid;
     }
+
+    private void salvaSintomo() {
+        if (!validateSintomoForm()) {
+            Toast.makeText(this, "Compila tutti i campi obbligatori", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String nomeSintomo = Objects.requireNonNull(editNomeSintomo.getText()).toString();
+        String gravita = autoCompleteTextView.getText().toString();
+        String frequenza = autoCompleteFrequenza.getText().toString();
+
+        Sintomi nuovoSintomo = new Sintomi(nomeSintomo, frequenza, gravita);
+
+        // Recupera lista salvata
+        List<Sintomi> sintomiSalvati = SintomiStorage.loadSintomi(this);
+        if (sintomiSalvati == null) {
+            sintomiSalvati = new ArrayList<>();
+        }
+
+        sintomiSalvati.add(nuovoSintomo);
+
+        // Salva lista aggiornata
+        SintomiStorage.saveSintomi(this, sintomiSalvati);
+
+        Toast.makeText(this, "Sintomo salvato!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, SintomiActivity.class);
+        startActivity(intent);
+    }
+
+
+}
 
 

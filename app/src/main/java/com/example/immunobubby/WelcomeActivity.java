@@ -16,9 +16,11 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_welcome); // Layout con il messaggio di benvenuto
 
         new Handler().postDelayed(() -> {
-            // Dopo il timer, manda l’utente a completare il profilo
-            startActivity(new Intent(WelcomeActivity.this, AccountDataActivity.class));
+            Intent intent = new Intent(WelcomeActivity.this, AccountDataActivity.class);
+            intent.putExtra("hideNavbar", true); // flag
+            startActivity(intent);
             finish();
         }, SPLASH_DURATION);
+
     }
 }

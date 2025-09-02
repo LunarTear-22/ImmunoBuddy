@@ -46,6 +46,20 @@ public class AccountDataActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_data);
 
+        boolean hideNavbar = getIntent().getBooleanExtra("hideNavbar", false);
+
+        if (hideNavbar) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide(); // nasconde la ActionBar
+            }
+
+            // Se usi anche una BottomNavigationView
+            View bottomNav = findViewById(R.id.navbar);
+            if (bottomNav != null) {
+                bottomNav.setVisibility(View.GONE);
+            }
+        }
+
 
 
         prefs = getSharedPreferences("UserData", Context.MODE_PRIVATE);

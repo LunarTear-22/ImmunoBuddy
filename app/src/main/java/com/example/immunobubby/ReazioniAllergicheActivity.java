@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +17,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,18 +46,39 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         sortByDateDesc(); // ordinamento di default
 
         TextView tvSortByDate = findViewById(R.id.header_data);
-        TextView tvSortByGravita = findViewById(R.id.header_gravita);
+        ImageButton icSortByGravita = findViewById(R.id.header_gravita);
+        ImageButton icSortDate = findViewById(R.id.header_data_icon);
+        LinearLayout headerData = findViewById(R.id.header_data_container);
 
+        // CLICK PER ORDINAMENTO DATA
         tvSortByDate.setOnClickListener(v -> {
             sortByDate(isDateAscending);
-            isDateAscending = !isDateAscending; // toggle
             adapter.notifyDataSetChanged();
+            rotateIcon(icSortDate, isDateAscending);
+            isDateAscending = !isDateAscending;
+        });
+        icSortDate.setOnClickListener(v -> {
+            sortByDate(isDateAscending);
+            adapter.notifyDataSetChanged();
+            rotateIcon(icSortDate, isDateAscending);
+            isDateAscending = !isDateAscending;
+        });
+        headerData.setOnClickListener(v -> {
+            sortByDate(isDateAscending);
+            adapter.notifyDataSetChanged();
+            rotateIcon(icSortDate, isDateAscending);
+            isDateAscending = !isDateAscending;
         });
 
-        tvSortByGravita.setOnClickListener(v -> {
+        // CLICK PER ORDINAMENTO GRAVITÀ
+        icSortByGravita.setOnClickListener(v -> {
             sortByGravita(isGravitaAscending);
-            isGravitaAscending = !isGravitaAscending; // toggle
             adapter.notifyDataSetChanged();
+
+            // Animazione rotazione ImageButton
+            rotateIcon(icSortByGravita, isGravitaAscending);
+
+            isGravitaAscending = !isGravitaAscending;
         });
 
         setupClickListeners();
@@ -75,14 +97,11 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
     }
 
-
-        private void loadReactions() {
-            reactionsList.clear();
-            reactionsList.addAll(ReazioneStorage.loadReactions(this));
-            adapter.notifyDataSetChanged();
-        }
-
-
+    private void loadReactions() {
+        reactionsList.clear();
+        reactionsList.addAll(ReazioneStorage.loadReactions(this));
+        adapter.notifyDataSetChanged();
+    }
 
     // ORDINAMENTO PER DATA
     private void sortByDate(boolean ascending) {
@@ -122,7 +141,6 @@ public class ReazioniAllergicheActivity extends BaseActivity {
             Intent intent = new Intent(this, NuovaReazioneActivity.class);
             startActivityForResult(intent, 1001);
         });
-
     }
 
     private void onReactionNameClick(Reazione reaction) {
@@ -142,38 +160,23 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         TextView tvDetailNote = reactionDetailCard.findViewById(R.id.detail_note);
         ImageView ivDetailFoto = reactionDetailCard.findViewById(R.id.detail_photo);
 
-        // Nome reazione
         tvDetailNome.setText(generateReactionName(reaction));
 
-        // Data
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         tvDetailData.setText(reaction.getData() != null ? sdf.format(reaction.getData()) : "Non specificato");
-
-        // Ora
         tvDetailOra.setText(reaction.getOra() != null ? reaction.getOra() : "Non specificato");
-
-        // Allergene
         tvDetailAllergene.setText(reaction.getAllergene() != null ? reaction.getAllergene() : "Non specificato");
-
-        // Sintomi
         tvDetailSintomi.setText(reaction.getSintomi() != null && !reaction.getSintomi().isEmpty()
                 ? String.join(", ", reaction.getSintomi())
                 : "Nessuno");
-
-        // Farmaci
         tvDetailFarmaci.setText(reaction.getFarmaci() != null && !reaction.getFarmaci().isEmpty()
                 ? String.join(", ", reaction.getFarmaci())
                 : "Nessuno");
-
-        // Contatto medico
         tvDetailMedico.setText(reaction.getContattoMedico() != null
                 ? (reaction.getContattoMedico() ? "Sì" : "No")
                 : "Non specificato");
-
-        // Note
         tvDetailNote.setText(reaction.getNote() != null ? reaction.getNote() : "Assenti");
 
-        // Foto (mostra prima foto se presente)
         if (reaction.getFoto() != null && !reaction.getFoto().isEmpty()) {
             File imgFile = new File(reaction.getFoto().get(0));
             if (imgFile.exists()) {
@@ -191,7 +194,6 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         closeButton.setOnClickListener(v -> reactionDetailCard.setVisibility(View.GONE));
     }
 
-    // Metodo helper per il nome della reazione (puoi spostarlo in Activity se vuoi)
     private String generateReactionName(Reazione reaction) {
         if (reaction == null) return "Reazione allergica";
         String allergen = reaction.getAllergene();
@@ -207,8 +209,15 @@ public class ReazioniAllergicheActivity extends BaseActivity {
         }
     }
 
-
-
+    // ANIMAZIONI ROTAZIONE
+    private void rotateIcon(View view, boolean ascending) {
+        float toDegree = ascending ? 180f : 0f;
+        view.animate()
+                .rotation(toDegree)
+                .setDuration(300)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -52,7 +52,8 @@
             app:layout_constraintTop_toBottomOf="@id/section_title"
             app:layout_constraintBottom_toTopOf="@id/buttons_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp">
 
         <!-- INTESTAZIONE LISTA (Sintomi | Frequenza | Gravità) -->
         <LinearLayout
@@ -60,45 +61,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:gravity="center_vertical">
 
                 <!-- Colonna Sintomi -->
                 <TextView
                     android:id="@+id/header_sintomi"
                     android:layout_width="0dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Sintomi"
                     android:textStyle="bold"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textColor="@color/text_dark"/>
 
-                <!-- Colonna Frequenza -->
-                <TextView
-                    android:id="@+id/header_frequenza"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Frequenza"
-                    android:textStyle="bold"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_dark"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/header_Frequenza_container"
+                android:layout_weight="1.5"
+                android:gravity="center_vertical">
 
-                <!-- Colonna Gravità -->
-                <TextView
-                    android:id="@+id/header_gravita"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="-"
+                <ImageButton
+                    android:id="@+id/header_Frequenza_icon"
+                    android:rotation="180"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/sort_24px"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/text_dark"
                     android:clickable="true"
-                    android:focusable="true"/>
+                    android:focusable="true"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="ordina"/>
+
+
+                <TextView
+                    android:id="@+id/header_Frequenza"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Frequenza"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_dark"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/header_gravita"
+                android:rotation="180"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:src="@drawable/sort_24px"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/text_dark"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@android:color/transparent"
+                android:contentDescription="ordina"/>
 
         </LinearLayout>
 
@@ -109,8 +135,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         tools:listitem="@layout/item_sintomo" />
 
         </LinearLayout>
@@ -172,7 +196,7 @@
         android:layout_margin="16dp"
         app:maxImageSize="24dp"
         app:tint="@color/text_dark"
-        app:fabCustomSize="56dp"
+        app:fabCustomSize="48dp"
         android:contentDescription="Aggiungi sintomo"
         app:layout_constraintBottom_toTopOf="@id/navbar"
         app:layout_constraintEnd_toEndOf="parent"
