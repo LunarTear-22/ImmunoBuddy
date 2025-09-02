@@ -28,7 +28,7 @@
 
     <!-- Pulsante elimina -->
     <ImageButton
-        android:id="@+id/btnRemoveOther"
+        android:id="@+id/btnAction"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/delete_24px"
