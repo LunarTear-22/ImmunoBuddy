@@ -57,7 +57,7 @@ public class SintomiActivity extends BaseActivity {
 
         sintomiList.clear();
 
-        Sintomi sintomo1 = new Sintomi("Mal di testa", "frequente", "Moderato");
+        Sintomi sintomo1 = new Sintomi("Mal di testa", "Frequente", "Moderato");
         sintomiList.add(sintomo1);
 
         Sintomi sintomo2 = new Sintomi("Nausea", "Raro", "Lieve");

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -54,11 +55,13 @@
         <TextView android:id="@+id/detail_ora"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ora:"/>
+            android:text="Ora:"
+            android:textColor="@color/text_dark"/>
         <TextView android:id="@+id/detail_allergeni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Allergene:"/>
+            android:text="Allergene:"
+            android:textColor="@color/text_dark"/>
         <TextView android:id="@+id/detail_sintomi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,15 +69,18 @@
         <TextView android:id="@+id/detail_farmaci"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Farmaci:"/>
+            android:text="Farmaci:"
+            android:textColor="@color/text_dark"/>
         <TextView android:id="@+id/detail_medico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medico contattato:"/>
+            android:text="Medico contattato:"
+            android:textColor="@color/text_dark"/>
         <TextView android:id="@+id/detail_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Note: ---"/>
+            android:text="Note: ---"
+            android:textColor="@color/text_dark"/>
         <ImageView android:id="@+id/detail_photos"
             android:layout_width="match_parent"
             android:layout_height="200dp"
