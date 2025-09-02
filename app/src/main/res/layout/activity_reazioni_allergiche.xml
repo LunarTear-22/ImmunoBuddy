@@ -40,7 +40,7 @@
 
         <LinearLayout
             android:id="@+id/table_container"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
             android:padding="8dp"
@@ -48,9 +48,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintTop_toBottomOf="@id/section_title"
-            app:layout_constraintBottom_toTopOf="@id/navbar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnAddReaction"
+            android:layout_marginBottom="16dp">
 
             <!-- HEADER -->
             <LinearLayout
@@ -63,7 +64,7 @@
                 <TextView
                     android:id="@+id/header_nome"
                     android:layout_width="0dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Reazioni"
@@ -76,7 +77,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:text="Data"
                     android:textStyle="bold"
                     android:textSize="14sp"
@@ -87,7 +88,7 @@
                 <TextView
                     android:id="@+id/header_gravita"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.3"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="-"
@@ -105,8 +106,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:paddingHorizontal="8dp"
                 tools:listitem="@layout/item_reaction" />
 
         </LinearLayout>
@@ -114,6 +114,7 @@
 
         <!-- FAB PER AGGIUNGERE NUOVA REAZIONE -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
             android:id="@+id/btnAddReaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,11 +137,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+
+        <include
+            layout="@layout/item_reaction_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:elevation="16dp"
+            android:translationZ="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         layout="@layout/drawer_menu"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

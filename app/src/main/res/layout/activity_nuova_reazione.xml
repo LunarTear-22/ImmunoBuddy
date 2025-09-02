@@ -304,7 +304,15 @@
                     android:contentDescription="Aggiungi foto"
                     app:backgroundTint="@color/text_dark"
                     android:text="" />
+
             </LinearLayout>
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:id="@+id/imageShow"
+                android:layout_marginStart="24dp"
+                android:contentDescription="foto">
+            </ImageView>
 
         </LinearLayout>
     </ScrollView>

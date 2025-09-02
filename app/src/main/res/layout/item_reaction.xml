@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="8dp">
+    android:paddingVertical="4dp">
 
     <!-- Riga compatta -->
     <LinearLayout
@@ -17,10 +17,11 @@
         <TextView
             android:id="@+id/reaction_name"
             android:layout_width="0dp"
-            android:layout_weight="2.5"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:gravity="start"
             android:text="Reazione"
             android:textStyle="bold"
             android:textColor="@color/text_dark"
@@ -31,9 +32,9 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:text="Data"
-            android:textSize="10sp"
+            android:textSize="14sp"
             android:textColor="@color/text_dark"/>
 
         <View
@@ -43,50 +44,6 @@
             android:background="@drawable/circle_indicator"/>
     </LinearLayout>
 
-    <!-- Dettagli estesi (inizialmente GONE) -->
-    <LinearLayout
-        android:id="@+id/details_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:visibility="gone">
-
-        <TextView android:id="@+id/detail_ora"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ora:"
-            android:textColor="@color/text_dark"/>
-        <TextView android:id="@+id/detail_allergeni"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Allergene:"
-            android:textColor="@color/text_dark"/>
-        <TextView android:id="@+id/detail_sintomi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sintomi:"/>
-        <TextView android:id="@+id/detail_farmaci"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Farmaci:"
-            android:textColor="@color/text_dark"/>
-        <TextView android:id="@+id/detail_medico"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Medico contattato:"
-            android:textColor="@color/text_dark"/>
-        <TextView android:id="@+id/detail_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Note: ---"
-            android:textColor="@color/text_dark"/>
-        <ImageView android:id="@+id/detail_photos"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
-    </LinearLayout>
 </LinearLayout>
 
 

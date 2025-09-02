@@ -1,14 +1,20 @@
 package com.example.immunobubby;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,11 +31,13 @@ public class ReazioniAllergicheActivity extends BaseActivity {
     private FloatingActionButton fabAddReaction;
     private boolean isDateAscending = true;
     private boolean isGravitaAscending = true;
+    private MaterialCardView reactionDetailCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reazioni_allergiche);
+        reactionDetailCard = findViewById(R.id.reaction_detail_card);
 
         initViews();
         setupRecyclerView();
@@ -62,64 +70,19 @@ public class ReazioniAllergicheActivity extends BaseActivity {
     private void setupRecyclerView() {
         reactionsList = new ArrayList<>();
         adapter = new ReazioneAdapter(this, reactionsList);
-        adapter.setOnReactionClickListener(this::onReactionClick);
+        adapter.setOnReactionClickListener(this::onReactionNameClick);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadReactions() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        reactionsList.clear();
 
-        try {
-            Reazione reaction1 = new Reazione();
-            reaction1.setData(dateFormat.parse("17/08/2025"));
-            reaction1.setAllergene("pistacchi");
-            reaction1.setGravita("Moderato"); // cambiato da "Media"
-            reaction1.addSintomo("Gonfiore");
-            reactionsList.add(reaction1);
-
-            Reazione reaction2 = new Reazione();
-            reaction2.setData(dateFormat.parse("05/04/2025"));
-            reaction2.setAllergene("pollini");
-            reaction2.setGravita("Lieve");
-            reaction2.addSintomo("Rinite");
-            reactionsList.add(reaction2);
-
-            Reazione reaction3 = new Reazione();
-            reaction3.setData(dateFormat.parse("18/04/2025"));
-            reaction3.setAllergene("acari");
-            reaction3.setGravita("Grave");
-            reaction3.addSintomo("Asma");
-            reactionsList.add(reaction3);
-
-            Reazione reaction4 = new Reazione();
-            reaction4.setData(dateFormat.parse("27/04/2025"));
-            reaction4.setAllergene("allergeni vari");
-            reaction4.setGravita("Lieve");
-            reaction4.addSintomo("Congiuntivite");
-            reactionsList.add(reaction4);
-
-            Reazione reaction5 = new Reazione();
-            reaction5.setData(dateFormat.parse("06/05/2025"));
-            reaction5.setAllergene("frutta secca");
-            reaction5.setGravita("Moderato"); // cambiato da "Media"
-            reaction5.addSintomo("Prurito orale");
-            reactionsList.add(reaction5);
-
-            Reazione reaction6 = new Reazione();
-            reaction6.setData(dateFormat.parse("20/05/2025"));
-            reaction6.setAllergene("antibiotico");
-            reaction6.setGravita("Grave");
-            reaction6.addSintomo("Anafilassi");
-            reactionsList.add(reaction6);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        private void loadReactions() {
+            reactionsList.clear();
+            reactionsList.addAll(ReazioneStorage.loadReactions(this));
+            adapter.notifyDataSetChanged();
         }
 
-        adapter.notifyDataSetChanged();
-    }
+
 
     // ORDINAMENTO PER DATA
     private void sortByDate(boolean ascending) {
@@ -159,14 +122,93 @@ public class ReazioniAllergicheActivity extends BaseActivity {
             Intent intent = new Intent(this, NuovaReazioneActivity.class);
             startActivityForResult(intent, 1001);
         });
+
     }
 
-    private void onReactionClick(Reazione reaction) {
-        Intent intent = new Intent(this, NuovaReazioneActivity.class);
-        intent.putExtra("edit_mode", true);
-        intent.putExtra("reaction_data", reaction);
-        startActivity(intent);
+    private void onReactionNameClick(Reazione reaction) {
+        if (reaction == null) return;
+
+        // Mostra la card
+        reactionDetailCard.setVisibility(View.VISIBLE);
+
+        // Popola i campi della card
+        TextView tvDetailNome = reactionDetailCard.findViewById(R.id.detail_title);
+        TextView tvDetailData = reactionDetailCard.findViewById(R.id.detail_data);
+        TextView tvDetailOra = reactionDetailCard.findViewById(R.id.detail_ora);
+        TextView tvDetailAllergene = reactionDetailCard.findViewById(R.id.detail_allergeni);
+        TextView tvDetailSintomi = reactionDetailCard.findViewById(R.id.detail_sintomi);
+        TextView tvDetailFarmaci = reactionDetailCard.findViewById(R.id.detail_farmaci);
+        TextView tvDetailMedico = reactionDetailCard.findViewById(R.id.detail_medico);
+        TextView tvDetailNote = reactionDetailCard.findViewById(R.id.detail_note);
+        ImageView ivDetailFoto = reactionDetailCard.findViewById(R.id.detail_photo);
+
+        // Nome reazione
+        tvDetailNome.setText(generateReactionName(reaction));
+
+        // Data
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        tvDetailData.setText(reaction.getData() != null ? sdf.format(reaction.getData()) : "Non specificato");
+
+        // Ora
+        tvDetailOra.setText(reaction.getOra() != null ? reaction.getOra() : "Non specificato");
+
+        // Allergene
+        tvDetailAllergene.setText(reaction.getAllergene() != null ? reaction.getAllergene() : "Non specificato");
+
+        // Sintomi
+        tvDetailSintomi.setText(reaction.getSintomi() != null && !reaction.getSintomi().isEmpty()
+                ? String.join(", ", reaction.getSintomi())
+                : "Nessuno");
+
+        // Farmaci
+        tvDetailFarmaci.setText(reaction.getFarmaci() != null && !reaction.getFarmaci().isEmpty()
+                ? String.join(", ", reaction.getFarmaci())
+                : "Nessuno");
+
+        // Contatto medico
+        tvDetailMedico.setText(reaction.getContattoMedico() != null
+                ? (reaction.getContattoMedico() ? "Sì" : "No")
+                : "Non specificato");
+
+        // Note
+        tvDetailNote.setText(reaction.getNote() != null ? reaction.getNote() : "Assenti");
+
+        // Foto (mostra prima foto se presente)
+        if (reaction.getFoto() != null && !reaction.getFoto().isEmpty()) {
+            File imgFile = new File(reaction.getFoto().get(0));
+            if (imgFile.exists()) {
+                ivDetailFoto.setImageBitmap(BitmapFactory.decodeFile(imgFile.getAbsolutePath()));
+                ivDetailFoto.setVisibility(View.VISIBLE);
+            } else {
+                ivDetailFoto.setVisibility(View.GONE);
+            }
+        } else {
+            ivDetailFoto.setVisibility(View.GONE);
+        }
+
+        // Bottone chiudi
+        ImageButton closeButton = reactionDetailCard.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(v -> reactionDetailCard.setVisibility(View.GONE));
     }
+
+    // Metodo helper per il nome della reazione (puoi spostarlo in Activity se vuoi)
+    private String generateReactionName(Reazione reaction) {
+        if (reaction == null) return "Reazione allergica";
+        String allergen = reaction.getAllergene();
+        List<String> symptoms = reaction.getSintomi();
+        if (allergen != null && !allergen.isEmpty()) {
+            return (symptoms != null && !symptoms.isEmpty())
+                    ? symptoms.get(0) + " da " + allergen
+                    : "Reazione a " + allergen;
+        } else if (symptoms != null && !symptoms.isEmpty()) {
+            return symptoms.get(0);
+        } else {
+            return "Reazione allergica";
+        }
+    }
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

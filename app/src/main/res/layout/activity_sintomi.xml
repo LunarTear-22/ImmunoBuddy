@@ -175,7 +175,9 @@
         app:fabCustomSize="56dp"
         android:contentDescription="Aggiungi sintomo"
         app:layout_constraintBottom_toTopOf="@id/navbar"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@style/ShapeAppearanceOverlay.MaterialAlertDialog.Material3"
+        />
 
     <!-- NAVIGATION BAR -->
     <include
