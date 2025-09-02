@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -47,7 +48,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Configura navbar e back button automaticamente
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
-        setupDropdownDividerColor();
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
@@ -133,7 +133,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         setupNavbarButtons();
         setupBackButton(R.id.btnBack);
-        setupDropdownDividerColor();
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
 
@@ -303,8 +302,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void setupDropdownDividerColor() {
-        MaterialAutoCompleteTextView dropdown = findViewById(R.id.dropdown);
+    void setupDropdownDividerColor(AutoCompleteTextView dropdown) {
+
         if (dropdown != null) {
             dropdown.setDropDownBackgroundDrawable(
                     getResources().getDrawable(R.drawable.bg_dropdown)

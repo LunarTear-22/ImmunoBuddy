@@ -74,63 +74,6 @@
                     android:textCursorDrawable="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Data -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginBottom="12dp"
-                android:hint="Data*"
-                android:textColorHint="@color/text_dark"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/calendar_add_on_24px"
-                app:endIconTint="@color/text_dark"
-                app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputDataSintomo"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:inputType="none"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="6dp"
-                    android:textColor="@color/text_dark"
-                    android:textColorHint="@color/text_dark"
-                    android:textCursorDrawable="@null"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Ora -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/ora_layout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginBottom="12dp"
-                android:textColorHint="@color/text_dark"
-                app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ora_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:hint="Ora"
-                    android:inputType="none"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="6dp"
-                    android:textColor="@color/text_dark"
-                    android:textColorHint="@color/text_dark"
-                    android:textCursorDrawable="@null"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Gravità -->
             <com.google.android.material.textfield.TextInputLayout
@@ -147,6 +90,30 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:inputType="none"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/text_dark"
+                    android:textColorHint="@color/text_dark" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Frequenza -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                android:hint="Frequenza*"
+                android:textColorHint="@color/text_dark"
+                app:boxStrokeColor="@color/text_dark"
+                app:hintTextColor="@color/text_dark"
+                app:endIconTint="@color/text_dark">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdownFrequenza"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:inputType="none"

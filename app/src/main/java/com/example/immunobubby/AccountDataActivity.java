@@ -60,6 +60,7 @@ public class AccountDataActivity extends BaseActivity {
         btnFab = findViewById(R.id.btnFab);
 
         setupGenderDropdown();
+        setupDropdownDividerColor(dropdownGender);
 
         // banner
         background = findViewById(R.id.background);

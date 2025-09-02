@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -26,6 +27,8 @@ import java.util.TimeZone;
 
 public class NuovoSintomoActivity extends BaseActivity {
 
+
+
     private static class SintomoOption {
         String label;
         int colorRes;
@@ -35,15 +38,16 @@ public class NuovoSintomoActivity extends BaseActivity {
             this.colorRes = colorRes;
         }
     }
-    private TextInputEditText oraEditText;
     private AutoCompleteTextView autoCompleteTextView;
+    private AutoCompleteTextView autoCompleteFrequenza;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuovo_sintomo);
         autoCompleteTextView = findViewById(R.id.dropdown);
-        setupGravitaDropdown();
+        setupDropdown(autoCompleteTextView);
+        setupDropdownDividerColor(autoCompleteTextView);
 
         // Trova la view dal layout
 
@@ -101,59 +105,55 @@ public class NuovoSintomoActivity extends BaseActivity {
             }
         };
 
+
+
         autoCompleteTextView.setAdapter(adapter);
 
-        // Campo per la data
-        TextInputEditText inputDataSintomo = findViewById(R.id.inputDataSintomo);
-        if (inputDataSintomo != null) {
-            inputDataSintomo.setOnClickListener(v -> {
-                MaterialDatePicker<Long> datePicker =
-                        MaterialDatePicker.Builder.datePicker()
-                                .setTitleText("Seleziona la data del sintomo")
-                                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                                .build();
+        // Dropdown frequenza
+        autoCompleteFrequenza = findViewById(R.id.dropdownFrequenza);
+        setupDropdownDividerColor(autoCompleteFrequenza);
+        setupDropdown(autoCompleteFrequenza);
+        String[] optionsFrequenza = {"Frequente", "Molto frequente", "Raro", "Molto raro"};
 
-                datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                    calendar.setTimeInMillis(selection);
+        ArrayAdapter<String> frequenzaAdapter = new ArrayAdapter<String>(
+                this,
+                R.layout.dropdown_frequenza,
+                optionsFrequenza
+        ) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                return createCustomView(position, convertView, parent);
+            }
 
-                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                    inputDataSintomo.setText(format.format(calendar.getTime()));
-                });
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                return createCustomView(position, convertView, parent);
+            }
 
-                datePicker.show(getSupportFragmentManager(), "DATE_PICKER_SINTOMO");
-            });
-        }
+            private View createCustomView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    convertView = inflater.inflate(R.layout.dropdown_frequenza, parent, false);
+                }
 
-        oraEditText = findViewById(R.id.ora_edit_text);
-        oraEditText.setOnClickListener(v -> showTimePicker());
+                TextView label = convertView.findViewById(R.id.labelFrequenza);
+                label.setText(optionsFrequenza[position]);
+
+                return convertView;
+            }
+        };
+
+        autoCompleteFrequenza.setAdapter(frequenzaAdapter);
+
     }
 
-    private void showTimePicker() {
-        Calendar now = Calendar.getInstance();
-        int hour = now.get(Calendar.HOUR_OF_DAY);
-        int minute = now.get(Calendar.MINUTE);
-
-        MaterialTimePicker picker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(hour)
-                .setMinute(minute)
-                .setTitleText("Scegli l'orario")
-                .build();
-
-        picker.addOnPositiveButtonClickListener(v -> {
-            int selectedHour = picker.getHour();
-            int selectedMinute = picker.getMinute();
-
-            oraEditText.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
-        });
-
-        picker.show(getSupportFragmentManager(), "TIME_PICKER");
-    }
-
-    private void setupGravitaDropdown() {
+    private void setupDropdown(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.setKeyListener(null);
         autoCompleteTextView.setFocusable(false);
         autoCompleteTextView.setClickable(true);
     }
-}
+
+    }
+
+

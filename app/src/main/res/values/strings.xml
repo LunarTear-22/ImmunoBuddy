@@ -15,10 +15,16 @@
         <item>Altro</item>
     </string-array>
     <string-array name="gravita_sintomo">
-        <item>Lieve 🟢</item>
-        <item>Moderato 🟡</item>
-        <item>Significativo 🟠</item>
-        <item>Grave 🔴</item>
+        <item>Lieve</item>
+        <item>Moderato</item>
+        <item>Significativo</item>
+        <item>Grave</item>
+    </string-array>
+    <string-array name="frequenza_sintomo">
+        <item>Frequente</item>
+        <item>Molto frequente</item>
+        <item>Raro</item>
+        <item>Molto raro</item>
     </string-array>
 
 
