@@ -351,11 +351,11 @@ public class MainActivity extends BaseActivity {
     }
     
     //sharedpreferences
-    private List<Reazione> loadReazioniFromPrefs() {
+   /* private List<Reazione> loadReazioniFromPrefs() {
         SharedPreferences prefs = getContext().getClass("app_prefs", Context.MODE_PRIVATE);
         String json = prefs.getString("reazioni_list", "[]");
         Gson gson = new Gson();
         return gson.fromJson(json, new TypeToken<List<Reazione>>(){}.getType());
-    }
+    }*/
 
 }
