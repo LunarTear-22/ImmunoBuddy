@@ -22,7 +22,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:background="@color/white">
 
             <!-- NOME REAZIONE -->
             <TextView
@@ -44,14 +45,14 @@
             <!-- DATA -->
             <TextView
                 android:id="@+id/reaction_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
                 android:textColor="@color/text_dark"
-                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/severity_indicator"
                 app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="17/08/2025" />
 
             <!-- INDICATORE GRAVITÀ -->

@@ -236,69 +236,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <TextView
-                            android:text="12/05/2025"
+                        <!-- RecyclerView per le prime 3 reazioni -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reazioni_preview_recycler"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/inter_bold"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp"/>
-                        <TextView
-                            android:text=" - Orticaria da farmaco 💊"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="normal"
-                            android:fontFamily="@font/inter_regular"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp"/>
-                    </LinearLayout>
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never"
+                            android:paddingTop="8dp"/>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
 
-                        <TextView
-                            android:text="20/03/2025"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/inter_bold"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp"/>
 
-                        <TextView
-                            android:text=" - Allergia pollini 🌸"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="normal"
-                            android:fontFamily="@font/inter_regular"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:text="05/02/2025"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/inter_bold"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:text=" - Reazione a crostacei 🦐"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textStyle="normal"
-                            android:textColor="@color/text_dark"
-                            android:fontFamily="@font/inter_regular"
-                            android:textSize="14sp"/>
 
                     </LinearLayout>
 

@@ -1,7 +1,10 @@
 package com.example.immunobubby;
 
+import static java.security.AccessController.getContext;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,6 +26,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.List;
@@ -210,6 +215,8 @@ public class MainActivity extends BaseActivity {
         tvConsiglio.setText(consigli[indexToShow]);
     }
 
+
+
     @SuppressLint("MissingPermission")
     private void caricaPollini() {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -342,4 +349,13 @@ public class MainActivity extends BaseActivity {
 
         });
     }
+    
+    //sharedpreferences
+    private List<Reazione> loadReazioniFromPrefs() {
+        SharedPreferences prefs = getContext().getClass("app_prefs", Context.MODE_PRIVATE);
+        String json = prefs.getString("reazioni_list", "[]");
+        Gson gson = new Gson();
+        return gson.fromJson(json, new TypeToken<List<Reazione>>(){}.getType());
+    }
+
 }
