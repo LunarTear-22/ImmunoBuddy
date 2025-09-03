@@ -2,9 +2,13 @@ package com.example.immunobubby;
 
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
+
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,25 +48,64 @@ public class SintomiAdapter extends RecyclerView.Adapter<SintomiAdapter.SintomiV
         int colorRes = getSeverityColor(sintomo.getGravita());
         holder.statusDot.getBackground().setTint(ContextCompat.getColor(context, colorRes));
 
-        // Click sulla frequenza SOLO se siamo in modalità modifica
         if (isEditingMode) {
             holder.txtFrequenza.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Seleziona frequenza");
-
                 String[] opzioni = {"Molto frequente", "Frequente", "Raro", "Molto raro"};
 
-                builder.setItems(opzioni, (dialog, which) -> {
+                // Adapter personalizzato per testo
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                        context,
+                        android.R.layout.simple_list_item_1,
+                        opzioni
+                ) {
+                    @NonNull
+                    @Override
+                    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                        View view = super.getView(position, convertView, parent);
+                        TextView textView = view.findViewById(android.R.id.text1);
+
+                        // Colore del testo
+                        textView.setTextColor(Color.parseColor("#001229"));
+
+                        return view;
+                    }
+                };
+
+                View customTitle = LayoutInflater.from(context).inflate(R.layout.dialog_title, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setCustomTitle(customTitle); // usa il tuo titolo
+                //builder.setTitle("Seleziona frequenza");
+                builder.setAdapter(adapter, (dialog, which) -> {
                     String nuovaFrequenza = opzioni[which];
                     sintomo.setFrequenza(nuovaFrequenza);
                     notifyItemChanged(holder.getAdapterPosition());
                 });
 
-                builder.show();
+                // Creazione dialog
+                AlertDialog dialog = builder.create();
+
+                // Sfondo finestra
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(R.drawable.rounded_button_bg);
+                }
+
+                dialog.setOnShowListener(d -> {
+                    int titleId = context.getResources().getIdentifier("alertTitle", "id", "android");
+                    TextView titleView = dialog.findViewById(titleId);
+                    if (titleView != null) {
+                        titleView.setTextColor(Color.parseColor("#001229")); // tuo colore personalizzato
+                        titleView.setTypeface(null, Typeface.BOLD);          // opzionale: grassetto
+                    }
+                });
+
+                dialog.show();
             });
         } else {
             holder.txtFrequenza.setOnClickListener(null);
         }
+
+
     }
 
     @Override

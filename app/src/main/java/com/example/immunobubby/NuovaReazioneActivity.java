@@ -43,7 +43,7 @@ public class NuovaReazioneActivity extends BaseActivity {
 
     private TextInputEditText dataEditText, oraEditText, allergeneEditText, sintomiEditText, farmacEditText, noteEditText;
     private AutoCompleteTextView gravitaDropdown;
-    private TextInputLayout dataLayout, oraLayout, allergeneLayout, sintomiLayout, farmacLayout, noteLayout;
+    private TextInputLayout dataLayout, oraLayout, allergeneLayout, sintomiLayout, farmacLayout, noteLayout, gravitaLayout;
     private RadioGroup medicoRadioGroup;
     private RadioButton siRadioButton, noRadioButton;
     private Button aggiungiFotoButton;
@@ -62,6 +62,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         setupClickListeners();
         setupGravitaDropdown();
         setupGravitaAdapter();
+        setupDropdownDividerColor(gravitaDropdown);
     }
 
     private void initializeViews() {
@@ -80,6 +81,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         sintomiLayout = findViewById(R.id.sintomi_layout);
         farmacLayout = findViewById(R.id.farmaci_layout);
         noteLayout = findViewById(R.id.note_layout);
+        gravitaLayout = findViewById(R.id.inputGravitaLayout);
 
         medicoRadioGroup = findViewById(R.id.medico_radio_group);
         siRadioButton = findViewById(R.id.si_radio_button);
@@ -276,6 +278,11 @@ public class NuovaReazioneActivity extends BaseActivity {
             sintomiLayout.setError("Campo obbligatorio");
             isValid = false;
         } else sintomiLayout.setError(null);
+
+        if (gravitaDropdown.getText().toString().trim().isEmpty()) {
+            gravitaLayout.setError("Campo obbligatorio");
+            isValid = false;
+        }
 
         return isValid;
     }

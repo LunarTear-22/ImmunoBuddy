@@ -3,16 +3,20 @@ package com.example.immunobubby;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 public class SintomiActivity extends BaseActivity {
 
@@ -22,11 +26,24 @@ public class SintomiActivity extends BaseActivity {
     private List<Sintomi> backupList;
     private Button btnAggiorna, btnAnnulla, btnSalva;
     private FloatingActionButton BtnAddSintomo;
+    private ImageButton icGravitaorder;
+    private LinearLayout frequenzaOrder;
+    private ImageButton icFrequenzaorder;
+    private TextView tvSortFrequenza;
+
+    private boolean gravitaAsc = true;
+    private boolean frequenzaAsc = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sintomi);
+
+        icGravitaorder = findViewById(R.id.header_gravita);
+        frequenzaOrder = findViewById(R.id.header_Frequenza_container);
+
+        tvSortFrequenza = findViewById(R.id.header_Frequenza);
+        icFrequenzaorder = findViewById(R.id.header_Frequenza_icon);
 
         initViews();
         setupRecyclerView();
@@ -52,27 +69,68 @@ public class SintomiActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    /** Carica i dati di esempio */
     private void loadSintomi() {
-
         sintomiList.clear();
-
-        Sintomi sintomo1 = new Sintomi("Mal di testa", "Frequente", "Moderato");
-        sintomiList.add(sintomo1);
-
-        Sintomi sintomo2 = new Sintomi("Nausea", "Raro", "Lieve");
-        sintomiList.add(sintomo2);
-
-        Sintomi sintomo3 = new Sintomi("Febbre", "Molto raro", "Significativo");
-        sintomiList.add(sintomo3);
-
+        sintomiList.addAll(SintomiStorage.loadSintomi(this));
         adapter.notifyDataSetChanged();
+    }
+
+    /** Ordina per gravità */
+    private void sortByGravita() {
+        // ruoto l'icona in base al valore attuale
+        rotateIcon(icGravitaorder, gravitaAsc);
+
+        java.util.Map<String, Integer> gravitaMap = new java.util.HashMap<>();
+        gravitaMap.put("Lieve", 1);
+        gravitaMap.put("Moderato", 2);
+        gravitaMap.put("Significativo", 3);
+        gravitaMap.put("Grave", 4);
+
+        sintomiList.sort((r1, r2) -> {
+            int g1 = gravitaMap.getOrDefault(r1.getGravita(), 0);
+            int g2 = gravitaMap.getOrDefault(r2.getGravita(), 0);
+            int cmp = Integer.compare(g1, g2);
+            return gravitaAsc ? cmp : -cmp;
+        });
+
+        // inverti il flag per il prossimo click
+        gravitaAsc = !gravitaAsc;
+
+        // aggiorna la lista
+        adapter.notifyDataSetChanged();
+    }
+
+    /** Ordina per frequenza */
+    private void sortByFrequenza() {
+        rotateIcon(icFrequenzaorder, frequenzaAsc);
+        java.util.Map<String, Integer> frequenzaMap = new java.util.HashMap<>();
+        frequenzaMap.put("Molto Raro", 1);
+        frequenzaMap.put("Raro", 2);
+        frequenzaMap.put("Frequente", 3);
+        frequenzaMap.put("Molto Frequente", 4);
+
+        sintomiList.sort( (s1, s2) -> {
+            int f1 = frequenzaMap.getOrDefault(s1.getFrequenza(), 0);
+            int f2 = frequenzaMap.getOrDefault(s2.getFrequenza(), 0);
+            int cmp = Integer.compare(f1, f2);
+            return frequenzaAsc ? cmp : -cmp;});
+        frequenzaAsc = !frequenzaAsc;
+        adapter.notifyDataSetChanged();
+    }
+
+    // ANIMAZIONI ROTAZIONE
+    private void rotateIcon(View view, boolean ascending) {
+        float toDegree = ascending ? 180f : 0f;
+        view.animate()
+                .rotation(toDegree)
+                .setDuration(300)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
     }
 
     /** Imposta i click listener dei bottoni */
     private void setupClickListeners() {
         btnAggiorna.setOnClickListener(v -> {
-            // Salvo una copia per poter annullare
             backupList = new ArrayList<>();
             for (Sintomi s : sintomiList) {
                 backupList.add(new Sintomi(s.getNome(), s.getFrequenza(), s.getGravita()));
@@ -85,7 +143,6 @@ public class SintomiActivity extends BaseActivity {
         });
 
         btnAnnulla.setOnClickListener(v -> {
-            // Ripristina la copia
             if (backupList != null) {
                 sintomiList.clear();
                 sintomiList.addAll(backupList);
@@ -105,7 +162,7 @@ public class SintomiActivity extends BaseActivity {
             btnSalva.setVisibility(Button.GONE);
 
             Toast.makeText(this, "Frequenze aggiornate", Toast.LENGTH_SHORT).show();
-            // TODO: salva sintomiList in persistenza se necessario
+            SintomiStorage.saveSintomi(this,sintomiList);
         });
 
         BtnAddSintomo.setOnClickListener(v -> {
@@ -113,6 +170,11 @@ public class SintomiActivity extends BaseActivity {
             startActivity(intent);
         });
 
-    }
+        // Ordinamenti
+        icGravitaorder.setOnClickListener(v -> sortByGravita());
 
+        frequenzaOrder.setOnClickListener(v -> sortByFrequenza());
+        icFrequenzaorder.setOnClickListener(v -> sortByFrequenza());
+        tvSortFrequenza.setOnClickListener(v -> sortByFrequenza());
+    }
 }

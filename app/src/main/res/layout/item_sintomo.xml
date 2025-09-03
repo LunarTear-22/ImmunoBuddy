@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="8dp">
+    android:padding="8dp"
+    tools:ignore="HardcodedText">
 
     <!-- Riga compatta -->
     <LinearLayout
@@ -18,33 +20,34 @@
     <TextView
         android:id="@+id/txtSintomoNome"
         android:layout_width="0dp"
-        android:layout_weight="2.5"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Reazione"
+        android:text="Sintomo"
         android:textStyle="bold"
         android:textColor="@color/text_dark"
         android:textSize="14sp"/>
 
     <!-- Colonna: Frequenza (cliccabile in modalità modifica) -->
-    <TextView
-        android:id="@+id/txtSintomoFrequenza"
-        android:layout_width="0dp"
-        android:layout_weight="1.5"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Frequenza"
-        android:textSize="11sp"
-        android:textColor="@color/text_dark"
-        android:clickable="true"
-        android:focusable="true" />
+        <TextView
+            android:id="@+id/txtSintomoFrequenza"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_weight="1.5"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="start"
+            android:text="Frequenza"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp" />
 
     <!-- Colonna: Gravità (indicatore colorato) -->
     <View
         android:id="@+id/gravita"
         android:layout_width="12dp"
         android:layout_height="12dp"
+        android:layout_margin="5dp"
         android:background="@drawable/circle_indicator"/>
 
     </LinearLayout>

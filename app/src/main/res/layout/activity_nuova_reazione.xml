@@ -64,7 +64,10 @@
                 app:hintTextColor="@color/text_dark"
                 app:endIconMode="custom"
                 app:endIconTint="@color/text_dark"
-                app:endIconDrawable="@drawable/calendar_add_on_24px">
+                app:endIconDrawable="@drawable/calendar_add_on_24px"
+                app:errorIconTint="@color/text_danger"
+                app:boxStrokeErrorColor="@color/text_danger"
+                app:errorTextColor="@color/text_danger">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/data_edit_text"
@@ -92,7 +95,8 @@
                 android:layout_marginBottom="12dp"
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
+                app:hintTextColor="@color/text_dark"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ora_edit_text"
@@ -120,7 +124,11 @@
                 android:layout_marginBottom="12dp"
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
+                app:hintTextColor="@color/text_dark"
+                app:errorIconTint="@color/text_danger"
+                app:boxStrokeErrorColor="@color/text_danger"
+                app:errorTextColor="@color/text_danger"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/allergene_edit_text"
@@ -147,7 +155,11 @@
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
                 app:hintTextColor="@color/text_dark"
-                app:endIconTint="@color/text_dark">
+                app:endIconTint="@color/text_dark"
+                app:errorIconTint="@color/text_danger"
+                app:boxStrokeErrorColor="@color/text_danger"
+                app:errorTextColor="@color/text_danger"
+                >
 
                 <AutoCompleteTextView
                     android:id="@+id/dropdown"
@@ -157,7 +169,8 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="6dp"
                     android:textColor="@color/text_dark"
-                    android:textColorHint="@color/text_dark" />
+                    android:textColorHint="@color/text_dark"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Sintomi -->
@@ -170,7 +183,10 @@
                 android:layout_marginBottom="12dp"
                 android:textColorHint="@color/text_dark"
                 app:boxStrokeColor="@color/text_dark"
-                app:hintTextColor="@color/text_dark">
+                app:hintTextColor="@color/text_dark"
+                app:errorIconTint="@color/text_danger"
+                app:boxStrokeErrorColor="@color/text_danger"
+                app:errorTextColor="@color/text_danger">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/sintomi_edit_text"
