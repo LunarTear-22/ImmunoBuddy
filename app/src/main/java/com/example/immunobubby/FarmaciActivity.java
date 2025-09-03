@@ -88,6 +88,25 @@ public class FarmaciActivity extends BaseActivity {
         checkNotificationPermission();
     }
 
+    private void cancelAlarm(MedicineReminder reminder, int requestCode) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager == null) return;
+
+        for (int dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
+            Intent intent = new Intent(this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    requestCode * 10 + dayOfWeek,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            alarmManager.cancel(pendingIntent);
+        }
+
+        Log.d(TAG, "Allarme cancellato per " + reminder.getName());
+    }
+
+
     private void checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33+
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)

@@ -1,5 +1,6 @@
 package com.example.immunobubby;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.MedicineViewHolder> {
 
@@ -56,10 +58,10 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
         int adapterPosition = holder.getAdapterPosition();
         if (adapterPosition == RecyclerView.NO_POSITION) return;
 
-        MedicineReminder reminder = reminders.get(adapterPosition);
+        AtomicReference<MedicineReminder> reminder = new AtomicReference<>(reminders.get(adapterPosition));
 
-        holder.txtName.setText(reminder.getName());
-        Log.d(TAG, "[Bind] Posizione " + adapterPosition + ", nome iniziale: '" + reminder.getName() + "'");
+        holder.txtName.setText(reminder.get().getName());
+        Log.d(TAG, "[Bind] Posizione " + adapterPosition + ", nome iniziale: '" + reminder.get().getName() + "'");
 
         // --- Handler per debounce ---
         final Handler handler = new Handler();
@@ -71,7 +73,7 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                reminder.setName(s.toString());
+                reminder.get().setName(s.toString());
                 Log.d(TAG, "[TextChanged] Posizione " + adapterPosition + ", nome aggiornato: '" + s + "'");
 
                 // Rimuove eventuale salvataggio precedente
@@ -80,7 +82,7 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
                 // Programma il salvataggio dopo 500 ms di inattività
                 saveRunnable[0] = () -> {
                     saveCallback.run();
-                    Log.d(TAG, "[DebounceSave] Nome salvato: '" + reminder.getName() + "' (posizione " + adapterPosition + ")");
+                    Log.d(TAG, "[DebounceSave] Nome salvato: '" + reminder.get().getName() + "' (posizione " + adapterPosition + ")");
                 };
                 handler.postDelayed(saveRunnable[0], 500);
             }
@@ -90,7 +92,7 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
         });
 
         // --- Resto del bind invariato ---
-        holder.btnTime.setText(String.format("%02d:%02d", reminder.getHour(), reminder.getMinute()));
+        holder.btnTime.setText(String.format("%02d:%02d", reminder.get().getHour(), reminder.get().getMinute()));
         holder.btnTime.setOnClickListener(v -> {
             if (timeClickListener != null) timeClickListener.onTimeClick(adapterPosition, holder.btnTime);
             Log.d(TAG, "[TimeClick] Click su ora (posizione " + adapterPosition + ")");
@@ -111,14 +113,14 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
             int day = mapChipToDayOfWeek(chip.getId());
 
             chip.setOnCheckedChangeListener(null);
-            chip.setChecked(reminder.getDays().contains(day));
+            chip.setChecked(reminder.get().getDays().contains(day));
 
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    if (!reminder.getDays().contains(day)) reminder.getDays().add(day);
+                    if (!reminder.get().getDays().contains(day)) reminder.get().getDays().add(day);
                     Log.d(TAG, "[ChipChecked] Giorno aggiunto: " + day + " (posizione " + adapterPosition + ")");
                 } else {
-                    reminder.getDays().remove((Integer) day);
+                    reminder.get().getDays().remove((Integer) day);
                     Log.d(TAG, "[ChipChecked] Giorno rimosso: " + day + " (posizione " + adapterPosition + ")");
                 }
                 saveCallback.run();
@@ -127,12 +129,36 @@ public class MedicinesAdapter extends RecyclerView.Adapter<MedicinesAdapter.Medi
 
         // Switch attivo
         holder.switchButton.setOnCheckedChangeListener(null);
-        holder.switchButton.setChecked(reminder.isActive());
+        holder.switchButton.setChecked(reminder.get().isActive());
         holder.switchButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            reminder.setActive(isChecked);
-            Log.d(TAG, "[Switch] Stato promemoria: " + (isChecked ? "attivo" : "inattivo") + " (posizione " + adapterPosition + ")");
-            saveCallback.run();
+            int pos = holder.getAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION) return;
+
+            reminder.set(reminders.get(pos));
+
+            if (isChecked) {
+                // Attivazione → salvo subito
+                reminder.get().setActive(true);
+                saveCallback.run();
+                Log.d(TAG, "[Switch] Attivato promemoria: " + reminder.get().getName());
+            } else {
+                // Disattivazione → chiedo conferma
+                new AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle("Disattiva promemoria")
+                        .setMessage("Vuoi davvero disattivare il promemoria per " + reminder.get().getName() + "?")
+                        .setPositiveButton("Conferma", (dialog, which) -> {
+                            reminder.get().setActive(false);
+                            saveCallback.run(); // salva subito con stato disattivo
+                            Log.d(TAG, "[Switch] Disattivato promemoria: " + reminder.get().getName());
+                        })
+                        .setNegativeButton("Annulla", (dialog, which) -> {
+                            // Ripristino switch su ON
+                            buttonView.setChecked(true);
+                        })
+                        .show();
+            }
         });
+        holder.switchButton.setChecked(reminder.get().isActive());
 
         // Chiudi tastiera al click esterno
         holder.card.setOnClickListener(v -> {

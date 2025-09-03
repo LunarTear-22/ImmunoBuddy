@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -59,6 +60,45 @@ public class AccountDataActivity extends BaseActivity {
                 bottomNav.setVisibility(View.GONE);
             }
         }
+
+        // Intercetta il back con OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isFormDirty()) {
+                    new androidx.appcompat.app.AlertDialog.Builder(AccountDataActivity.this)
+                            .setTitle("Attenzione")
+                            .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                            .setPositiveButton("Esci", (dialog, which) -> {
+                                // Disabilito il callback per permettere la chiusura
+                                setEnabled(false);
+                                getOnBackPressedDispatcher().onBackPressed();
+                            })
+                            .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                            .show();
+                } else {
+                    // Nessun dato inserito → chiusura normale
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+
+        MaterialButton backButton = findViewById(R.id.btnBack);
+        backButton.setOnClickListener(v -> {
+            if (isFormDirty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(AccountDataActivity.this)
+                        .setTitle("Attenzione")
+                        .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                        .setPositiveButton("Esci", (dialog, which) -> {
+                            finish(); // chiude l'activity
+                        })
+                        .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                        .show();
+            } else {
+                finish(); // Nessun dato → chiusura diretta
+            }
+        });
 
 
 
@@ -115,6 +155,23 @@ public class AccountDataActivity extends BaseActivity {
         btnFab.setOnClickListener(v -> saveUserData());
         bannerAction.setOnClickListener(v -> closeBanner());
     }
+
+    private boolean isFormDirty() {
+        return (inputNome.getText() != null &&
+                !inputNome.getText().toString().trim().isEmpty())
+                ||
+                (inputCognome.getText() != null &&
+                        !inputCognome.getText().toString().trim().isEmpty())
+                ||
+                (inputDob.getText() != null &&
+                        !inputDob.getText().toString().trim().isEmpty())
+                ||
+                (dropdownGender.getText() != null &&
+                        !dropdownGender.getText().toString().trim().isEmpty())
+                ||
+                checkCaregiver.isChecked();
+    }
+
 
     private void setupGenderDropdown() {
         dropdownGender.setKeyListener(null);

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,10 +20,12 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -63,7 +66,63 @@ public class NuovaReazioneActivity extends BaseActivity {
         setupGravitaDropdown();
         setupGravitaAdapter();
         setupDropdownDividerColor(gravitaDropdown);
+
+        // Intercetta il back con OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isFormDirty()) {
+                    new androidx.appcompat.app.AlertDialog.Builder(NuovaReazioneActivity.this)
+                            .setTitle("Attenzione")
+                            .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                            .setPositiveButton("Esci", (dialog, which) -> {
+                                // Disabilito il callback per permettere la chiusura
+                                setEnabled(false);
+                                getOnBackPressedDispatcher().onBackPressed();
+                            })
+                            .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                            .show();
+                } else {
+                    // Nessun dato inserito → chiusura normale
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+
+        MaterialButton backButton = findViewById(R.id.btnBack);
+        backButton.setOnClickListener(v -> {
+            if (isFormDirty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(NuovaReazioneActivity.this)
+                        .setTitle("Attenzione")
+                        .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                        .setPositiveButton("Esci", (dialog, which) -> {
+                            finish(); // chiude l'activity
+                        })
+                        .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                        .show();
+            } else {
+                finish(); // Nessun dato → chiusura diretta
+            }
+        });
+
+
     }
+
+
+    private boolean isFormDirty() {
+        return !dataEditText.getText().toString().trim().isEmpty() ||
+                !oraEditText.getText().toString().trim().isEmpty() ||
+                !allergeneEditText.getText().toString().trim().isEmpty() ||
+                !sintomiEditText.getText().toString().trim().isEmpty() ||
+                !farmacEditText.getText().toString().trim().isEmpty() ||
+                !noteEditText.getText().toString().trim().isEmpty() ||
+                !gravitaDropdown.getText().toString().trim().isEmpty() ||
+                savedPhotoPath != null ||
+                medicoRadioGroup.getCheckedRadioButtonId() != -1;
+    }
+
+
 
     private void initializeViews() {
         dataEditText = findViewById(R.id.data_edit_text);

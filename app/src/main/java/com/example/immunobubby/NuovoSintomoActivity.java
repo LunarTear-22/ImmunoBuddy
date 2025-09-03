@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
@@ -69,6 +71,45 @@ public class NuovoSintomoActivity extends BaseActivity {
         inputNomeSintomo = findViewById(R.id.inputNomeSintomo);
         inputGravita = findViewById(R.id.inputGravita);
         inputFrequenza = findViewById(R.id.inputFrequenza);
+
+        // Intercetta il back con OnBackPressedDispatcher
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isFormDirty()) {
+                    new androidx.appcompat.app.AlertDialog.Builder(NuovoSintomoActivity.this)
+                            .setTitle("Attenzione")
+                            .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                            .setPositiveButton("Esci", (dialog, which) -> {
+                                // Disabilito il callback per permettere la chiusura
+                                setEnabled(false);
+                                getOnBackPressedDispatcher().onBackPressed();
+                            })
+                            .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                            .show();
+                } else {
+                    // Nessun dato inserito → chiusura normale
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+
+        MaterialButton backButton = findViewById(R.id.btnBack);
+        backButton.setOnClickListener(v -> {
+            if (isFormDirty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(NuovoSintomoActivity.this)
+                        .setTitle("Attenzione")
+                        .setMessage("Stai compilando il form. Vuoi davvero uscire senza salvare?")
+                        .setPositiveButton("Esci", (dialog, which) -> {
+                            finish(); // chiude l'activity
+                        })
+                        .setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss())
+                        .show();
+            } else {
+                finish(); // Nessun dato → chiusura diretta
+            }
+        });
 
         // Trova la view dal layout
 
@@ -168,6 +209,16 @@ public class NuovoSintomoActivity extends BaseActivity {
         autoCompleteFrequenza.setAdapter(frequenzaAdapter);
 
     }
+
+    private boolean isFormDirty() {
+        return (editNomeSintomo.getText() != null &&
+                !editNomeSintomo.getText().toString().trim().isEmpty())
+                ||
+                !autoCompleteTextView.getText().toString().trim().isEmpty()
+                ||
+                !autoCompleteFrequenza.getText().toString().trim().isEmpty();
+    }
+
 
     private void setupDropdown(AutoCompleteTextView autoCompleteTextView) {
         autoCompleteTextView.setKeyListener(null);
