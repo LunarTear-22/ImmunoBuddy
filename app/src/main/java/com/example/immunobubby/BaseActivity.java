@@ -32,6 +32,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private MaterialButton btnBurger;
     private ImageButton closeBtnMenu;
     private boolean isDrawerOpen = false;
+    private MaterialCardView infoCard;
+    ImageButton infoButton;
+    ImageButton closeInfoButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,12 +53,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupBackButton(R.id.btnBack);
         setupExpandableCard();
         setupExpandableSearchBar(R.id.searchButton, R.id.searchBarContainer, R.id.btnCloseSearch, R.id.searchInput, R.id.allergeni_lista_root, R.id.recyclerAllergeni);
+        setupInfoButton();
 
         btnBurger = findViewById(R.id.btnMenu);
         if (btnBurger != null) {
             setupBurgerMenu();
         }
 
+    }
+
+    private void setupInfoButton() {
+        infoCard = findViewById(R.id.InfoCard);
+        infoButton = findViewById(R.id.infoBtn);
+        closeInfoButton = findViewById(R.id.closeInfo);
+        if (infoCard == null || infoButton == null || closeInfoButton == null) return;
+        infoButton.setOnClickListener(v -> infoCard.setVisibility(View.VISIBLE));
+        closeInfoButton.setOnClickListener(v -> infoCard.setVisibility(View.GONE));
     }
 
     private void setupBurgerMenu() {
