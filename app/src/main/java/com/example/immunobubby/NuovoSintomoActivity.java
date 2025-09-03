@@ -20,6 +20,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
@@ -44,6 +45,10 @@ public class NuovoSintomoActivity extends BaseActivity {
             this.colorRes = colorRes;
         }
     }
+    private TextInputLayout inputNomeSintomo;
+    private TextInputLayout inputGravita;
+    private TextInputLayout inputFrequenza;
+
     private TextInputEditText editNomeSintomo;
     private AutoCompleteTextView autoCompleteTextView;
     private AutoCompleteTextView autoCompleteFrequenza;
@@ -60,6 +65,10 @@ public class NuovoSintomoActivity extends BaseActivity {
 
         saveBtn = findViewById(R.id.btnFab);
         saveBtn.setOnClickListener(v -> salvaSintomo());
+
+        inputNomeSintomo = findViewById(R.id.inputNomeSintomo);
+        inputGravita = findViewById(R.id.inputGravita);
+        inputFrequenza = findViewById(R.id.inputFrequenza);
 
         // Trova la view dal layout
 
@@ -170,24 +179,24 @@ public class NuovoSintomoActivity extends BaseActivity {
         boolean isValid = true;
 
         if (Objects.requireNonNull(editNomeSintomo.getText()).toString().trim().isEmpty()) {
-            editNomeSintomo.setError("Campo obbligatorio");
+            inputNomeSintomo.setError("Campo obbligatorio");
             isValid = false;
         } else {
-            editNomeSintomo.setError(null);
+            inputNomeSintomo.setError(null);
         }
 
         if (autoCompleteTextView.getText().toString().trim().isEmpty()) {
-            autoCompleteTextView.setError("Seleziona la gravità");
+            inputGravita.setError("Seleziona la gravità");
             isValid = false;
         } else {
-            autoCompleteTextView.setError(null);
+            inputGravita.setError(null);
         }
 
         if (autoCompleteFrequenza.getText().toString().trim().isEmpty()) {
-            autoCompleteFrequenza.setError("Seleziona la frequenza");
+            inputFrequenza.setError("Seleziona la frequenza");
             isValid = false;
         } else {
-            autoCompleteFrequenza.setError(null);
+            inputFrequenza.setError(null);
         }
 
         return isValid;
