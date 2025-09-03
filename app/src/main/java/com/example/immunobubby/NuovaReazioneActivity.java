@@ -69,6 +69,7 @@ public class NuovaReazioneActivity extends BaseActivity {
         oraEditText = findViewById(R.id.ora_edit_text);
         allergeneEditText = findViewById(R.id.allergene_edit_text);
         gravitaDropdown = findViewById(R.id.dropdown);
+        setupDropdownDividerColor(gravitaDropdown);
         sintomiEditText = findViewById(R.id.sintomi_edit_text);
         farmacEditText = findViewById(R.id.farmaci_edit_text);
         noteEditText = findViewById(R.id.note_edit_text);

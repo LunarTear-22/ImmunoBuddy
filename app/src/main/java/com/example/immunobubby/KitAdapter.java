@@ -32,6 +32,13 @@ public class KitAdapter extends RecyclerView.Adapter<KitAdapter.KitViewHolder> {
         Kit kit = kitList.get(position);
         holder.name.setText(kit.getName());
         holder.description.setText(kit.getDescription());
+
+        // Se l'elemento è il "kit vuoto", nascondi il trattino
+        if ("Il tuo kit è vuoto".equals(kit.getName())) {
+            holder.trattino.setVisibility(View.GONE);
+        } else {
+            holder.trattino.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -40,12 +47,13 @@ public class KitAdapter extends RecyclerView.Adapter<KitAdapter.KitViewHolder> {
     }
 
     public static class KitViewHolder extends RecyclerView.ViewHolder {
-        TextView name, description, date;
+        TextView name, description, trattino;
 
         public KitViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.nome_farmaco);
             description = itemView.findViewById(R.id.descrizione_farmaco);
+            trattino = itemView.findViewById(R.id.trattino_farmaco);
         }
     }
 }

@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,6 +31,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +186,93 @@ public class MainActivity extends BaseActivity {
         btnMostraKit.setOnClickListener(v -> startActivity(new Intent(this, KitEmergenzaActivity.class)));
         btnMostraPollini.setOnClickListener(v -> startActivity(new Intent(this, QualitàAriaActivity.class)));
         btnMostraReazioni.setOnClickListener(v -> startActivity(new Intent(this, ReazioniAllergicheActivity.class)));
+
+        //kit
+
+        SharedPreferences sharedPreferences = getSharedPreferences("KitEmergenzaPrefs", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("medicines", null);
+        Type type = new TypeToken<List<Farmaco>>() {}.getType();
+        List<Farmaco> farmacoList = gson.fromJson(json, type);
+        List<Kit> kitList = new ArrayList<>();
+        if (farmacoList == null || farmacoList.isEmpty()) {
+            farmacoList = new ArrayList<>();
+        }else{
+
+            if (!farmacoList.isEmpty()) {
+                int max = Math.min(farmacoList.size(), 2);
+                for (int i = 0; i < max; i++) {
+                    Kit k = new Kit();
+                    k.setName(farmacoList.get(i).getNome() + " " + farmacoList.get(i).getDosaggio());
+                    k.setDescription(farmacoList.get(i).getTipologia());
+                    kitList.add(k);
+                }
+
+            }
+
+        }
+
+       if (kitList.isEmpty()) {
+
+           kitList.add(new Kit("Il tuo kit è vuoto", "", ""));
+       }
+
+        RecyclerView recyclerView = findViewById(R.id.kit_preview_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        KitAdapter adapter = new KitAdapter(this, kitList);
+        recyclerView.setAdapter(adapter);
+
+        //reazioni
+
+
+        List<Reazione> reazioniList = ReazioneStorage.loadReactions(this);
+        for(Reazione r : reazioniList){
+            System.out.println(r.getAllergene());
+        }
+        List<ReazioniPreview> ReazioniPreviewList = new ArrayList<>();
+        if (reazioniList == null || reazioniList.isEmpty()) {
+            reazioniList = new ArrayList<>();
+        }else{
+
+            if (!reazioniList.isEmpty()) {
+                int max = Math.min(reazioniList.size(), 3);
+                for (int i = 0; i < max; i++) {
+                    ReazioniPreview r = new ReazioniPreview();
+                    if (reazioniList.get(i) == null) r.setName ("Reazione allergica");
+                    String allergen = reazioniList.get(i).getAllergene();
+                    List<String> symptoms = reazioniList.get(i).getSintomi();
+                    if (allergen != null && !allergen.isEmpty()) {
+                        r.setName(symptoms != null && !symptoms.isEmpty()
+                                ? symptoms.get(0) + " da " + allergen
+                                : "Reazione a " + allergen);
+                    } else if (symptoms != null && !symptoms.isEmpty()) {
+                        r.setName (symptoms.get(0));
+                    } else {
+                        r.setName ("Reazione allergica");
+                    }
+
+                    r.setData(reazioniList.get(i).getData());
+                    ReazioniPreviewList.add(r);
+                    for(ReazioniPreview q : ReazioniPreviewList){
+                        System.out.println(q.toString());
+                    }
+                }
+
+            }
+
+        }
+
+        if (ReazioniPreviewList.isEmpty()) {
+
+            ReazioniPreviewList.add(new ReazioniPreview("Non sono presenti reazioni recenti", null));
+        }
+
+        RecyclerView recyclerViewReazioni = findViewById(R.id.reazioni_preview_recycler);
+        recyclerViewReazioni.setLayoutManager(new LinearLayoutManager(this));
+        ReazionePreviewAdapter adapterReazioni = new ReazionePreviewAdapter(this, ReazioniPreviewList);
+        recyclerViewReazioni.setAdapter(adapterReazioni);
+
+
 
     }
 
@@ -349,13 +443,5 @@ public class MainActivity extends BaseActivity {
 
         });
     }
-    
-    //sharedpreferences
-   /* private List<Reazione> loadReazioniFromPrefs() {
-        SharedPreferences prefs = getContext().getClass("app_prefs", Context.MODE_PRIVATE);
-        String json = prefs.getString("reazioni_list", "[]");
-        Gson gson = new Gson();
-        return gson.fromJson(json, new TypeToken<List<Reazione>>(){}.getType());
-    }*/
 
 }

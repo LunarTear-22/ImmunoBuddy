@@ -238,12 +238,15 @@
 
                         <!-- RecyclerView per le prime 3 reazioni -->
                         <androidx.recyclerview.widget.RecyclerView
+
                             android:id="@+id/reazioni_preview_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:nestedScrollingEnabled="false"
                             android:overScrollMode="never"
-                            android:paddingTop="8dp"/>
+                            android:paddingTop="8dp"
+                            tools:listitem="@layout/item_reaction_preview"/>
+
 
 
 
@@ -348,6 +351,8 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Kit Emergenza -->
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardKit"
                 android:layout_width="match_parent"
@@ -378,21 +383,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <TextView
-                            android:text="• Jext® 300 mcg"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/inter_bold"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_dark"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content" />
+                        <androidx.recyclerview.widget.RecyclerView
 
-                        <TextView
-                            android:textColor="@color/text_dark"
-                            android:fontFamily="@font/inter_regular"
-                            android:text=" - Adrenalina autoiniettabile"
+                            android:id="@+id/kit_preview_recycler"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content" />
+                            android:nestedScrollingEnabled="false"
+                            android:overScrollMode="never"
+                            android:paddingTop="8dp"
+                            tools:listitem="@layout/item_kit"/>
 
                     </LinearLayout>
 
@@ -401,7 +400,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:text="• Xyzal® 5 mg"
+                            android:text=""
                             android:textStyle="bold"
                             android:fontFamily="@font/inter_bold"
                             android:textSize="14sp"
@@ -412,7 +411,7 @@
                         <TextView
                             android:textColor="@color/text_dark"
                             android:fontFamily="@font/inter_regular"
-                            android:text=" - Antistaminico orale"
+                            android:text=""
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content" />
 

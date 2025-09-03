@@ -15,10 +15,10 @@ import java.util.Locale;
 
 public class ReazionePreviewAdapter extends RecyclerView.Adapter<ReazionePreviewAdapter.PreviewViewHolder> {
 
-    private List<Reazione> reactions;
+    private List<ReazioniPreview> reactions;
     private Context context;
 
-    public ReazionePreviewAdapter(Context context, List<Reazione> reactions) {
+    public ReazionePreviewAdapter(Context context, List<ReazioniPreview> reactions) {
         this.context = context;
         this.reactions = reactions;
     }
@@ -32,11 +32,11 @@ public class ReazionePreviewAdapter extends RecyclerView.Adapter<ReazionePreview
 
     @Override
     public void onBindViewHolder(@NonNull PreviewViewHolder holder, int position) {
-        Reazione reaction = reactions.get(position);
+        ReazioniPreview reaction = reactions.get(position);
 
         // Mostriamo sintomo principale oppure "Reazione"
-        if (reaction.getSintomi() != null && !reaction.getSintomi().isEmpty()) {
-            holder.reactionName.setText(reaction.getSintomi().get(0));
+        if (reaction.getName() != null && !reaction.getName().isEmpty()) {
+            holder.reactionName.setText(reaction.getName());
         } else {
             holder.reactionName.setText("Reazione");
         }
@@ -45,8 +45,13 @@ public class ReazionePreviewAdapter extends RecyclerView.Adapter<ReazionePreview
         if (reaction.getData() != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             holder.reactionDate.setText(dateFormat.format(reaction.getData()));
+        }
+
+        // Se l'elemento è il "kit vuoto", nascondi il trattino
+        if ("Non sono presenti reazioni recenti".equals(reaction.getName())) {
+            holder.trattino.setVisibility(View.GONE);
         } else {
-            holder.reactionDate.setText("-");
+            holder.trattino.setVisibility(View.VISIBLE);
         }
     }
 
@@ -56,12 +61,13 @@ public class ReazionePreviewAdapter extends RecyclerView.Adapter<ReazionePreview
     }
 
     static class PreviewViewHolder extends RecyclerView.ViewHolder {
-        TextView reactionName, reactionDate;
+        TextView reactionName, reactionDate, trattino;
 
         public PreviewViewHolder(@NonNull View itemView) {
             super(itemView);
             reactionName = itemView.findViewById(R.id.preview_reaction_name);
             reactionDate = itemView.findViewById(R.id.preview_reaction_date);
+            trattino = itemView.findViewById(R.id.trattino2);
         }
     }
 }
